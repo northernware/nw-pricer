@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { Icon } from "@iconify/react";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -11,7 +12,7 @@ export default function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <div className="w-8 h-8" />;
+  if (!mounted) return <div className="w-10 h-10" />;
 
   return (
     <button
@@ -19,11 +20,10 @@ export default function ThemeToggle() {
       className="w-10 h-10 flex items-center justify-center border border-nw-graphite/20 hover:border-nw-acid transition-colors group"
       aria-label="Toggle theme"
     >
-      <span
-        className="iconify text-lg text-nw-graphite group-hover:text-nw-acid"
-        data-icon={theme === "dark" ? "solar:sun-linear" : "solar:moon-linear"}
-        suppressHydrationWarning
-      ></span>
+      <Icon 
+        icon={theme === "dark" ? "solar:sun-linear" : "solar:moon-linear"} 
+        className="text-lg text-nw-graphite group-hover:text-nw-acid"
+      />
     </button>
   );
 }

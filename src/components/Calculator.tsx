@@ -9,6 +9,7 @@ import OutputPanel from "./OutputPanel";
 import QuoteTemplate from "./QuoteTemplate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { Icon } from "@iconify/react";
 
 export default function Calculator() {
   const [projectType, setProjectType] = useState<ProjectType>(DEFAULTS.projectType);
@@ -135,7 +136,7 @@ export default function Calculator() {
                   : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-acid hover:text-nw-black"
               }`}
             >
-              <span className="iconify" data-icon={isClientMode ? "solar:eye-linear" : "solar:eye-closed-linear"}></span>
+              <Icon icon={isClientMode ? "solar:eye-linear" : "solar:eye-closed-linear"} />
               Client Mode: {isClientMode ? "ON" : "OFF"}
             </button>
 
@@ -143,7 +144,7 @@ export default function Calculator() {
               onClick={exportToPDF}
               className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black hover:bg-nw-acid hover:border-nw-acid transition-all"
             >
-              <span className="iconify" data-icon="solar:download-minimalistic-linear"></span>
+              <Icon icon="solar:download-minimalistic-linear" />
               Export PDF
             </button>
           </div>
@@ -156,7 +157,7 @@ export default function Calculator() {
             <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
               <div className="flex justify-between items-center mb-8 border-b border-nw-graphite/20 pb-4">
                 <div className="font-mono text-xs text-nw-black uppercase track-widest flex items-center gap-2">
-                  <span className="iconify" data-icon="solar:settings-linear" suppressHydrationWarning></span>
+                  <Icon icon="solar:settings-linear" />
                   scope.config
                 </div>
                 <div className="flex gap-2">

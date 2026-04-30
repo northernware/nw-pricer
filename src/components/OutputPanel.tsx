@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { CalculatorOutput } from "@/lib/calculator";
+import { Icon } from "@iconify/react";
 
 function fmt(n: number): string {
   return "₱" + n.toLocaleString("en-PH", { maximumFractionDigits: 0 });
@@ -37,7 +38,7 @@ export default function OutputPanel({
       {/* Terminal-style header */}
       <div className="flex justify-between items-center border-b border-nw-graphite/20 pb-4 no-print">
         <div className="font-mono text-xs text-nw-black uppercase track-widest flex items-center gap-2">
-          <span className="iconify" data-icon="solar:calculator-linear" suppressHydrationWarning></span>
+          <Icon icon="solar:calculator-linear" />
           output.log
         </div>
         <div className="flex gap-2">
@@ -104,11 +105,10 @@ export default function OutputPanel({
             className="w-full flex items-center justify-between font-mono text-[10px] uppercase track-widest text-nw-graphite border border-nw-graphite/20 px-4 py-3 hover:border-nw-acid hover:text-nw-black transition-all duration-200"
           >
             <span>{showBreakdown ? "Hide" : "Show"} Breakdown</span>
-            <span
-              className={`iconify text-base transition-transform duration-300 ${showBreakdown ? "rotate-180" : ""}`}
-              data-icon="solar:alt-arrow-down-linear"
-              suppressHydrationWarning
-            ></span>
+            <Icon
+              icon="solar:alt-arrow-down-linear"
+              className={`text-base transition-transform duration-300 ${showBreakdown ? "rotate-180" : ""}`}
+            />
           </button>
 
           {showBreakdown && (

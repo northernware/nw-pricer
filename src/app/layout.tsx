@@ -36,10 +36,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-nw-bone text-nw-black font-body antialiased selection-acid relative min-h-screen" suppressHydrationWarning>
-        <Script
-          src="https://code.iconify.design/3/3.1.1/iconify.min.js"
-          strategy="lazyOnload"
-        />
         <Providers>
           <div className="bg-noise"></div>
           {children}

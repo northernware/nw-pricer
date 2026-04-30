@@ -1,5 +1,4 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import type { CalculatorOutput, CalculatorInput } from "@/lib/calculator";
 import { PROJECT_TYPES, FEATURES } from "@/lib/constants";
 
@@ -9,6 +8,19 @@ interface QuoteTemplateProps {
 }
 
 export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
+  const [quoteId, setQuoteId] = useState("");
+  const [dates, setDates] = useState({ today: "", validUntil: "" });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setQuoteId(`NW-${Math.random().toString(36).substring(2, 9).toUpperCase()}`);
+    setDates({
+      today: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }),
+      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })
+    });
+    setMounted(true);
+  }, []);
+
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
 
   const fmt = (n: number) => "₱" + n.toLocaleString();
@@ -18,6 +30,8 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
     const adjusted = hours * result.complexityMultiplier;
     return adjusted * input.hourlyRate;
   };
+
+  if (!mounted) return null;
 
   return (
     <div 
@@ -44,9 +58,9 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
           </p>
         </div>
         <div style={{ textAlign: "right", fontSize: "12px", color: "#5C5C5C", lineHeight: "1.6" }}>
-          QUOTATION ID: NW-{Math.random().toString(36).substring(2, 9).toUpperCase()}<br />
-          DATE: {new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}<br />
-          VALID UNTIL: {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}
+          QUOTATION ID: {quoteId}<br />
+          DATE: {dates.today}<br />
+          VALID UNTIL: {dates.validUntil}
         </div>
       </div>
 
