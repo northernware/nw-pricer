@@ -1,7 +1,7 @@
 "use client";
 
 import type { CalculatorOutput, CalculatorInput } from "@/lib/calculator";
-import { PROJECT_TYPES } from "@/lib/constants";
+import { PROJECT_TYPES, FEATURES } from "@/lib/constants";
 
 interface QuoteTemplateProps {
   input: CalculatorInput;
@@ -10,6 +10,14 @@ interface QuoteTemplateProps {
 
 export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
+
+  const fmt = (n: number) => "₱" + n.toLocaleString();
+  
+  // Calculate specific row costs (distributing complexity multiplier)
+  const calcRowCost = (hours: number) => {
+    const adjusted = hours * result.complexityMultiplier;
+    return adjusted * input.hourlyRate;
+  };
 
   return (
     <div 
@@ -51,74 +59,79 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
             <div style={{ fontSize: "16px", fontWeight: "bold" }}>{projectTypeLabel}</div>
           </div>
           <div>
-            <div style={{ fontSize: "10px", color: "#5C5C5C", textTransform: "uppercase", marginBottom: "4px" }}>Design Level</div>
-            <div style={{ fontSize: "16px", fontWeight: "bold", textTransform: "capitalize" }}>{input.designLevel.replace('_', ' ')}</div>
-          </div>
-          <div>
             <div style={{ fontSize: "10px", color: "#5C5C5C", textTransform: "uppercase", marginBottom: "4px" }}>Complexity</div>
-            <div style={{ fontSize: "16px", fontWeight: "bold", textTransform: "capitalize" }}>{input.complexity}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: "10px", color: "#5C5C5C", textTransform: "uppercase", marginBottom: "4px" }}>Estimated Scope</div>
-            <div style={{ fontSize: "16px", fontWeight: "bold" }}>{input.pages} Pages</div>
+            <div style={{ fontSize: "16px", fontWeight: "bold", textTransform: "capitalize" }}>{input.complexity} (x{result.complexityMultiplier})</div>
           </div>
         </div>
       </div>
 
       {/* Breakdown */}
       <div style={{ marginBottom: "40px" }}>
-        <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FF3800", marginBottom: "15px" }}>Scope Breakdown</h2>
+        <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FF3800", marginBottom: "15px" }}>Itemized Scope</h2>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid #B9B9B9" }}>
-              <th style={{ textAlign: "left", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C5C" }}>Item</th>
-              <th style={{ textAlign: "right", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C5C" }}>Details</th>
-              <th style={{ textAlign: "right", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C5C" }}>Hours</th>
+              <th style={{ textAlign: "left", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Description</th>
+              <th style={{ textAlign: "center", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Hours</th>
+              <th style={{ textAlign: "right", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Rate</th>
+              <th style={{ textAlign: "right", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Amount</th>
             </tr>
           </thead>
           <tbody>
             <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
-              <td style={{ padding: "12px 0", fontSize: "14px" }}>Base Architecture & Pages</td>
-              <td style={{ textAlign: "right", fontSize: "14px", color: "#5C5C5C" }}>{input.pages} Pages</td>
-              <td style={{ textAlign: "right", fontSize: "14px" }}>{result.pagesHours}h</td>
+              <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                <strong>Base Architecture & Layout</strong><br />
+                <span style={{ fontSize: "11px", color: "#5C5C5C" }}>Development of {input.pages} pages structure</span>
+              </td>
+              <td style={{ textAlign: "center", fontSize: "13px" }}>{(result.pagesHours * result.complexityMultiplier).toFixed(1)}h</td>
+              <td style={{ textAlign: "right", fontSize: "13px" }}>{fmt(input.hourlyRate)}</td>
+              <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(calcRowCost(result.pagesHours))}</td>
             </tr>
             <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
-              <td style={{ padding: "12px 0", fontSize: "14px" }}>UI/UX Design Phase</td>
-              <td style={{ textAlign: "right", fontSize: "14px", color: "#5C5C5C" }}>{input.designLevel}</td>
-              <td style={{ textAlign: "right", fontSize: "14px" }}>{result.designHours}h</td>
+              <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                <strong>UI/UX Custom Design</strong><br />
+                <span style={{ fontSize: "11px", color: "#5C5C5C" }}>{input.designLevel.replace('_', ' ')} design system</span>
+              </td>
+              <td style={{ textAlign: "center", fontSize: "13px" }}>{(result.designHours * result.complexityMultiplier).toFixed(1)}h</td>
+              <td style={{ textAlign: "right", fontSize: "13px" }}>{fmt(input.hourlyRate)}</td>
+              <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(calcRowCost(result.designHours))}</td>
             </tr>
-            {input.features.length > 0 && (
-              <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
-                <td style={{ padding: "12px 0", fontSize: "14px" }}>Selected Functional Features</td>
-                <td style={{ textAlign: "right", fontSize: "14px", color: "#5C5C5C" }}>{input.features.length} Items</td>
-                <td style={{ textAlign: "right", fontSize: "14px" }}>{result.featureHours}h</td>
-              </tr>
-            )}
-            <tr style={{ backgroundColor: "#0A0A0A", color: "#F4F4F0" }}>
-              <td colSpan={2} style={{ padding: "15px", fontSize: "14px", fontWeight: "bold" }}>Adjusted Total (Complexity: {result.complexityMultiplier}x)</td>
-              <td style={{ textAlign: "right", padding: "15px", fontSize: "16px", fontWeight: "bold" }}>{result.adjustedHours}h</td>
-            </tr>
+            
+            {input.features.map(fKey => {
+              const f = FEATURES.find(x => x.value === fKey);
+              if (!f) return null;
+              return (
+                <tr key={fKey} style={{ borderBottom: "1px solid #EEEEEE" }}>
+                  <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                    <strong>{f.label}</strong>
+                  </td>
+                  <td style={{ textAlign: "center", fontSize: "13px" }}>{(f.hours * result.complexityMultiplier).toFixed(1)}h</td>
+                  <td style={{ textAlign: "right", fontSize: "13px" }}>{fmt(input.hourlyRate)}</td>
+                  <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(calcRowCost(f.hours))}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Pricing */}
+      {/* Pricing Summary */}
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "60px" }}>
-        <div style={{ width: "300px" }}>
+        <div style={{ width: "320px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-            <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#5C5C5C" }}>Base Development Cost</span>
-            <span style={{ fontSize: "14px" }}>₱{result.baseCost.toLocaleString()}</span>
+            <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#5C5C5C" }}>Subtotal (Base Development)</span>
+            <span style={{ fontSize: "14px" }}>{fmt(result.baseCost)}</span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-            <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#5C5C5C" }}>Project Buffer ({input.bufferPercent}%)</span>
-            <span style={{ fontSize: "14px" }}>₱{(result.finalPrice - result.baseCost).toLocaleString()}</span>
+            <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#5C5C5C" }}>Tax / VAT ({input.taxPercent}%)</span>
+            <span style={{ fontSize: "14px" }}>{fmt(result.finalPrice - result.baseCost)}</span>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", padding: "15px 0", borderTop: "2px solid #0A0A0A", marginTop: "10px" }}>
-            <span style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase" }}>Total Quotation</span>
-            <span style={{ fontSize: "20px", fontWeight: "bold", color: "#FF3800" }}>₱{result.roundedPrice.toLocaleString()}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "15px 0", borderTop: "2px solid #0A0A0A", marginTop: "10px", backgroundColor: "#0A0A0A", color: "#F4F4F0", paddingLeft: "10px", paddingRight: "10px" }}>
+            <span style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase" }}>Total Amount</span>
+            <span style={{ fontSize: "20px", fontWeight: "bold", color: "#FF3800" }}>{fmt(result.roundedPrice)}</span>
           </div>
-          <p style={{ fontSize: "10px", color: "#5C5C5C", textAlign: "right", marginTop: "5px" }}>
-            Suggested Range: ₱{result.priceRange[0].toLocaleString()} – ₱{result.priceRange[1].toLocaleString()}
+          <p style={{ fontSize: "9px", color: "#5C5C5C", textAlign: "right", marginTop: "8px", fontStyle: "italic" }}>
+            * Rounded to {input.roundingMode.replace('_', ' ')}. Estimated range: {fmt(result.priceRange[0])} – {fmt(result.priceRange[1])}
           </p>
         </div>
       </div>
@@ -126,12 +139,19 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
       {/* Footer */}
       <div style={{ borderTop: "1px solid #B9B9B9", paddingTop: "20px" }}>
         <p style={{ margin: 0, fontSize: "10px", color: "#5C5C5C", lineHeight: "1.6" }}>
-          This quotation is an estimate based on the scope provided. Final pricing may vary upon technical deep-dive. 
-          Standard payment terms: 50% upfront, 50% upon deployment. All rates in PHP.
+          This quotation is an estimate based on the current scope. Final pricing is subject to technical deep-dive and finalized functional requirements. 
+          Standard payment terms: 50% down payment, 50% upon project completion and deployment.
         </p>
-        <p style={{ margin: "20px 0 0 0", fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", textAlign: "center", color: "#0A0A0A" }}>
-          Northernware Software Development Services &middot; Engineering Reality
-        </p>
+        <div style={{ marginTop: "30px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ fontSize: "10px", fontWeight: "bold" }}>
+            ACCEPTED BY:<br /><br />
+            ___________________________
+          </div>
+          <div style={{ fontSize: "10px", fontWeight: "bold", textAlign: "right" }}>
+            NORTHERNWARE AUTHORIZED:<br /><br />
+            KENJI VAFE / CTO
+          </div>
+        </div>
       </div>
     </div>
   );

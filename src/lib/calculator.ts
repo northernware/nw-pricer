@@ -19,7 +19,7 @@ export interface CalculatorInput {
   complexity: Complexity;
   features: Feature[];
   hourlyRate: number;
-  bufferPercent: number;
+  taxPercent: number;
   roundingMode: RoundingMode;
 }
 
@@ -100,8 +100,8 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
   // Step 3: Base Cost
   const baseCost = adjustedHours * input.hourlyRate;
 
-  // Step 4: Final Price (with buffer)
-  const finalPrice = baseCost * (1 + input.bufferPercent / 100);
+  // Step 4: Final Price (with tax)
+  const finalPrice = baseCost * (1 + input.taxPercent / 100);
 
   // Step 5: Rounded Price
   const roundedPrice = roundToNearest(finalPrice, input.roundingMode);
