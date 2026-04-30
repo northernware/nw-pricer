@@ -58,13 +58,14 @@ export default function Calculator() {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // We want a gap at the bottom of each page
+      // We want gaps at the top and bottom of each page
+      const topMargin = 20; // 20mm
       const bottomMargin = 20; // 20mm
-      const effectivePageHeight = pdfHeight - bottomMargin;
+      const effectivePageHeight = pdfHeight - topMargin - bottomMargin;
       const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
       
       let heightLeft = imgHeight;
-      let position = 0;
+      let position = topMargin; // Start first page with top margin
 
       // Add first page
       pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
