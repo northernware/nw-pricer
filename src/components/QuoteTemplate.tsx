@@ -80,12 +80,12 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
           <tbody>
             <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
               <td style={{ padding: "12px 0", fontSize: "13px" }}>
-                <strong>Base Architecture & Layout</strong><br />
-                <span style={{ fontSize: "11px", color: "#5C5C5C" }}>Development of {input.pages} pages structure</span>
+                <strong>Project Scaffolding & Core Architecture</strong><br />
+                <span style={{ fontSize: "11px", color: "#5C5C5C" }}>Base setup + {input.pages} pages development (10h + {input.pages}×6h)</span>
               </td>
-              <td style={{ textAlign: "center", fontSize: "13px" }}>{(result.pagesHours * result.complexityMultiplier).toFixed(1)}h</td>
+              <td style={{ textAlign: "center", fontSize: "13px" }}>{((10 + input.pages * 6) * result.complexityMultiplier).toFixed(1)}h</td>
               <td style={{ textAlign: "right", fontSize: "13px" }}>{fmt(input.hourlyRate)}</td>
-              <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(calcRowCost(result.pagesHours))}</td>
+              <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(calcRowCost(10 + input.pages * 6))}</td>
             </tr>
             <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
               <td style={{ padding: "12px 0", fontSize: "13px" }}>

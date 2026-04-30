@@ -40,9 +40,9 @@ export interface CalculatorOutput {
 // ─── Hour Mappings ───
 
 function getPagesHours(pages: number): number {
-  if (pages <= 5) return 15;
-  if (pages <= 10) return 25;
-  return 40;
+  const baseSetup = 10;
+  const perPage = 6;
+  return baseSetup + (pages * perPage);
 }
 
 function getDesignHours(level: DesignLevel): number {

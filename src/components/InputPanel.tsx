@@ -72,7 +72,7 @@ export default function InputPanel(props: InputPanelProps) {
         <div className="flex justify-between font-mono text-[10px] text-nw-graphite mt-1">
           <span>1</span>
           <span className="text-nw-acid">
-            {props.pages <= 5 ? "15 hrs" : props.pages <= 10 ? "25 hrs" : "40 hrs"}
+            {10 + (props.pages * 6)} hrs
           </span>
           <span>30</span>
         </div>
