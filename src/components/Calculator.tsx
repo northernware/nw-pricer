@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { calculate } from "@/lib/calculator";
-import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, CalculatorInput } from "@/lib/calculator";
+import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, CalculatorInput, HostingPlan } from "@/lib/calculator";
 import { DEFAULTS, TEMPLATES } from "@/lib/constants";
 import InputPanel from "./InputPanel";
 import OutputPanel from "./OutputPanel";
@@ -20,6 +20,8 @@ export default function Calculator() {
   const [hourlyRate, setHourlyRate] = useState(DEFAULTS.hourlyRate);
   const [bufferPercent, setBufferPercent] = useState(DEFAULTS.bufferPercent);
   const [roundingMode, setRoundingMode] = useState<RoundingMode>(DEFAULTS.roundingMode);
+  const [hostingPlan, setHostingPlan] = useState<HostingPlan>(DEFAULTS.hostingPlan);
+  const [discountPercent, setDiscountPercent] = useState(DEFAULTS.discountPercent);
   const [isClientMode, setIsClientMode] = useState(false);
 
   const applyTemplate = (config: Partial<CalculatorInput>) => {
@@ -28,6 +30,8 @@ export default function Calculator() {
     if (config.designLevel) setDesignLevel(config.designLevel);
     if (config.complexity) setComplexity(config.complexity);
     if (config.features) setFeatures(config.features as Feature[]);
+    if (config.hostingPlan) setHostingPlan(config.hostingPlan as HostingPlan);
+    if (config.discountPercent !== undefined) setDiscountPercent(config.discountPercent);
   };
 
   const exportToPDF = async () => {
@@ -84,8 +88,10 @@ export default function Calculator() {
         hourlyRate,
         bufferPercent,
         roundingMode,
+        hostingPlan,
+        discountPercent,
       }),
-    [projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode]
+    [projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode, hostingPlan, discountPercent]
   );
 
   return (
@@ -184,6 +190,10 @@ export default function Calculator() {
                 setBufferPercent={setBufferPercent}
                 roundingMode={roundingMode}
                 setRoundingMode={setRoundingMode}
+                hostingPlan={hostingPlan}
+                setHostingPlan={setHostingPlan}
+                discountPercent={discountPercent}
+                setDiscountPercent={setDiscountPercent}
               />
             </div>
           </div>
@@ -211,7 +221,7 @@ export default function Calculator() {
 
         {/* Hidden template for PDF generation */}
         <QuoteTemplate 
-          input={{ projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode }} 
+          input={{ projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode, hostingPlan, discountPercent }} 
           result={result} 
         />
       </div>

@@ -96,6 +96,18 @@ export default function OutputPanel({
         </div>
       </div>
 
+      {/* Managed Hosting (Monthly) */}
+      {result.hostingPrice > 0 && (
+        <div className="border border-nw-graphite/20 p-5 bg-nw-bone">
+          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+            Managed Hosting & Maintenance
+          </div>
+          <div className="font-display font-bold text-2xl track-tighter text-nw-black">
+            {fmt(result.hostingPrice)} <span className="text-nw-graphite text-lg">/ month</span>
+          </div>
+        </div>
+      )}
+
       {/* Breakdown Toggle */}
       {!isClientMode && (
         <>
@@ -120,9 +132,15 @@ export default function OutputPanel({
               <Row label="Complexity" value={`×${result.complexityMultiplier}`} />
               <Row label="Adjusted Hours" value={`${result.adjustedHours} hrs`} accent />
               <Row label="Base Cost" value={fmt(result.baseCost)} />
-              <Row label="+ Project Buffer" value={fmt(result.finalPrice - result.baseCost)} />
+              <Row label="+ Project Buffer" value={fmt(result.finalPrice + result.discountAmount - result.baseCost)} />
+              {result.discountAmount > 0 && (
+                <Row label="- Discount Applied" value={`-${fmt(result.discountAmount)}`} accent />
+              )}
               <Row label="Final (unrounded)" value={fmt(result.finalPrice)} />
               <Row label="Rounded Price" value={fmt(result.roundedPrice)} accent />
+              {result.hostingPrice > 0 && (
+                <Row label="Hosting / Month" value={fmt(result.hostingPrice)} accent />
+              )}
             </div>
           )}
         </>

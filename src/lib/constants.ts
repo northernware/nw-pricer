@@ -1,6 +1,6 @@
 // ─── Labels & Display Constants ───
 
-import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode } from './calculator';
+import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput } from './calculator';
 
 export const PROJECT_TYPES: { value: ProjectType; label: string; code: string }[] = [
   { value: 'business_website', label: 'Business Website', code: 'BW' },
@@ -35,6 +35,75 @@ export const ROUNDING_MODES: { value: RoundingMode; label: string }[] = [
   { value: 'nearest_5000', label: 'Nearest ₱5,000' },
 ];
 
+export const HOSTING_PLANS: { 
+  value: HostingPlan; 
+  label: string; 
+  price: number; 
+  description: string;
+  includes: string[];
+  bestFor: string[];
+}[] = [
+  {
+    value: 'none',
+    label: 'No Hosting',
+    price: 0,
+    description: 'Client handles hosting and maintenance.',
+    includes: [],
+    bestFor: []
+  },
+  {
+    value: 'basic',
+    label: 'Basic Plan',
+    price: 1500,
+    description: 'Managed hosting for simple sites.',
+    includes: [
+      'Managed hosting',
+      'Domain connection + SSL',
+      'Basic monitoring',
+      'Email support'
+    ],
+    bestFor: [
+      'Simple business websites',
+      'Landing pages'
+    ]
+  },
+  {
+    value: 'standard',
+    label: 'Standard Plan',
+    price: 4000,
+    description: 'Managed Hosting & Maintenance (Recommended).',
+    includes: [
+      'Everything in Basic',
+      'Ongoing maintenance',
+      'Bug fixes',
+      'Minor content updates',
+      'Performance checks'
+    ],
+    bestFor: [
+      'Most client websites',
+      'SMEs'
+    ]
+  },
+  {
+    value: 'advanced',
+    label: 'Advanced Plan',
+    price: 8000,
+    description: 'High-performance managed hosting & priority maintenance.',
+    includes: [
+      'Everything in Standard',
+      'Priority support',
+      'SEO support (basic)',
+      'Analytics tracking',
+      'Faster turnaround'
+    ],
+    bestFor: [
+      'E-commerce',
+      'High-traffic sites',
+      'Business-critical systems'
+    ]
+  }
+];
+
 export const DEFAULTS = {
   hourlyRate: 600,
   bufferPercent: 10,
@@ -43,6 +112,9 @@ export const DEFAULTS = {
   designLevel: 'custom' as DesignLevel,
   projectType: 'business_website' as ProjectType,
   pages: 5,
+  hostingPlan: 'standard' as HostingPlan,
+  features: [] as Feature[],
+  discountPercent: 0,
 };
 
 export const TEMPLATES: { 

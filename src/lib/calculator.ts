@@ -11,6 +11,7 @@ export type Feature =
   | 'payment_integration'
   | 'api_integration';
 export type RoundingMode = 'nearest_1000' | 'nearest_5000';
+export type HostingPlan = 'none' | 'basic' | 'standard' | 'advanced';
 
 export interface CalculatorInput {
   projectType: ProjectType;
@@ -21,6 +22,8 @@ export interface CalculatorInput {
   hourlyRate: number;
   bufferPercent: number;
   roundingMode: RoundingMode;
+  hostingPlan: HostingPlan;
+  discountPercent: number;
 }
 
 export interface CalculatorOutput {
@@ -35,6 +38,8 @@ export interface CalculatorOutput {
   designHours: number;
   featureHours: number;
   complexityMultiplier: number;
+  hostingPrice: number;
+  discountAmount: number;
 }
 
 // ─── Hour Mappings ───
@@ -76,6 +81,16 @@ function getComplexityMultiplier(complexity: Complexity): number {
   return map[complexity];
 }
 
+function getHostingPrice(plan: HostingPlan): number {
+  const map: Record<HostingPlan, number> = {
+    none: 0,
+    basic: 1500,
+    standard: 4000,
+    advanced: 8000,
+  };
+  return map[plan];
+}
+
 // ─── Rounding ───
 
 function roundToNearest(value: number, mode: RoundingMode): number {
@@ -101,9 +116,13 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
   const baseCost = adjustedHours * input.hourlyRate;
 
   // Step 4: Final Price (with buffer)
-  const finalPrice = baseCost * (1 + input.bufferPercent / 100);
+  const baseFinalPrice = baseCost * (1 + input.bufferPercent / 100);
 
-  // Step 5: Rounded Price
+  // Step 5: Apply Discount
+  const discountAmount = baseFinalPrice * (input.discountPercent / 100);
+  const finalPrice = baseFinalPrice - discountAmount;
+
+  // Step 6: Rounded Price
   const roundedPrice = roundToNearest(finalPrice, input.roundingMode);
 
   // Price Range
@@ -123,5 +142,7 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
     designHours,
     featureHours,
     complexityMultiplier,
+    hostingPrice: getHostingPrice(input.hostingPlan),
+    discountAmount,
   };
 }

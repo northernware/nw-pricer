@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { CalculatorOutput, CalculatorInput } from "@/lib/calculator";
-import { PROJECT_TYPES, FEATURES } from "@/lib/constants";
+import { PROJECT_TYPES, FEATURES, HOSTING_PLANS } from "@/lib/constants";
 
 interface QuoteTemplateProps {
   input: CalculatorInput;
@@ -22,6 +22,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
   }, []);
 
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
+  const hostingPlan = HOSTING_PLANS.find(h => h.value === input.hostingPlan);
 
   const fmt = (n: number) => "₱" + n.toLocaleString();
   
@@ -129,6 +130,27 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
         </table>
       </div>
 
+      {/* Managed Hosting & Maintenance */}
+      {hostingPlan && hostingPlan.value !== 'none' && (
+        <div style={{ marginBottom: "40px" }}>
+          <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FF3800", marginBottom: "15px" }}>Managed Hosting & Maintenance</h2>
+          <div style={{ backgroundColor: "#FFFFFF", border: "1px solid #EEEEEE", padding: "20px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+              <div style={{ fontSize: "16px", fontWeight: "bold" }}>{hostingPlan.label}</div>
+              <div style={{ fontSize: "18px", fontWeight: "bold", color: "#FF3800" }}>{fmt(hostingPlan.price)} / month</div>
+            </div>
+            <div style={{ fontSize: "12px", color: "#5C5C5C", marginBottom: "15px" }}>Managed Hosting & Maintenance Plan</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+              {hostingPlan.includes.map((item, idx) => (
+                <div key={idx} style={{ fontSize: "11px", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span style={{ color: "#FF3800" }}>✓</span> {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Pricing Summary */}
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "60px" }}>
         <div style={{ width: "320px" }}>
@@ -138,12 +160,24 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
             <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#5C5C5C" }}>Project Buffer ({input.bufferPercent}%)</span>
-            <span style={{ fontSize: "14px" }}>{fmt(result.finalPrice - result.baseCost)}</span>
+            <span style={{ fontSize: "14px" }}>{fmt(result.finalPrice + result.discountAmount - result.baseCost)}</span>
           </div>
+          {input.discountPercent > 0 && (
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", color: "#FF3800" }}>
+              <span style={{ fontSize: "12px", textTransform: "uppercase" }}>Discount ({input.discountPercent}%)</span>
+              <span style={{ fontSize: "14px" }}>-{fmt(result.discountAmount)}</span>
+            </div>
+          )}
           <div style={{ display: "flex", justifyContent: "space-between", padding: "15px 0", borderTop: "2px solid #0A0A0A", marginTop: "10px", backgroundColor: "#0A0A0A", color: "#F4F4F0", paddingLeft: "10px", paddingRight: "10px" }}>
-            <span style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase" }}>Total Amount</span>
+            <span style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase" }}>One-time Development</span>
             <span style={{ fontSize: "20px", fontWeight: "bold", color: "#FF3800" }}>{fmt(result.roundedPrice)}</span>
           </div>
+          {hostingPlan && hostingPlan.value !== 'none' && (
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px", borderTop: "1px dashed #0A0A0A", backgroundColor: "#EEEEEE", marginTop: "5px" }}>
+              <span style={{ fontSize: "12px", fontWeight: "bold", textTransform: "uppercase" }}>Monthly Managed Hosting</span>
+              <span style={{ fontSize: "16px", fontWeight: "bold" }}>{fmt(hostingPlan.price)}/mo</span>
+            </div>
+          )}
           <p style={{ fontSize: "9px", color: "#5C5C5C", textAlign: "right", marginTop: "8px", fontStyle: "italic" }}>
             * Rounded to {input.roundingMode.replace('_', ' ')}. Estimated range: {fmt(result.priceRange[0])} – {fmt(result.priceRange[1])}
           </p>

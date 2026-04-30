@@ -1,7 +1,7 @@
 "use client";
 
-import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode } from "@/lib/calculator";
-import { PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES, FEATURES, ROUNDING_MODES } from "@/lib/constants";
+import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan } from "@/lib/calculator";
+import { PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES, FEATURES, ROUNDING_MODES, HOSTING_PLANS } from "@/lib/constants";
 
 interface InputPanelProps {
   projectType: ProjectType;
@@ -20,6 +20,10 @@ interface InputPanelProps {
   setBufferPercent: (v: number) => void;
   roundingMode: RoundingMode;
   setRoundingMode: (v: RoundingMode) => void;
+  hostingPlan: HostingPlan;
+  setHostingPlan: (v: HostingPlan) => void;
+  discountPercent: number;
+  setDiscountPercent: (v: number) => void;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -181,6 +185,17 @@ export default function InputPanel(props: InputPanelProps) {
           </div>
           <div>
             <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+              Discount (%)
+            </div>
+            <input
+              type="number"
+              value={props.discountPercent}
+              onChange={(e) => props.setDiscountPercent(Number(e.target.value))}
+              className="w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-2 transition-colors"
+            />
+          </div>
+          <div>
+            <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
               Rounding
             </div>
             <select
@@ -195,6 +210,35 @@ export default function InputPanel(props: InputPanelProps) {
               ))}
             </select>
           </div>
+        </div>
+      </div>
+
+      {/* Managed Hosting & Maintenance */}
+      <div className="border-t border-nw-graphite/20 pt-6">
+        <Label>Managed Hosting & Maintenance</Label>
+        <div className="grid grid-cols-1 gap-2">
+          {HOSTING_PLANS.map((hp) => (
+            <button
+              key={hp.value}
+              type="button"
+              onClick={() => props.setHostingPlan(hp.value)}
+              className={`flex flex-col font-mono text-xs uppercase track-widest px-4 py-3 border transition-all duration-200 text-left ${
+                props.hostingPlan === hp.value
+                  ? "bg-nw-black text-nw-bone border-nw-black"
+                  : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-acid hover:text-nw-black"
+              }`}
+            >
+              <div className="flex justify-between items-center w-full">
+                <span className="font-bold">{hp.label}</span>
+                <span className={props.hostingPlan === hp.value ? "text-nw-acid" : "text-nw-graphite"}>
+                  {hp.price > 0 ? `₱${hp.price.toLocaleString()}/mo` : "FREE"}
+                </span>
+              </div>
+              <div className="mt-1 text-[10px] opacity-60 normal-case tracking-normal">
+                {hp.description}
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     </div>
