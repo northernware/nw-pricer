@@ -52,7 +52,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "60px", borderBottom: "2px solid #0A0A0A", paddingBottom: "30px" }}>
         <div>
           <h1 style={{ margin: 0, fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.05em" }}>
-            northernware<span style={{ color: "#FF3800" }}>®</span>
+            northernware<span style={{ color: "#FF3800", fontSize: "14px", verticalAlign: "super", marginLeft: "2px" }}>®</span>
           </h1>
           <p style={{ margin: "5px 0 0 0", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#5C5C5C" }}>
             Software Development Services
