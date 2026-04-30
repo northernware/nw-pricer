@@ -147,7 +147,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
               <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
                 <td style={{ padding: "12px 0", fontSize: "13px" }}>
                   <strong>{hostingPlan.label}</strong><br />
-                  <span style={{ fontSize: "11px", color: "#5C5C5C" }}>{hostingPlan.includes.join(" • ")}</span>
+                  <span style={{ fontSize: "11px", color: "#5C5C5C" }}>{hostingPlan.description}</span>
                 </td>
                 <td style={{ textAlign: "center", fontSize: "13px" }}>Monthly</td>
                 <td style={{ textAlign: "right", fontSize: "13px" }}>{fmt(hostingPlan.price)}</td>

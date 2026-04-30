@@ -55,7 +55,7 @@ export const HOSTING_PLANS: {
     value: 'basic',
     label: 'Basic Plan',
     price: 1500,
-    description: 'Managed hosting for simple sites.',
+    description: 'Managed hosting for simple business websites.',
     includes: [
       'Managed hosting',
       'Domain connection + SSL',
@@ -71,7 +71,7 @@ export const HOSTING_PLANS: {
     value: 'standard',
     label: 'Standard Plan',
     price: 4000,
-    description: 'Managed Hosting & Maintenance (Recommended).',
+    description: 'Managed hosting, maintenance, updates, and support.',
     includes: [
       'Everything in Basic',
       'Ongoing maintenance',
@@ -88,7 +88,7 @@ export const HOSTING_PLANS: {
     value: 'advanced',
     label: 'Advanced Plan',
     price: 8000,
-    description: 'High-performance managed hosting & priority maintenance.',
+    description: 'Business-critical hosting with priority support and SEO.',
     includes: [
       'Everything in Standard',
       'Priority support',
