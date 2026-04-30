@@ -203,8 +203,8 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
             ___________________________
           </div>
           <div style={{ fontSize: "10px", fontWeight: "bold", textAlign: "right" }}>
-            northernware AUTHORIZED:<br /><br />
-            KENJI VAFE / CTO
+            NORTHERNWARE AUTHORIZED:<br /><br />
+            Kenji Von Ashley F. Edillo / CEO
           </div>
         </div>
       </div>
