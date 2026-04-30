@@ -39,7 +39,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
       id="quote-template" 
       style={{ 
         width: "800px", 
-        padding: "60px", 
+        padding: "40px 60px", 
         backgroundColor: "#FFFFFF", 
         color: "#0A0A0A",
         fontFamily: "sans-serif",
