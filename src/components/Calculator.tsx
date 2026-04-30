@@ -51,32 +51,44 @@ export default function Calculator() {
         logging: false,
       });
       
-      const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
-      
-      const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // We want gaps at the top and bottom of each page
-      const topMargin = 20; // 20mm
-      const bottomMargin = 20; // 20mm
-      const effectivePageHeight = pdfHeight - topMargin - bottomMargin;
-      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const margin = 20; // 20mm
+      const innerHeightMm = pdfHeight - (margin * 2);
       
-      let heightLeft = imgHeight;
-      let position = topMargin; // Start first page with top margin
+      // Calculate pixels per mm based on the captured canvas
+      const pxPerMm = canvas.width / pdfWidth;
+      const innerHeightPx = innerHeightMm * pxPerMm;
+      
+      let currentY = 0;
+      let isFirstPage = true;
 
-      // Add first page
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-      heightLeft -= effectivePageHeight;
-
-      // Add additional pages if content overflows
-      while (heightLeft > 0) {
-        pdf.addPage();
-        position -= effectivePageHeight; 
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-        heightLeft -= effectivePageHeight;
+      while (currentY < canvas.height) {
+        if (!isFirstPage) pdf.addPage();
+        
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvas.width;
+        const remainingHeight = canvas.height - currentY;
+        pageCanvas.height = Math.min(innerHeightPx, remainingHeight);
+        
+        const ctx = pageCanvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(
+            canvas,
+            0, currentY, canvas.width, pageCanvas.height, // Source
+            0, 0, canvas.width, pageCanvas.height         // Destination
+          );
+        }
+        
+        const pageData = pageCanvas.toDataURL("image/png");
+        const displayHeight = pageCanvas.height / pxPerMm;
+        
+        pdf.addImage(pageData, "PNG", 0, margin, pdfWidth, displayHeight);
+        
+        currentY += innerHeightPx;
+        isFirstPage = false;
       }
 
       pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);
