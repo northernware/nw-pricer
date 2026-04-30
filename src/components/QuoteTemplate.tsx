@@ -134,20 +134,27 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
       {hostingPlan && hostingPlan.value !== 'none' && (
         <div style={{ marginBottom: "40px" }}>
           <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FF3800", marginBottom: "15px" }}>Managed Hosting & Maintenance</h2>
-          <div style={{ backgroundColor: "#FFFFFF", border: "1px solid #EEEEEE", padding: "20px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-              <div style={{ fontSize: "16px", fontWeight: "bold" }}>{hostingPlan.label}</div>
-              <div style={{ fontSize: "18px", fontWeight: "bold", color: "#FF3800" }}>{fmt(hostingPlan.price)} / month</div>
-            </div>
-            <div style={{ fontSize: "12px", color: "#5C5C5C", marginBottom: "15px" }}>Managed Hosting & Maintenance Plan</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-              {hostingPlan.includes.map((item, idx) => (
-                <div key={idx} style={{ fontSize: "11px", display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ color: "#FF3800" }}>✓</span> {item}
-                </div>
-              ))}
-            </div>
-          </div>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ borderBottom: "1px solid #B9B9B9" }}>
+                <th style={{ textAlign: "left", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Service Description</th>
+                <th style={{ textAlign: "center", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Frequency</th>
+                <th style={{ textAlign: "right", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Rate</th>
+                <th style={{ textAlign: "right", padding: "12px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
+                <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                  <strong>{hostingPlan.label}</strong><br />
+                  <span style={{ fontSize: "11px", color: "#5C5C5C" }}>{hostingPlan.includes.join(" • ")}</span>
+                </td>
+                <td style={{ textAlign: "center", fontSize: "13px" }}>Monthly</td>
+                <td style={{ textAlign: "right", fontSize: "13px" }}>{fmt(hostingPlan.price)}</td>
+                <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(hostingPlan.price)}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       )}
 
