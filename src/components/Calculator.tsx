@@ -53,11 +53,27 @@ export default function Calculator() {
       
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
+      
       const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
       
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      // Add additional pages if content overflows
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight; // Move the image "up" relative to the new page
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+
       pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error("PDF Export failed:", error);
