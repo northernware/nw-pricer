@@ -18,8 +18,24 @@ export default function OutputPanel({
 
   return (
     <div className="space-y-6">
+      {/* Print-only branding */}
+      <div className="hidden print:flex justify-between items-start mb-10 border-b-2 border-nw-black pb-6">
+        <div>
+          <div className="font-display font-bold text-2xl track-tightest text-nw-black mb-1">
+            NORTHERNWARE<span className="text-nw-acid">®</span>
+          </div>
+          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite">
+            Project Quotation &middot; {new Date().toLocaleDateString('en-PH')}
+          </div>
+        </div>
+        <div className="text-right font-mono text-[10px] uppercase track-widest text-nw-graphite">
+          Northern Luzon, PH<br />
+          www.northernware.ph
+        </div>
+      </div>
+
       {/* Terminal-style header */}
-      <div className="flex justify-between items-center border-b border-nw-graphite/20 pb-4">
+      <div className="flex justify-between items-center border-b border-nw-graphite/20 pb-4 no-print">
         <div className="font-mono text-xs text-nw-black uppercase track-widest flex items-center gap-2">
           <span className="iconify" data-icon="solar:calculator-linear" suppressHydrationWarning></span>
           output.log

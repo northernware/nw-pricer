@@ -99,3 +99,58 @@
 ::-webkit-scrollbar-track { @apply bg-nw-bone; }
 ::-webkit-scrollbar-thumb { @apply bg-nw-graphite/40 rounded-full; }
 ::-webkit-scrollbar-thumb:hover { @apply bg-nw-graphite; }
+
+@media print {
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+
+  body {
+    background-color: #F4F4F0 !important;
+    color: #0A0A0A !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  header, 
+  footer, 
+  .no-print,
+  button,
+  select,
+  input[type="range"] {
+    display: none !important;
+  }
+
+  #calculator-content {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .col-span-12 {
+    width: 100% !important;
+    position: static !important;
+  }
+
+  .lg\:sticky {
+    position: static !important;
+  }
+
+  /* Force display of hidden elements that should be in the PDF */
+  .bg-nw-black {
+    background-color: #0A0A0A !important;
+    color: #F4F4F0 !important;
+  }
+
+  .text-nw-acid {
+    color: #FF3800 !important;
+  }
+
+  .bg-nw-acid\/5 {
+    background-color: rgba(255, 56, 0, 0.05) !important;
+  }
+}

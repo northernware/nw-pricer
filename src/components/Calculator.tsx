@@ -6,6 +6,7 @@ import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, Calcu
 import { DEFAULTS, TEMPLATES } from "@/lib/constants";
 import InputPanel from "./InputPanel";
 import OutputPanel from "./OutputPanel";
+import QuoteTemplate from "./QuoteTemplate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -29,22 +30,40 @@ export default function Calculator() {
   };
 
   const exportToPDF = async () => {
-    const element = document.getElementById("calculator-content");
+    const element = document.getElementById("quote-template");
     if (!element) return;
 
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#F4F4F0" // Bone color
-    });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);
+    // Temporarily bring it into view but hidden from user visually
+    element.style.position = "static";
+    element.style.top = "0";
+    element.style.left = "0";
+
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#F4F4F0",
+        logging: false,
+      });
+      
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (error) {
+      console.error("PDF Export failed:", error);
+      alert("Failed to generate PDF. Falling back to print dialog.");
+      window.print();
+    } finally {
+      // Put it back
+      element.style.position = "fixed";
+      element.style.top = "-9999px";
+      element.style.left = "-9999px";
+    }
   };
 
   const toggleFeature = (f: Feature) => {
@@ -88,7 +107,7 @@ export default function Calculator() {
         </div>
 
         {/* Toolbar */}
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-nw-graphite/20 pb-6">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-nw-graphite/20 pb-6 no-print">
           <div className="flex items-center gap-4">
             <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite">
               Project Presets
@@ -188,6 +207,12 @@ export default function Calculator() {
             </div>
           </div>
         </div>
+
+        {/* Hidden template for PDF generation */}
+        <QuoteTemplate 
+          input={{ projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode }} 
+          result={result} 
+        />
       </div>
     </section>
   );
