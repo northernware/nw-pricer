@@ -186,7 +186,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
             </div>
           )}
           <p style={{ fontSize: "9px", color: "#5C5C5C", textAlign: "right", marginTop: "8px", fontStyle: "italic" }}>
-            * Rounded to {input.roundingMode.replace('_', ' ')}. Estimated range: {fmt(result.priceRange[0])} – {fmt(result.priceRange[1])}
+            * Rounded to {input.roundingMode.replace('_', ' ')}.
           </p>
         </div>
       </div>

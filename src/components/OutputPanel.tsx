@@ -85,15 +85,7 @@ export default function OutputPanel({
         </div>
       </div>
 
-      {/* Suggested Range */}
-      <div className="border border-nw-acid/30 bg-nw-acid/5 p-5">
-        <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
-          Suggested Price Range
-        </div>
-        <div className="font-display font-bold text-xl track-tighter text-nw-black">
-          {fmt(result.priceRange[0])} — {fmt(result.priceRange[1])}
-        </div>
-      </div>
+
 
       {/* Managed Hosting (Monthly) */}
       {result.hostingPrice > 0 && (
