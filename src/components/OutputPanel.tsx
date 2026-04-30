@@ -48,26 +48,25 @@ export default function OutputPanel({
         </div>
       </div>
 
-      {/* Estimated Hours */}
+      {/* Estimated Hours & Base Cost */}
       {!isClientMode && (
-        <div className="border border-nw-graphite/20 p-5">
-          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
-            Estimated Hours
+        <div className="grid grid-cols-2 gap-3">
+          <div className="border border-nw-graphite/20 p-5">
+            <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+              Estimated Hours
+            </div>
+            <div className="font-display font-bold text-2xl track-tighter text-nw-black">
+              {result.adjustedHours}<span className="text-nw-graphite text-base ml-1">hrs</span>
+            </div>
           </div>
-          <div className="font-display font-bold text-3xl track-tighter text-nw-black">
-            {result.adjustedHours} <span className="text-nw-graphite text-lg">hrs</span>
-          </div>
-        </div>
-      )}
 
-      {/* Base Cost */}
-      {!isClientMode && (
-        <div className="border border-nw-graphite/20 p-5">
-          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
-            Base Cost
-          </div>
-          <div className="font-display font-bold text-2xl track-tighter text-nw-black">
-            {fmt(result.baseCost)}
+          <div className="border border-nw-graphite/20 p-5">
+            <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+              Base Cost
+            </div>
+            <div className="font-display font-bold text-2xl track-tighter text-nw-black">
+              {fmt(result.baseCost)}
+            </div>
           </div>
         </div>
       )}
