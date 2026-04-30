@@ -120,7 +120,7 @@ export default function OutputPanel({
               <Row label="Complexity" value={`×${result.complexityMultiplier}`} />
               <Row label="Adjusted Hours" value={`${result.adjustedHours} hrs`} accent />
               <Row label="Base Cost" value={fmt(result.baseCost)} />
-              <Row label="+ Tax" value={fmt(result.finalPrice - result.baseCost)} />
+              <Row label="+ Project Buffer" value={fmt(result.finalPrice - result.baseCost)} />
               <Row label="Final (unrounded)" value={fmt(result.finalPrice)} />
               <Row label="Rounded Price" value={fmt(result.roundedPrice)} accent />
             </div>

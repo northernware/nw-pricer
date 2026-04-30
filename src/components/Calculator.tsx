@@ -17,7 +17,7 @@ export default function Calculator() {
   const [complexity, setComplexity] = useState<Complexity>(DEFAULTS.complexity);
   const [features, setFeatures] = useState<Feature[]>([]);
   const [hourlyRate, setHourlyRate] = useState(DEFAULTS.hourlyRate);
-  const [taxPercent, setTaxPercent] = useState(DEFAULTS.taxPercent);
+  const [bufferPercent, setBufferPercent] = useState(DEFAULTS.bufferPercent);
   const [roundingMode, setRoundingMode] = useState<RoundingMode>(DEFAULTS.roundingMode);
   const [isClientMode, setIsClientMode] = useState(false);
 
@@ -81,10 +81,10 @@ export default function Calculator() {
         complexity,
         features,
         hourlyRate,
-        taxPercent,
+        bufferPercent,
         roundingMode,
       }),
-    [projectType, pages, designLevel, complexity, features, hourlyRate, taxPercent, roundingMode]
+    [projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode]
   );
 
   return (
@@ -179,8 +179,8 @@ export default function Calculator() {
                 toggleFeature={toggleFeature}
                 hourlyRate={hourlyRate}
                 setHourlyRate={setHourlyRate}
-                taxPercent={taxPercent}
-                setTaxPercent={setTaxPercent}
+                bufferPercent={bufferPercent}
+                setBufferPercent={setBufferPercent}
                 roundingMode={roundingMode}
                 setRoundingMode={setRoundingMode}
               />
@@ -210,7 +210,7 @@ export default function Calculator() {
 
         {/* Hidden template for PDF generation */}
         <QuoteTemplate 
-          input={{ projectType, pages, designLevel, complexity, features, hourlyRate, taxPercent, roundingMode }} 
+          input={{ projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode }} 
           result={result} 
         />
       </div>

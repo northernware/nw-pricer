@@ -37,7 +37,7 @@ export const ROUNDING_MODES: { value: RoundingMode; label: string }[] = [
 
 export const DEFAULTS = {
   hourlyRate: 700,
-  taxPercent: 10,
+  bufferPercent: 10,
   roundingMode: 'nearest_1000' as RoundingMode,
   complexity: 'medium' as Complexity,
   designLevel: 'custom' as DesignLevel,

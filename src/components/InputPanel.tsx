@@ -16,8 +16,8 @@ interface InputPanelProps {
   toggleFeature: (f: Feature) => void;
   hourlyRate: number;
   setHourlyRate: (v: number) => void;
-  taxPercent: number;
-  setTaxPercent: (v: number) => void;
+  bufferPercent: number;
+  setBufferPercent: (v: number) => void;
   roundingMode: RoundingMode;
   setRoundingMode: (v: RoundingMode) => void;
 }
@@ -170,12 +170,12 @@ export default function InputPanel(props: InputPanelProps) {
           </div>
           <div>
             <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
-              Tax (%)
+              Project Buffer (%)
             </div>
             <input
               type="number"
-              value={props.taxPercent}
-              onChange={(e) => props.setTaxPercent(Number(e.target.value))}
+              value={props.bufferPercent}
+              onChange={(e) => props.setBufferPercent(Number(e.target.value))}
               className="w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-2 transition-colors"
             />
           </div>

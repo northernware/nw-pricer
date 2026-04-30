@@ -123,7 +123,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
             <span style={{ fontSize: "14px" }}>{fmt(result.baseCost)}</span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-            <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#5C5C5C" }}>Tax / VAT ({input.taxPercent}%)</span>
+            <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#5C5C5C" }}>Project Buffer ({input.bufferPercent}%)</span>
             <span style={{ fontSize: "14px" }}>{fmt(result.finalPrice - result.baseCost)}</span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", padding: "15px 0", borderTop: "2px solid #0A0A0A", marginTop: "10px", backgroundColor: "#0A0A0A", color: "#F4F4F0", paddingLeft: "10px", paddingRight: "10px" }}>
