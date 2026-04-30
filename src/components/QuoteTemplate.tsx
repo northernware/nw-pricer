@@ -52,7 +52,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "60px", borderBottom: "2px solid #0A0A0A", paddingBottom: "30px" }}>
         <div>
           <h1 style={{ margin: 0, fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.05em" }}>
-            NORTHERNWARE<span style={{ color: "#FF3800" }}>®</span>
+            northernware<span style={{ color: "#FF3800" }}>®</span>
           </h1>
           <p style={{ margin: "5px 0 0 0", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#5C5C5C" }}>
             Software Development Services
@@ -203,7 +203,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
             ___________________________
           </div>
           <div style={{ fontSize: "10px", fontWeight: "bold", textAlign: "right" }}>
-            NORTHERNWARE AUTHORIZED:<br /><br />
+            northernware AUTHORIZED:<br /><br />
             KENJI VAFE / CTO
           </div>
         </div>
