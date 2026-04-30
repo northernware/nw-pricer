@@ -47,7 +47,7 @@ export default function Calculator() {
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        backgroundColor: "#F4F4F0",
+        backgroundColor: "#FFFFFF",
         logging: false,
       });
       
@@ -57,21 +57,25 @@ export default function Calculator() {
       const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      
+      const margin = 15; // 15mm margin
+      const innerWidth = pdfWidth - (margin * 2);
+      const innerHeight = pdfHeight - (margin * 2);
+      const imgHeight = (imgProps.height * innerWidth) / imgProps.width;
       
       let heightLeft = imgHeight;
       let position = 0;
 
       // Add first page
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-      heightLeft -= pdfHeight;
+      pdf.addImage(imgData, "PNG", margin, margin, innerWidth, imgHeight);
+      heightLeft -= innerHeight;
 
       // Add additional pages if content overflows
       while (heightLeft > 0) {
-        position = heightLeft - imgHeight; // Move the image "up" relative to the new page
         pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-        heightLeft -= pdfHeight;
+        position = heightLeft - imgHeight + margin;
+        pdf.addImage(imgData, "PNG", margin, position, innerWidth, imgHeight);
+        heightLeft -= innerHeight;
       }
 
       pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);

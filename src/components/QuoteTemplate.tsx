@@ -40,7 +40,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
       style={{ 
         width: "800px", 
         padding: "60px", 
-        backgroundColor: "#F4F4F0", 
+        backgroundColor: "#FFFFFF", 
         color: "#0A0A0A",
         fontFamily: "sans-serif",
         position: "fixed",
