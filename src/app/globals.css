@@ -1,19 +1,39 @@
 @import "tailwindcss";
 
+:root {
+  --nw-black: #0A0A0A;
+  --nw-code: #1C1C1C;
+  --nw-graphite: #5C5C5C;
+  --nw-silver: #B9B9B9;
+  --nw-acid: #FF3800;
+  --nw-bone: #F4F4F0;
+  --nw-white: #FFFFFF;
+  --nw-emerald: #4af0c4;
+}
+
+.dark {
+  --nw-bone: #0A0A0A;
+  --nw-graphite: #A0A0A0;
+  --nw-black: #F4F4F0;
+  --nw-white: #1A1A1A;
+  --nw-code: #141414;
+  --nw-acid: #FF3800;
+}
+
 @theme {
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
   --font-display: var(--font-space-grotesk);
   --font-body: var(--font-inter);
 
-  --color-nw-black: #0A0A0A;
-  --color-nw-code: #1C1C1C;
-  --color-nw-graphite: #5C5C5C;
-  --color-nw-silver: #B9B9B9;
-  --color-nw-acid: #FF3800;
-  --color-nw-bone: #F4F4F0;
-  --color-nw-white: #FFFFFF;
-  --color-nw-emerald: #4af0c4;
+  --color-nw-black: var(--nw-black);
+  --color-nw-code: var(--nw-code);
+  --color-nw-graphite: var(--nw-graphite);
+  --color-nw-silver: var(--nw-silver);
+  --color-nw-acid: var(--nw-acid);
+  --color-nw-bone: var(--nw-bone);
+  --color-nw-white: var(--nw-white);
+  --color-nw-emerald: var(--nw-emerald);
 
   --animate-pulse-node: pulse-node 4s infinite alternate ease-in-out;
   --animate-float: float 6s ease-in-out infinite;
@@ -27,23 +47,6 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
   }
-}
-
-.dark {
-  --color-nw-bone: #0A0A0A;
-  --color-nw-graphite: #A0A0A0;
-  --color-nw-black: #F4F4F0;
-  --color-nw-white: #1A1A1A;
-  --color-nw-code: #141414;
-  --color-nw-acid: #FF3800;
-}
-
-:root {
-  --nw-black: #0A0A0A;
-  --nw-graphite: #5C5C5C;
-  --nw-acid: #FF3800;
-  --nw-bone: #F4F4F0;
-  --nw-white: #FFFFFF;
 }
 
 @layer base {
