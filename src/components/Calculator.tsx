@@ -55,7 +55,7 @@ export default function Calculator() {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      const margin = 20; // 20mm
+      const margin = 10; // 10mm
       const innerHeightMm = pdfHeight - (margin * 2);
       
       // Calculate pixels per mm based on the captured canvas
