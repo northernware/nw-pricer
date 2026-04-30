@@ -10,9 +10,9 @@ export const PROJECT_TYPES: { value: ProjectType; label: string; code: string }[
 ];
 
 export const DESIGN_LEVELS: { value: DesignLevel; label: string; hours: number }[] = [
-  { value: 'basic', label: 'Basic', hours: 5 },
-  { value: 'custom', label: 'Custom', hours: 10 },
-  { value: 'high_end', label: 'High-end', hours: 15 },
+  { value: 'basic', label: 'Basic', hours: 12 },
+  { value: 'custom', label: 'Custom', hours: 24 },
+  { value: 'high_end', label: 'High-end', hours: 40 },
 ];
 
 export const COMPLEXITIES: { value: Complexity; label: string; multiplier: string }[] = [
@@ -22,12 +22,12 @@ export const COMPLEXITIES: { value: Complexity; label: string; multiplier: strin
 ];
 
 export const FEATURES: { value: Feature; label: string; hours: number }[] = [
-  { value: 'contact_form', label: 'Contact Form', hours: 2 },
-  { value: 'cms_blog', label: 'CMS / Blog', hours: 6 },
-  { value: 'authentication', label: 'Authentication', hours: 10 },
-  { value: 'dashboard_admin', label: 'Dashboard / Admin', hours: 15 },
-  { value: 'payment_integration', label: 'Payment Integration', hours: 10 },
-  { value: 'api_integration', label: 'API Integration', hours: 8 },
+  { value: 'contact_form', label: 'Contact Form', hours: 4 },
+  { value: 'cms_blog', label: 'CMS / Blog', hours: 12 },
+  { value: 'authentication', label: 'Authentication', hours: 16 },
+  { value: 'dashboard_admin', label: 'Dashboard / Admin', hours: 24 },
+  { value: 'payment_integration', label: 'Payment Integration', hours: 16 },
+  { value: 'api_integration', label: 'API Integration', hours: 12 },
 ];
 
 export const ROUNDING_MODES: { value: RoundingMode; label: string }[] = [
@@ -36,7 +36,7 @@ export const ROUNDING_MODES: { value: RoundingMode; label: string }[] = [
 ];
 
 export const DEFAULTS = {
-  hourlyRate: 700,
+  hourlyRate: 600,
   bufferPercent: 10,
   roundingMode: 'nearest_1000' as RoundingMode,
   complexity: 'medium' as Complexity,

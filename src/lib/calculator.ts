@@ -40,27 +40,27 @@ export interface CalculatorOutput {
 // ─── Hour Mappings ───
 
 function getPagesHours(pages: number): number {
-  if (pages <= 5) return 10;
-  if (pages <= 10) return 20;
-  return 30;
+  if (pages <= 5) return 15;
+  if (pages <= 10) return 25;
+  return 40;
 }
 
 function getDesignHours(level: DesignLevel): number {
   const map: Record<DesignLevel, number> = {
-    basic: 5,
-    custom: 10,
-    high_end: 15,
+    basic: 12,
+    custom: 24,
+    high_end: 40,
   };
   return map[level];
 }
 
 const FEATURE_HOURS: Record<Feature, number> = {
-  contact_form: 2,
-  cms_blog: 6,
-  authentication: 10,
-  dashboard_admin: 15,
-  payment_integration: 10,
-  api_integration: 8,
+  contact_form: 4,
+  cms_blog: 12,
+  authentication: 16,
+  dashboard_admin: 24,
+  payment_integration: 16,
+  api_integration: 12,
 };
 
 function getFeatureHours(features: Feature[]): number {
