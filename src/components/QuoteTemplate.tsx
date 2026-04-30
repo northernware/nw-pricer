@@ -86,15 +86,15 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid #B9B9B9" }}>
-              <th style={{ textAlign: "left", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Description</th>
-              <th style={{ textAlign: "center", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Hours</th>
-              <th style={{ textAlign: "right", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Rate</th>
-              <th style={{ textAlign: "right", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Amount</th>
+              <th style={{ textAlign: "left", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Description</th>
+              <th style={{ textAlign: "center", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Hours</th>
+              <th style={{ textAlign: "right", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Rate</th>
+              <th style={{ textAlign: "right", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Amount</th>
             </tr>
           </thead>
           <tbody>
             <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
-              <td style={{ padding: "8px 0", fontSize: "13px" }}>
+              <td style={{ padding: "6px 0 10px 0", fontSize: "13px" }}>
                 <strong>Project Scaffolding & Core Architecture</strong><br />
                 <span style={{ fontSize: "11px", color: "#5C5C5C" }}>Base setup + {input.pages} pages development (10h + {input.pages}×6h)</span>
               </td>
@@ -103,7 +103,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
               <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(calcRowCost(10 + input.pages * 6))}</td>
             </tr>
             <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
-              <td style={{ padding: "8px 0", fontSize: "13px" }}>
+              <td style={{ padding: "6px 0 10px 0", fontSize: "13px" }}>
                 <strong>UI/UX Custom Design</strong><br />
                 <span style={{ fontSize: "11px", color: "#5C5C5C" }}>{input.designLevel.replace('_', ' ')} design system</span>
               </td>
@@ -117,7 +117,7 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
               if (!f) return null;
               return (
                 <tr key={fKey} style={{ borderBottom: "1px solid #EEEEEE" }}>
-                  <td style={{ padding: "8px 0", fontSize: "13px" }}>
+                  <td style={{ padding: "6px 0 10px 0", fontSize: "13px" }}>
                     <strong>{f.label}</strong>
                   </td>
                   <td style={{ textAlign: "center", fontSize: "13px" }}>{(f.hours * result.complexityMultiplier).toFixed(1)}h</td>
@@ -137,10 +137,10 @@ export default function QuoteTemplate({ input, result }: QuoteTemplateProps) {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid #B9B9B9" }}>
-                <th style={{ textAlign: "left", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Service Description</th>
-                <th style={{ textAlign: "center", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Frequency</th>
-                <th style={{ textAlign: "right", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Rate</th>
-                <th style={{ textAlign: "right", padding: "8px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Amount</th>
+                <th style={{ textAlign: "left", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Service Description</th>
+                <th style={{ textAlign: "center", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Frequency</th>
+                <th style={{ textAlign: "right", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Rate</th>
+                <th style={{ textAlign: "right", padding: "6px 0 10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C54" }}>Amount</th>
               </tr>
             </thead>
             <tbody>
