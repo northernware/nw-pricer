@@ -1,3 +1,5 @@
+import ThemeToggle from "./ThemeToggle";
+
 export default function Header() {
   return (
     <header className="border-b border-nw-graphite/20 bg-nw-bone/95 backdrop-blur-md sticky top-0 z-40">
@@ -20,6 +22,7 @@ export default function Header() {
           <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite border border-nw-graphite/20 px-3 py-1.5">
             GMT+8
           </div>
+          <ThemeToggle />
         </div>
       </div>
     </header>

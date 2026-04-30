@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import { Providers } from "./providers";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -39,8 +40,10 @@ export default function RootLayout({
           src="https://code.iconify.design/3/3.1.1/iconify.min.js"
           strategy="lazyOnload"
         />
-        <div className="bg-noise"></div>
-        {children}
+        <Providers>
+          <div className="bg-noise"></div>
+          {children}
+        </Providers>
       </body>
     </html>
   );

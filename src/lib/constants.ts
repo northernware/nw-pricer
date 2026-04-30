@@ -44,3 +44,49 @@ export const DEFAULTS = {
   projectType: 'business_website' as ProjectType,
   pages: 5,
 };
+
+export const TEMPLATES: { 
+  label: string; 
+  config: Partial<CalculatorInput> 
+}[] = [
+  {
+    label: "Landing Page (Simple)",
+    config: {
+      projectType: "business_website",
+      pages: 1,
+      designLevel: "basic",
+      complexity: "simple",
+      features: ["contact_form"],
+    }
+  },
+  {
+    label: "Corporate Site (Standard)",
+    config: {
+      projectType: "business_website",
+      pages: 8,
+      designLevel: "custom",
+      complexity: "medium",
+      features: ["contact_form", "cms_blog"],
+    }
+  },
+  {
+    label: "E-commerce Store (Pro)",
+    config: {
+      projectType: "ecommerce",
+      pages: 12,
+      designLevel: "high_end",
+      complexity: "complex",
+      features: ["contact_form", "cms_blog", "authentication", "payment_integration"],
+    }
+  },
+  {
+    label: "SaaS Dashboard (Custom)",
+    config: {
+      projectType: "custom_system",
+      pages: 15,
+      designLevel: "high_end",
+      complexity: "complex",
+      features: ["authentication", "dashboard_admin", "api_integration"],
+    }
+  }
+];

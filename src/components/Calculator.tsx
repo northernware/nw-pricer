@@ -2,10 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { calculate } from "@/lib/calculator";
-import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode } from "@/lib/calculator";
-import { DEFAULTS } from "@/lib/constants";
+import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, CalculatorInput } from "@/lib/calculator";
+import { DEFAULTS, TEMPLATES } from "@/lib/constants";
 import InputPanel from "./InputPanel";
 import OutputPanel from "./OutputPanel";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function Calculator() {
   const [projectType, setProjectType] = useState<ProjectType>(DEFAULTS.projectType);
@@ -16,6 +18,34 @@ export default function Calculator() {
   const [hourlyRate, setHourlyRate] = useState(DEFAULTS.hourlyRate);
   const [bufferPercent, setBufferPercent] = useState(DEFAULTS.bufferPercent);
   const [roundingMode, setRoundingMode] = useState<RoundingMode>(DEFAULTS.roundingMode);
+  const [isClientMode, setIsClientMode] = useState(false);
+
+  const applyTemplate = (config: Partial<CalculatorInput>) => {
+    if (config.projectType) setProjectType(config.projectType);
+    if (config.pages !== undefined) setPages(config.pages);
+    if (config.designLevel) setDesignLevel(config.designLevel);
+    if (config.complexity) setComplexity(config.complexity);
+    if (config.features) setFeatures(config.features as Feature[]);
+  };
+
+  const exportToPDF = async () => {
+    const element = document.getElementById("calculator-content");
+    if (!element) return;
+
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#F4F4F0" // Bone color
+    });
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);
+  };
 
   const toggleFeature = (f: Feature) => {
     setFeatures((prev) =>
@@ -57,8 +87,51 @@ export default function Calculator() {
           </p>
         </div>
 
+        {/* Toolbar */}
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-nw-graphite/20 pb-6">
+          <div className="flex items-center gap-4">
+            <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite">
+              Project Presets
+            </div>
+            <select
+              onChange={(e) => applyTemplate(JSON.parse(e.target.value))}
+              className="bg-transparent border border-nw-graphite/20 px-3 py-2 font-mono text-xs text-nw-black uppercase track-widest cursor-pointer hover:border-nw-acid transition-colors"
+              defaultValue=""
+            >
+              <option value="" disabled>Select a Template...</option>
+              {TEMPLATES.map((t) => (
+                <option key={t.label} value={JSON.stringify(t.config)} className="bg-nw-bone">
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsClientMode(!isClientMode)}
+              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 border transition-all ${
+                isClientMode 
+                  ? "bg-nw-acid text-white border-nw-acid" 
+                  : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-acid hover:text-nw-black"
+              }`}
+            >
+              <span className="iconify" data-icon={isClientMode ? "solar:eye-linear" : "solar:eye-closed-linear"}></span>
+              Client Mode: {isClientMode ? "ON" : "OFF"}
+            </button>
+
+            <button
+              onClick={exportToPDF}
+              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black hover:bg-nw-acid hover:border-nw-acid transition-all"
+            >
+              <span className="iconify" data-icon="solar:download-minimalistic-linear"></span>
+              Export PDF
+            </button>
+          </div>
+        </div>
+
         {/* Two-column layout */}
-        <div className="grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)]">
+        <div id="calculator-content" className="grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)]">
           {/* Input Column */}
           <div className="col-span-12 lg:col-span-7">
             <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
@@ -98,8 +171,8 @@ export default function Calculator() {
           {/* Output Column */}
           <div className="col-span-12 lg:col-span-5">
             <div className="lg:sticky lg:top-28">
-              <div className="bg-nw-bone border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
-                <OutputPanel result={result} />
+              <div className="bg-nw-bone dark:bg-nw-code border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
+                <OutputPanel result={result} isClientMode={isClientMode} />
               </div>
 
               {/* Quick summary bar */}
