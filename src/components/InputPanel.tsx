@@ -107,7 +107,7 @@ export default function InputPanel(props: InputPanelProps) {
       {/* Complexity */}
       <div>
         <Label>Complexity</Label>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {COMPLEXITIES.map((c) => (
             <button
               key={c.value}
@@ -160,7 +160,7 @@ export default function InputPanel(props: InputPanelProps) {
             Advanced Settings
           </span>
         </Label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
           <div>
             <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
               Hourly Rate (₱)

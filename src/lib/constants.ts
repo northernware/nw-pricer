@@ -16,9 +16,8 @@ export const DESIGN_LEVELS: { value: DesignLevel; label: string; hours: number }
 ];
 
 export const COMPLEXITIES: { value: Complexity; label: string; multiplier: string }[] = [
-  { value: 'simple', label: 'Simple', multiplier: '×1.0' },
-  { value: 'medium', label: 'Medium', multiplier: '×1.3' },
-  { value: 'complex', label: 'Complex', multiplier: '×1.6' },
+  { value: 'simple', label: 'Simple', multiplier: '×1.00' },
+  { value: 'complex', label: 'Complex', multiplier: '×1.50' },
 ];
 
 export const FEATURES: { value: Feature; label: string; hours: number }[] = [
@@ -108,7 +107,7 @@ export const DEFAULTS = {
   hourlyRate: 600,
   bufferPercent: 10,
   roundingMode: 'nearest_1000' as RoundingMode,
-  complexity: 'medium' as Complexity,
+  complexity: 'simple' as Complexity,
   designLevel: 'custom' as DesignLevel,
   projectType: 'business_website' as ProjectType,
   pages: 5,
@@ -137,7 +136,7 @@ export const TEMPLATES: {
       projectType: "business_website",
       pages: 8,
       designLevel: "custom",
-      complexity: "medium",
+      complexity: "simple",
       features: ["contact_form", "cms_blog"],
     }
   },

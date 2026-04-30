@@ -2,7 +2,7 @@
 
 export type ProjectType = 'business_website' | 'ecommerce' | 'redesign' | 'custom_system';
 export type DesignLevel = 'basic' | 'custom' | 'high_end';
-export type Complexity = 'simple' | 'medium' | 'complex';
+export type Complexity = 'simple' | 'complex';
 export type Feature =
   | 'contact_form'
   | 'cms_blog'
@@ -75,8 +75,7 @@ function getFeatureHours(features: Feature[]): number {
 function getComplexityMultiplier(complexity: Complexity): number {
   const map: Record<Complexity, number> = {
     simple: 1.0,
-    medium: 1.3,
-    complex: 1.6,
+    complex: 1.5,
   };
   return map[complexity];
 }
