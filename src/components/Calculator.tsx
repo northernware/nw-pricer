@@ -191,7 +191,7 @@ export default function Calculator() {
           {/* Output Column */}
           <div className="col-span-12 lg:col-span-5">
             <div className="lg:sticky lg:top-28">
-              <div className="bg-nw-bone dark:bg-nw-code border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
+              <div className="bg-white dark:bg-nw-code border border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
                 <OutputPanel result={result} isClientMode={isClientMode} />
               </div>
 

@@ -73,25 +73,25 @@ export default function OutputPanel({
       )}
 
       {/* FINAL PRICE — highlighted */}
-      <div className="bg-nw-black text-nw-bone p-6 clip-button relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-nw-acid/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
+      <div className="bg-nw-black dark:bg-nw-acid p-6 clip-button relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-nw-acid/10 dark:bg-nw-black/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
         <div className="relative z-10">
-          <div className="font-mono text-[10px] uppercase track-widest text-nw-acid mb-2 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-nw-acid animate-pulse"></span>
+          <div className="font-mono text-[10px] uppercase track-widest text-nw-acid dark:text-nw-black/60 mb-2 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-nw-acid dark:bg-nw-black animate-pulse"></span>
             Final Price
           </div>
-          <div className="font-display font-bold text-[clamp(2rem,4vw,3rem)] track-tightest leading-none">
+          <div className="font-display font-bold text-[clamp(2rem,4vw,3rem)] track-tightest leading-none text-nw-bone dark:text-nw-black">
             {fmt(result.roundedPrice)}
           </div>
         </div>
       </div>
 
       {/* Suggested Range */}
-      <div className="border border-nw-acid/30 bg-nw-acid/5 p-5">
-        <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+      <div className="border border-nw-acid/30 bg-nw-acid/5 dark:bg-nw-acid/10 p-5">
+        <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite dark:text-nw-bone/40 mb-2">
           Suggested Price Range
         </div>
-        <div className="font-display font-bold text-xl track-tighter text-nw-black">
+        <div className="font-display font-bold text-xl track-tighter text-nw-black dark:text-nw-acid">
           {fmt(result.priceRange[0])} — {fmt(result.priceRange[1])}
         </div>
       </div>
@@ -133,9 +133,9 @@ export default function OutputPanel({
 
 function Row({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className={`flex items-center justify-between px-4 py-3 ${accent ? "bg-nw-acid/5" : ""}`}>
-      <span className="text-nw-graphite">{label}</span>
-      <span className={accent ? "text-nw-acid font-bold" : "text-nw-black"}>{value}</span>
+    <div className={`flex items-center justify-between px-4 py-3 ${accent ? "bg-nw-acid/5 dark:bg-nw-acid/10" : ""}`}>
+      <span className="text-nw-graphite dark:text-nw-bone/60">{label}</span>
+      <span className={accent ? "text-nw-acid font-bold" : "text-nw-black dark:text-nw-bone"}>{value}</span>
     </div>
   );
 }
