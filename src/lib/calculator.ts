@@ -48,8 +48,8 @@ function getPagesHours(pages: number): number {
 function getDesignHours(level: DesignLevel): number {
   const map: Record<DesignLevel, number> = {
     basic: 12,
-    custom: 24,
-    high_end: 40,
+    custom: 18,
+    high_end: 24,
   };
   return map[level];
 }

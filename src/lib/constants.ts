@@ -11,8 +11,8 @@ export const PROJECT_TYPES: { value: ProjectType; label: string; code: string }[
 
 export const DESIGN_LEVELS: { value: DesignLevel; label: string; hours: number }[] = [
   { value: 'basic', label: 'Basic', hours: 12 },
-  { value: 'custom', label: 'Custom', hours: 24 },
-  { value: 'high_end', label: 'High-end', hours: 40 },
+  { value: 'custom', label: 'Custom', hours: 18 },
+  { value: 'high_end', label: 'High-end', hours: 24 },
 ];
 
 export const COMPLEXITIES: { value: Complexity; label: string; multiplier: string }[] = [
