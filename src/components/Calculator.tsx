@@ -58,24 +58,24 @@ export default function Calculator() {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      const margin = 15; // 15mm margin
-      const innerWidth = pdfWidth - (margin * 2);
-      const innerHeight = pdfHeight - (margin * 2);
-      const imgHeight = (imgProps.height * innerWidth) / imgProps.width;
+      // We want a gap at the bottom of each page
+      const bottomMargin = 20; // 20mm
+      const effectivePageHeight = pdfHeight - bottomMargin;
+      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
       
       let heightLeft = imgHeight;
       let position = 0;
 
       // Add first page
-      pdf.addImage(imgData, "PNG", margin, margin, innerWidth, imgHeight);
-      heightLeft -= innerHeight;
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+      heightLeft -= effectivePageHeight;
 
       // Add additional pages if content overflows
       while (heightLeft > 0) {
         pdf.addPage();
-        position = heightLeft - imgHeight + margin;
-        pdf.addImage(imgData, "PNG", margin, position, innerWidth, imgHeight);
-        heightLeft -= innerHeight;
+        position -= effectivePageHeight; 
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+        heightLeft -= effectivePageHeight;
       }
 
       pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);
