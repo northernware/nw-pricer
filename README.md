@@ -1,36 +1,150 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧾 NW Pricer — Northernware Pricing Calculator
 
-## Getting Started
+Internal tool for generating project quotes and estimates.  
+Input project scope → output price, hours, and suggested range.
 
-First, run the development server:
+> **This is an internal tool.** Not for client distribution.
+
+---
+
+## Setup
+
+This repo lives inside the main Northernware project as a nested repo.  
+The `tools/` directory is git-ignored by northernware — this has its own remote.
+
+### 1. Clone into your local northernware repo
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd d:\Codes\northernware
+mkdir tools
+cd tools
+git clone https://github.com/northernware/nw-pricer.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Your structure should look like:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+northernware/
+├── src/                  ← main website
+├── tools/                ← git-ignored by northernware
+│   └── nw-pricer/        ← this repo (separate git)
+│       ├── src/
+│       └── ...
+└── ...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. Install & run
 
-## Learn More
+```bash
+cd nw-pricer
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## How It Works
 
-## Deploy on Vercel
+### Calculation Flow
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+Pages → Hours    (≤5 = 10h, ≤10 = 20h, >10 = 30h)
+Design → Hours   (basic = 5h, custom = 10h, high_end = 15h)
+Features → Hours (contact_form +2h, cms_blog +6h, auth +10h, etc.)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+baseHours     = pagesHours + designHours + featureHours
+adjustedHours = baseHours × complexityMultiplier (1.0 / 1.3 / 1.6)
+baseCost      = adjustedHours × hourlyRate
+finalPrice    = baseCost × (1 + buffer%)
+roundedPrice  = round(finalPrice, nearest 1k or 5k)
+priceRange    = [roundedPrice × 0.9, roundedPrice × 1.1]
+```
+
+### Defaults
+
+| Setting      | Default  |
+|-------------|----------|
+| Hourly Rate | ₱700     |
+| Buffer      | 30%      |
+| Rounding    | Nearest ₱1,000 |
+| Complexity  | Medium (×1.3) |
+
+---
+
+## API
+
+### `POST /api/calculate`
+
+**Request:**
+
+```json
+{
+  "projectType": "business_website",
+  "pages": 8,
+  "designLevel": "custom",
+  "complexity": "medium",
+  "features": ["contact_form", "cms_blog", "authentication"],
+  "hourlyRate": 700,
+  "bufferPercent": 30
+}
+```
+
+**Response:**
+
+```json
+{
+  "baseHours": 48,
+  "adjustedHours": 62.4,
+  "baseCost": 43680,
+  "finalPrice": 56784,
+  "roundedPrice": 57000,
+  "priceRange": [51000, 63000],
+  "pagesHours": 20,
+  "designHours": 10,
+  "featureHours": 18,
+  "complexityMultiplier": 1.3
+}
+```
+
+---
+
+## File Structure
+
+```
+src/
+├── app/
+│   ├── api/calculate/route.ts   ← POST endpoint
+│   ├── globals.css              ← NW design system
+│   ├── layout.tsx               ← Root layout (NW fonts)
+│   └── page.tsx                 ← Entry point
+├── components/
+│   ├── Calculator.tsx           ← State orchestrator
+│   ├── InputPanel.tsx           ← All form controls
+│   ├── OutputPanel.tsx          ← Results + breakdown
+│   ├── Header.tsx               ← Toolbar
+│   └── Footer.tsx               ← Footer
+└── lib/
+    ├── calculator.ts            ← Core pricing engine
+    └── constants.ts             ← Labels & defaults
+```
+
+---
+
+## Tech Stack
+
+- **Next.js 16** (App Router + Turbopack)
+- **Tailwind CSS v4**
+- **TypeScript**
+- Same design tokens as [northernware.ph](https://northernware.ph)
+
+---
+
+## Future
+
+- [ ] Export quote as PDF
+- [ ] Save/load project templates
+- [ ] SEO pricing module (monthly retainer)
+- [ ] Client-facing estimator mode
+- [ ] Dark mode toggle
