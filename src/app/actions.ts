@@ -40,9 +40,9 @@ export async function saveProjectAction(data: { id: string, name: string, client
     });
     revalidatePath("/");
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Failed to save project:", error);
-    return { success: false, error };
+    return { success: false, error: error.message || String(error) };
   }
 }
 

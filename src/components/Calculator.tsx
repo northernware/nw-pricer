@@ -65,7 +65,7 @@ export default function Calculator() {
       fetchProjects();
       alert(`Project "${name}" saved to database.`);
     } else {
-      alert("Failed to save project to database.");
+      alert("Failed to save project to database. Error: " + res.error);
     }
   };
 
