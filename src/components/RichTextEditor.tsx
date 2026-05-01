@@ -13,6 +13,7 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
   const editor = useEditor({
     extensions: [StarterKit],
     content: value,
+    immediatelyRender: false,
     editorProps: {
       attributes: {
         class: 'prose prose-sm prose-invert max-w-none focus:outline-none min-h-[120px] p-3 text-sm font-body text-nw-black bg-transparent',
