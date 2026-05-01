@@ -1,37 +1,72 @@
 "use client";
 
 import { useState } from "react";
-import type { CalculatorOutput } from "@/lib/calculator";
+import type { CalculatorOutput, ProposalStatus } from "@/lib/calculator";
 import { Icon } from "@iconify/react";
+import { PROPOSAL_STATUSES } from "@/lib/constants";
 
 function fmt(n: number): string {
   return "₱" + n.toLocaleString("en-PH", { maximumFractionDigits: 0 });
 }
 
+interface OutputPanelProps {
+  result: CalculatorOutput;
+  isClientMode?: boolean;
+  status: ProposalStatus;
+  onStatusChange: (status: ProposalStatus) => void;
+}
+
 export default function OutputPanel({ 
   result, 
-  isClientMode 
-}: { 
-  result: CalculatorOutput, 
-  isClientMode?: boolean 
-}) {
+  isClientMode,
+  status,
+  onStatusChange
+}: OutputPanelProps) {
   const [showBreakdown, setShowBreakdown] = useState(false);
+
+  const currentStatus = PROPOSAL_STATUSES.find(s => s.value === status) || PROPOSAL_STATUSES[0];
 
   return (
     <div className="space-y-6">
-      {/* Print-only branding */}
-      <div className="hidden print:flex justify-between items-start mb-10 border-b-2 border-nw-black pb-6">
-        <div>
-          <div className="font-display font-bold text-2xl track-tightest text-nw-black mb-1">
-            NORTHERNWARE<span className="text-nw-acid">®</span>
-          </div>
-          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite">
-            Project Quotation &middot; {new Date().toLocaleDateString('en-PH')}
-          </div>
+      {/* Status Tracker */}
+      <div className="border border-nw-graphite/20 p-4 bg-nw-bone/50">
+        <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-3 flex items-center justify-between">
+          <span>Lifecycle Status</span>
+          <span className="flex items-center gap-1.5 text-nw-black">
+            <Icon icon={currentStatus.icon} className={currentStatus.color} />
+            {currentStatus.label}
+          </span>
         </div>
-        <div className="text-right font-mono text-[10px] uppercase track-widest text-nw-graphite">
-          Northern Luzon, PH<br />
-          www.northernware.ph
+        <div className="grid grid-cols-7 gap-1">
+          {PROPOSAL_STATUSES.map((s, idx) => {
+            const isPastOrCurrent = PROPOSAL_STATUSES.findIndex(x => x.value === status) >= idx;
+            return (
+              <button
+                key={s.value}
+                onClick={() => onStatusChange(s.value as ProposalStatus)}
+                title={s.label}
+                className={`h-1.5 transition-all duration-300 ${
+                  isPastOrCurrent ? "bg-nw-acid" : "bg-nw-graphite/20"
+                } hover:h-2.5`}
+              />
+            );
+          })}
+        </div>
+        <div className="mt-3 flex justify-between items-center">
+          <select 
+            value={status} 
+            onChange={(e) => onStatusChange(e.target.value as ProposalStatus)}
+            className="bg-transparent font-mono text-[10px] uppercase track-widest text-nw-black outline-none cursor-pointer hover:text-nw-acid transition-colors"
+          >
+            {PROPOSAL_STATUSES.map(s => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
+          <div className="font-mono text-[9px] text-nw-graphite italic">
+            {status === 'viewed' ? '“Did they see it?” — Yes.' : 
+             status === 'approved' ? 'Marriage, basically.' :
+             status === 'paid' ? 'Hope → Receivables.' : ''}
+          </div>
         </div>
       </div>
 
@@ -77,15 +112,16 @@ export default function OutputPanel({
         <div className="relative z-10">
           <div className="font-mono text-[10px] uppercase track-widest text-nw-acid mb-2 flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-nw-acid animate-pulse"></span>
-            Final Price
+            {status === 'paid' ? 'Total Paid' : 'Project Investment'}
           </div>
           <div className="font-display font-bold text-[clamp(2rem,4vw,3rem)] track-tightest leading-none">
             {fmt(result.roundedPrice)}
           </div>
+          <div className="mt-2 font-mono text-[9px] text-nw-bone/50 uppercase tracking-[0.2em]">
+            {status === 'paid' ? 'Transaction Completed' : 'One-time Development Fee'}
+          </div>
         </div>
       </div>
-
-
 
       {/* Managed Hosting (Monthly) */}
       {result.hostingPrice > 0 && (

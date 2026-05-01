@@ -13,6 +13,22 @@ export type Feature =
 export type RoundingMode = 'nearest_1000' | 'nearest_5000';
 export type HostingPlan = 'none' | 'basic' | 'standard' | 'advanced';
 
+export type ProposalStatus = 'draft' | 'sent' | 'viewed' | 'approved' | 'rejected' | 'converted' | 'paid';
+
+export interface ProposalContent {
+  clientName: string;
+  projectName: string;
+  projectOverview: string;
+  businessGoals: string;
+  scopeOfWork: string;
+  deliverables: string;
+  timeline: string;
+  exclusions: string;
+  assumptions: string;
+  paymentTerms: string;
+  validityPeriod: string;
+}
+
 export interface CalculatorInput {
   projectType: ProjectType;
   pages: number;
@@ -24,6 +40,9 @@ export interface CalculatorInput {
   roundingMode: RoundingMode;
   hostingPlan: HostingPlan;
   discountPercent: number;
+  // Proposal Engine fields
+  status: ProposalStatus;
+  proposal: ProposalContent;
 }
 
 export interface CalculatorOutput {

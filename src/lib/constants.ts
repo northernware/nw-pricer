@@ -103,7 +103,17 @@ export const HOSTING_PLANS: {
   }
 ];
 
-export const DEFAULTS = {
+export const PROPOSAL_STATUSES = [
+  { value: 'draft', label: 'Draft', icon: 'solar:pen-new-square-linear', color: 'text-nw-graphite' },
+  { value: 'sent', label: 'Sent', icon: 'solar:letter-linear', color: 'text-blue-500' },
+  { value: 'viewed', label: 'Viewed', icon: 'solar:eye-linear', color: 'text-purple-500' },
+  { value: 'approved', label: 'Approved', icon: 'solar:check-circle-linear', color: 'text-nw-emerald' },
+  { value: 'rejected', label: 'Rejected', icon: 'solar:close-circle-linear', color: 'text-red-500' },
+  { value: 'converted', label: 'Converted', icon: 'solar:transfer-horizontal-linear', color: 'text-nw-acid' },
+  { value: 'paid', label: 'Paid', icon: 'solar:dollar-minimalistic-linear', color: 'text-emerald-600' },
+];
+
+export const DEFAULTS: CalculatorInput = {
   hourlyRate: 600,
   bufferPercent: 10,
   roundingMode: 'nearest_1000' as RoundingMode,
@@ -114,6 +124,20 @@ export const DEFAULTS = {
   hostingPlan: 'standard' as HostingPlan,
   features: [] as Feature[],
   discountPercent: 0,
+  status: 'draft',
+  proposal: {
+    clientName: "",
+    projectName: "",
+    projectOverview: "A high-performance digital presence designed to elevate brand authority and drive conversions.",
+    businessGoals: "1. Increase online visibility\n2. Streamline customer acquisition\n3. Establish professional digital credibility",
+    scopeOfWork: "End-to-end development including UI/UX design, frontend development, CMS integration, and deployment.",
+    deliverables: "• Responsive Website\n• Content Management System\n• Technical Documentation\n• 30-day Post-launch Support",
+    timeline: "Estimated 4-6 weeks from kickoff to deployment.",
+    exclusions: "• Content writing/Copywriting\n• Professional photography\n• Third-party API subscription fees",
+    assumptions: "• Client will provide branding assets\n• Feedback cycles will be completed within 48 hours",
+    paymentTerms: "50% upfront deposit to commence work. 50% upon project completion and deployment.",
+    validityPeriod: "30 Days",
+  }
 };
 
 export const TEMPLATES: { 

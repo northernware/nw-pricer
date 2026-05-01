@@ -12,26 +12,23 @@ import jsPDF from "jspdf";
 import { Icon } from "@iconify/react";
 
 export default function Calculator() {
-  const [projectType, setProjectType] = useState<ProjectType>(DEFAULTS.projectType);
-  const [pages, setPages] = useState(DEFAULTS.pages);
-  const [designLevel, setDesignLevel] = useState<DesignLevel>(DEFAULTS.designLevel);
-  const [complexity, setComplexity] = useState<Complexity>(DEFAULTS.complexity);
-  const [features, setFeatures] = useState<Feature[]>([]);
-  const [hourlyRate, setHourlyRate] = useState(DEFAULTS.hourlyRate);
-  const [bufferPercent, setBufferPercent] = useState(DEFAULTS.bufferPercent);
-  const [roundingMode, setRoundingMode] = useState<RoundingMode>(DEFAULTS.roundingMode);
-  const [hostingPlan, setHostingPlan] = useState<HostingPlan>(DEFAULTS.hostingPlan);
-  const [discountPercent, setDiscountPercent] = useState(DEFAULTS.discountPercent);
+  const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
   const [isClientMode, setIsClientMode] = useState(false);
+  const [activeTab, setActiveTab] = useState<'calculator' | 'proposal' | 'contract' | 'invoice'>('calculator');
 
-  const applyTemplate = (config: Partial<CalculatorInput>) => {
-    if (config.projectType) setProjectType(config.projectType);
-    if (config.pages !== undefined) setPages(config.pages);
-    if (config.designLevel) setDesignLevel(config.designLevel);
-    if (config.complexity) setComplexity(config.complexity);
-    if (config.features) setFeatures(config.features as Feature[]);
-    if (config.hostingPlan) setHostingPlan(config.hostingPlan as HostingPlan);
-    if (config.discountPercent !== undefined) setDiscountPercent(config.discountPercent);
+  const updateConfig = (updates: Partial<CalculatorInput>) => {
+    setConfig(prev => ({ ...prev, ...updates }));
+  };
+
+  const updateProposal = (updates: Partial<typeof DEFAULTS.proposal>) => {
+    setConfig(prev => ({
+      ...prev,
+      proposal: { ...prev.proposal, ...updates }
+    }));
+  };
+
+  const applyTemplate = (templateConfig: Partial<CalculatorInput>) => {
+    setConfig(prev => ({ ...prev, ...templateConfig }));
   };
 
   const exportToPDF = async () => {
@@ -91,7 +88,10 @@ export default function Calculator() {
         isFirstPage = false;
       }
 
-      pdf.save(`NW-Quotation-${new Date().toISOString().split('T')[0]}.pdf`);
+      const prefix = activeTab === 'calculator' ? 'Quotation' : 
+                     activeTab === 'proposal' ? 'Proposal' :
+                     activeTab === 'contract' ? 'Contract' : 'Invoice';
+      pdf.save(`NW-${prefix}-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error("PDF Export failed:", error);
       alert("Failed to generate PDF. Falling back to print dialog.");
@@ -105,26 +105,16 @@ export default function Calculator() {
   };
 
   const toggleFeature = (f: Feature) => {
-    setFeatures((prev) =>
-      prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]
-    );
+    updateConfig({
+      features: config.features.includes(f)
+        ? config.features.filter((x) => x !== f)
+        : [...config.features, f]
+    });
   };
 
   const result = useMemo(
-    () =>
-      calculate({
-        projectType,
-        pages,
-        designLevel,
-        complexity,
-        features,
-        hourlyRate,
-        bufferPercent,
-        roundingMode,
-        hostingPlan,
-        discountPercent,
-      }),
-    [projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode, hostingPlan, discountPercent]
+    () => calculate(config),
+    [config]
   );
 
   return (
@@ -139,11 +129,33 @@ export default function Calculator() {
             [PRICING ENGINE]
           </div>
           <h1 className="font-display font-bold text-[clamp(2rem,4vw,3.5rem)] leading-[0.95] track-tightest text-nw-black mb-4">
-            Calculate project scope.
+            {activeTab === 'calculator' ? 'Calculate project scope.' : 
+             activeTab === 'proposal' ? 'Craft the proposal.' :
+             activeTab === 'contract' ? 'Finalize the contract.' : 'Generate the invoice.'}
           </h1>
           <p className="font-body text-[clamp(0.95rem,1.2vw,1.125rem)] text-nw-graphite max-w-[55ch]">
-            Configure inputs below. The output updates in real-time — no guesswork, no ambiguity.
+            {activeTab === 'calculator' ? 'Configure inputs below. The output updates in real-time — no guesswork, no ambiguity.' :
+             activeTab === 'proposal' ? 'Add the narrative that sells. Detail the vision, goals, and terms.' :
+             activeTab === 'contract' ? 'The legal foundation. Protecting both parties with clear boundaries.' :
+             'Hope transforms into receivables. Finalize the numbers for payment.'}
           </p>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="mb-8 flex border-b border-nw-graphite/20 no-print">
+          {(['calculator', 'proposal', 'contract', 'invoice'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-3 font-mono text-[10px] uppercase track-widest transition-all border-b-2 ${
+                activeTab === tab 
+                  ? "border-nw-acid text-nw-black bg-nw-acid/5" 
+                  : "border-transparent text-nw-graphite hover:text-nw-black hover:bg-nw-bone"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
         {/* Toolbar */}
@@ -207,26 +219,11 @@ export default function Calculator() {
               </div>
 
               <InputPanel
-                projectType={projectType}
-                setProjectType={setProjectType}
-                pages={pages}
-                setPages={setPages}
-                designLevel={designLevel}
-                setDesignLevel={setDesignLevel}
-                complexity={complexity}
-                setComplexity={setComplexity}
-                features={features}
+                activeTab={activeTab}
+                config={config}
+                updateConfig={updateConfig}
+                updateProposal={updateProposal}
                 toggleFeature={toggleFeature}
-                hourlyRate={hourlyRate}
-                setHourlyRate={setHourlyRate}
-                bufferPercent={bufferPercent}
-                setBufferPercent={setBufferPercent}
-                roundingMode={roundingMode}
-                setRoundingMode={setRoundingMode}
-                hostingPlan={hostingPlan}
-                setHostingPlan={setHostingPlan}
-                discountPercent={discountPercent}
-                setDiscountPercent={setDiscountPercent}
               />
             </div>
           </div>
@@ -235,7 +232,12 @@ export default function Calculator() {
           <div className="col-span-12 lg:col-span-5">
             <div className="lg:sticky lg:top-28">
               <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
-                <OutputPanel result={result} isClientMode={isClientMode} />
+                <OutputPanel 
+                  result={result} 
+                  isClientMode={isClientMode} 
+                  status={config.status}
+                  onStatusChange={(s) => updateConfig({ status: s })}
+                />
               </div>
 
               {/* Quick summary bar */}
@@ -245,7 +247,7 @@ export default function Calculator() {
                   Live calculation
                 </span>
                 <span className="text-nw-acid">
-                  {result.adjustedHours}h · {features.length} features
+                  {result.adjustedHours}h · {config.features.length} features
                 </span>
               </div>
             </div>
@@ -254,7 +256,8 @@ export default function Calculator() {
 
         {/* Hidden template for PDF generation */}
         <QuoteTemplate 
-          input={{ projectType, pages, designLevel, complexity, features, hourlyRate, bufferPercent, roundingMode, hostingPlan, discountPercent }} 
+          mode={activeTab === 'calculator' ? 'quote' : activeTab}
+          input={config} 
           result={result} 
         />
       </div>
