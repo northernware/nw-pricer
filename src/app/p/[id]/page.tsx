@@ -4,6 +4,7 @@ import { calculate, type CalculatorInput } from "@/lib/calculator";
 import { PROJECT_TYPES, FEATURES, HOSTING_PLANS } from "@/lib/constants";
 import { Metadata } from "next";
 import SignatureBlock from "@/components/SignatureBlock";
+import PaymentBlock from "@/components/PaymentBlock";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const { id } = await params;
@@ -157,7 +158,17 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
         </div>
 
         {/* Totals Section */}
-        <div className="flex flex-col md:items-end mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 md:gap-0">
+          {isInvoice ? (
+            <PaymentBlock 
+              projectId={project.id} 
+              amount={result.roundedPrice} 
+              description={`Invoice for ${input.proposal.projectName} - ${input.proposal.clientName}`} 
+            />
+          ) : (
+            <div className="hidden md:block w-[45%]"></div>
+          )}
+
           <div className="w-full md:w-[400px]">
             <div className="flex justify-between items-center mb-3">
               <span className="text-xs uppercase track-widest text-nw-graphite font-mono">Subtotal (One-time Dev)</span>
