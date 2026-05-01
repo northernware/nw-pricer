@@ -12,7 +12,7 @@ import jsPDF from "jspdf";
 import { Icon } from "@iconify/react";
 import { generateId, type StoredProject } from "@/lib/storage";
 import { getSavedProjects, saveProjectAction } from "@/app/actions";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect } from "react";
 
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
