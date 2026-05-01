@@ -46,9 +46,27 @@ function InputField({ label, value, onChange, placeholder, textarea = false }: {
 }
 
 export default function InputPanel({ activeTab, config, updateConfig, updateProposal, toggleFeature }: InputPanelProps) {
+  const ProjectInfo = (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-nw-graphite/20">
+      <InputField 
+        label="Client Name / Company" 
+        value={config.proposal.clientName} 
+        onChange={(v) => updateProposal({ clientName: v })} 
+        placeholder="e.g. Acme Corp"
+      />
+      <InputField 
+        label="Project Name" 
+        value={config.proposal.projectName} 
+        onChange={(v) => updateProposal({ projectName: v })} 
+        placeholder="e.g. Website Redesign 2024"
+      />
+    </div>
+  );
+
   if (activeTab === 'calculator') {
     return (
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {ProjectInfo}
         {/* Project Type */}
         <div>
           <Label>Project Type</Label>
@@ -246,20 +264,7 @@ export default function InputPanel({ activeTab, config, updateConfig, updateProp
   if (activeTab === 'proposal' || activeTab === 'contract' || activeTab === 'invoice') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField 
-            label="Client Name / Company" 
-            value={config.proposal.clientName} 
-            onChange={(v) => updateProposal({ clientName: v })} 
-            placeholder="e.g. Acme Corp"
-          />
-          <InputField 
-            label="Project Name" 
-            value={config.proposal.projectName} 
-            onChange={(v) => updateProposal({ projectName: v })} 
-            placeholder="e.g. Website Redesign 2024"
-          />
-        </div>
+        {ProjectInfo}
 
         {activeTab === 'proposal' && (
           <>
