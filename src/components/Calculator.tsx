@@ -10,11 +10,55 @@ import QuoteTemplate from "./QuoteTemplate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Icon } from "@iconify/react";
+import { getSavedProjects, saveProject, generateId, type StoredProject } from "@/lib/storage";
+import { useEffect } from "react";
 
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
+  const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
   const [isClientMode, setIsClientMode] = useState(false);
   const [activeTab, setActiveTab] = useState<'calculator' | 'proposal' | 'contract' | 'invoice'>('calculator');
+  const [showLibrary, setShowLibrary] = useState(false);
+
+  // Auto-save current work to local storage for crash recovery
+  useEffect(() => {
+    localStorage.setItem("nw_pricer_draft", JSON.stringify(config));
+  }, [config]);
+
+  // Load draft on mount if exists
+  useEffect(() => {
+    const draft = localStorage.getItem("nw_pricer_draft");
+    if (draft && !currentProjectId) {
+      try {
+        setConfig(JSON.parse(draft));
+      } catch (e) {
+        console.error("Failed to load draft", e);
+      }
+    }
+  }, []);
+
+  const handleSave = () => {
+    const id = currentProjectId || generateId();
+    const name = config.proposal.projectName || "Untitled Project";
+    const client = config.proposal.clientName || "Untitled Client";
+    
+    saveProject({ id, name, client, config });
+    setCurrentProjectId(id);
+    alert(`Project "${name}" saved locally.`);
+  };
+
+  const handleLoad = (project: StoredProject) => {
+    setConfig(project.config);
+    setCurrentProjectId(project.id);
+    setShowLibrary(false);
+  };
+
+  const handleNew = () => {
+    if (confirm("Start a new project? Unsaved changes to the current one will be lost.")) {
+      setConfig(DEFAULTS);
+      setCurrentProjectId(null);
+    }
+  };
 
   const updateConfig = (updates: Partial<CalculatorInput>) => {
     setConfig(prev => ({ ...prev, ...updates }));
@@ -178,7 +222,38 @@ export default function Calculator() {
             </select>
           </div>
 
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleNew}
+              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-transparent text-nw-graphite border border-nw-graphite/20 hover:border-nw-black hover:text-nw-black transition-all"
+            >
+              <Icon icon="solar:document-add-linear" />
+              New
+            </button>
+
+            <button
+              onClick={handleSave}
+              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black hover:bg-nw-acid hover:border-nw-acid transition-all"
+            >
+              <Icon icon="solar:diskette-linear" />
+              Save
+            </button>
+
+            <button
+              onClick={() => setShowLibrary(!showLibrary)}
+              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 border transition-all ${
+                showLibrary 
+                  ? "bg-nw-acid text-white border-nw-acid" 
+                  : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-black hover:text-nw-black"
+              }`}
+            >
+              <Icon icon="solar:folder-open-linear" />
+              Library
+            </button>
+          </div>
+
           <div className="flex items-center gap-4">
+
             <button
               onClick={() => setIsClientMode(!isClientMode)}
               className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 border transition-all ${
@@ -201,7 +276,43 @@ export default function Calculator() {
           </div>
         </div>
 
+        {/* Project Library Dropdown/Overlay */}
+        {showLibrary && (
+          <div className="mb-8 p-6 bg-nw-black text-nw-bone border border-nw-acid/30 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex justify-between items-center mb-6 border-b border-nw-bone/10 pb-4">
+              <div className="font-mono text-xs uppercase track-widest text-nw-acid">Saved Projects Library</div>
+              <button onClick={() => setShowLibrary(false)} className="text-nw-bone/50 hover:text-nw-acid">
+                <Icon icon="solar:close-circle-linear" className="text-xl" />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {getSavedProjects().length === 0 ? (
+                <div className="col-span-full py-8 text-center font-mono text-[10px] text-nw-graphite uppercase track-widest">
+                  No saved projects found.
+                </div>
+              ) : (
+                getSavedProjects().sort((a, b) => b.lastModified - a.lastModified).map((p) => (
+                  <div 
+                    key={p.id} 
+                    className="border border-nw-bone/10 p-4 hover:border-nw-acid transition-all cursor-pointer group"
+                    onClick={() => handleLoad(p)}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="font-mono text-[10px] text-nw-acid uppercase tracking-tighter">ID: {p.id}</div>
+                      <div className="font-mono text-[9px] text-nw-graphite uppercase">{new Date(p.lastModified).toLocaleDateString()}</div>
+                    </div>
+                    <div className="font-display font-bold text-lg mb-1 group-hover:text-nw-acid transition-colors">{p.name || "Untitled"}</div>
+                    <div className="font-mono text-[10px] text-nw-bone/60 uppercase track-widest">{p.client || "No Client"}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Two-column layout */}
+
         <div id="calculator-content" className="grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)]">
           {/* Input Column */}
           <div className="col-span-12 lg:col-span-7">
