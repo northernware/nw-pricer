@@ -10,8 +10,9 @@ import QuoteTemplate from "./QuoteTemplate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Icon } from "@iconify/react";
-import { getSavedProjects, saveProject, generateId, type StoredProject } from "@/lib/storage";
-import { useEffect } from "react";
+import { generateId, type StoredProject } from "@/lib/storage";
+import { getSavedProjects, saveProjectAction } from "@/app/actions";
+import { useEffect, useState, useMemo } from "react";
 
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
@@ -21,6 +22,17 @@ export default function Calculator() {
   const sessionId = useMemo(() => currentProjectId || generateId(), [currentProjectId]);
   const [activeTab, setActiveTab] = useState<'calculator' | 'proposal' | 'contract' | 'invoice'>('calculator');
   const [showLibrary, setShowLibrary] = useState(false);
+  const [projects, setProjects] = useState<StoredProject[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const fetchProjects = async () => {
+    const data = await getSavedProjects();
+    setProjects(data);
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   // Auto-save current work to local storage for crash recovery
   useEffect(() => {
@@ -39,14 +51,22 @@ export default function Calculator() {
     }
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setIsSaving(true);
     const id = sessionId;
     const name = config.proposal.projectName || "Untitled Project";
     const client = config.proposal.clientName || "Untitled Client";
     
-    saveProject({ id, name, client, config });
-    setCurrentProjectId(id);
-    alert(`Project "${name}" saved locally.`);
+    const res = await saveProjectAction({ id, name, client, config });
+    setIsSaving(false);
+    
+    if (res.success) {
+      setCurrentProjectId(id);
+      fetchProjects();
+      alert(`Project "${name}" saved to database.`);
+    } else {
+      alert("Failed to save project to database.");
+    }
   };
 
   const handleLoad = (project: StoredProject) => {
@@ -235,10 +255,11 @@ export default function Calculator() {
 
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black hover:bg-nw-acid hover:border-nw-acid transition-all"
+              disabled={isSaving}
+              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black transition-all ${isSaving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-nw-acid hover:border-nw-acid'}`}
             >
               <Icon icon="solar:diskette-linear" />
-              Save
+              {isSaving ? 'Saving...' : 'Save'}
             </button>
 
             <button
@@ -278,12 +299,12 @@ export default function Calculator() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {getSavedProjects().length === 0 ? (
+              {projects.length === 0 ? (
                 <div className="col-span-full py-8 text-center font-mono text-[10px] text-nw-graphite uppercase track-widest">
                   No saved projects found.
                 </div>
               ) : (
-                getSavedProjects().sort((a, b) => b.lastModified - a.lastModified).map((p) => (
+                projects.map((p) => (
                   <div 
                     key={p.id} 
                     className="border border-nw-bone/10 p-4 hover:border-nw-acid transition-all cursor-pointer group"
