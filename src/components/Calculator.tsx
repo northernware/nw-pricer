@@ -16,6 +16,9 @@ import { useEffect } from "react";
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
+  
+  // Ensure we have a stable ID for the session even if not saved
+  const sessionId = useMemo(() => currentProjectId || generateId(), [currentProjectId]);
   const [activeTab, setActiveTab] = useState<'calculator' | 'proposal' | 'contract' | 'invoice'>('calculator');
   const [showLibrary, setShowLibrary] = useState(false);
 
@@ -37,7 +40,7 @@ export default function Calculator() {
   }, []);
 
   const handleSave = () => {
-    const id = currentProjectId || generateId();
+    const id = sessionId;
     const name = config.proposal.projectName || "Untitled Project";
     const client = config.proposal.clientName || "Untitled Client";
     
@@ -357,6 +360,7 @@ export default function Calculator() {
           mode={activeTab === 'calculator' ? 'quote' : activeTab}
           input={config} 
           result={result} 
+          projectId={sessionId}
         />
       </div>
     </section>

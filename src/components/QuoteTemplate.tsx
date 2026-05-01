@@ -8,6 +8,7 @@ interface QuoteTemplateProps {
   mode: 'quote' | 'proposal' | 'contract' | 'invoice';
   input: CalculatorInput;
   result: CalculatorOutput;
+  projectId?: string | null;
 }
 
 export default function QuoteTemplate({ mode, input, result }: QuoteTemplateProps) {
@@ -17,13 +18,14 @@ export default function QuoteTemplate({ mode, input, result }: QuoteTemplateProp
 
   useEffect(() => {
     const prefix = mode === 'invoice' ? 'INV' : mode === 'contract' ? 'CTR' : 'PRP';
-    setDocId(`${prefix}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`);
+    const baseId = projectId || Math.random().toString(36).substring(2, 9).toUpperCase();
+    setDocId(`${prefix}-${baseId}`);
     setDates({
       today: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }),
       validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })
     });
     setMounted(true);
-  }, [mode]);
+  }, [mode, projectId]);
 
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
   const hostingPlan = HOSTING_PLANS.find(h => h.value === input.hostingPlan);
