@@ -187,7 +187,7 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
       {(isContract || isInvoice || isProposal) && (
         <div style={{ marginBottom: "40px", padding: "20px", backgroundColor: "#F9F9F9", border: "1px solid #EEEEEE" }}>
           <h3 style={{ fontSize: "12px", textTransform: "uppercase", color: "#FF3800", marginBottom: "10px" }}>Payment Terms & Conditions</h3>
-          <p style={{ fontSize: "12px", margin: 0, whiteSpace: "pre-line" }}>{input.proposal.paymentTerms}</p>
+          <div style={{ fontSize: "12px", margin: 0, whiteSpace: "normal" }} dangerouslySetInnerHTML={{ __html: input.proposal.paymentTerms }} />
         </div>
       )}
 
@@ -219,7 +219,10 @@ function Section({ title, content }: { title: string, content: string }) {
   return (
     <div style={{ marginBottom: "20px" }}>
       <h3 style={{ fontSize: "12px", textTransform: "uppercase", color: "#FF3800", marginBottom: "8px", borderBottom: "1px solid #EEEEEE", paddingBottom: "5px" }}>{title}</h3>
-      <div style={{ fontSize: "13px", color: "#333333", whiteSpace: "pre-line" }}>{content}</div>
+      <div 
+        style={{ fontSize: "13px", color: "#333333", whiteSpace: "normal", lineHeight: "1.6" }} 
+        dangerouslySetInnerHTML={{ __html: content }} 
+      />
     </div>
   );
 }

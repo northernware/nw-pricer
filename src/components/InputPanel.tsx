@@ -1,8 +1,9 @@
 "use client";
 
 import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput, ProposalContent } from "@/lib/calculator";
-import { PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES, FEATURES, ROUNDING_MODES, HOSTING_PLANS } from "@/lib/constants";
+import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES } from "@/lib/constants";
 import { Icon } from "@iconify/react";
+import RichTextEditor from "./RichTextEditor";
 
 interface InputPanelProps {
   activeTab: 'calculator' | 'proposal' | 'contract' | 'invoice';
@@ -25,12 +26,10 @@ function InputField({ label, value, onChange, placeholder, textarea = false }: {
     <div className="mb-4">
       <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">{label}</div>
       {textarea ? (
-        <textarea
+        <RichTextEditor
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={onChange}
           placeholder={placeholder}
-          rows={3}
-          className="w-full bg-transparent border border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-sm text-nw-black p-3 transition-colors resize-none"
         />
       ) : (
         <input
