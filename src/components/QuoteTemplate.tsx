@@ -46,7 +46,7 @@ export default function QuoteTemplate({ mode, input, result }: QuoteTemplateProp
       id="quote-template" 
       style={{ 
         width: "800px", 
-        padding: "60px", 
+        padding: "40px 60px", 
         backgroundColor: "#FFFFFF", 
         color: "#0A0A0A",
         fontFamily: "sans-serif",
@@ -57,7 +57,7 @@ export default function QuoteTemplate({ mode, input, result }: QuoteTemplateProp
       }}
     >
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "50px", borderBottom: "3px solid #0A0A0A", paddingBottom: "30px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "30px", borderBottom: "3px solid #0A0A0A", paddingBottom: "30px" }}>
         <div>
           <h1 style={{ margin: 0, fontSize: "32px", fontWeight: "bold", letterSpacing: "-0.05em" }}>
             northernware<span style={{ color: "#FF3800", fontSize: "16px", verticalAlign: "super", marginLeft: "2px" }}>®</span>

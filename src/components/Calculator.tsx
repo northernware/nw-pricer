@@ -52,8 +52,8 @@ export default function Calculator() {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      const margin = 10; // 10mm
-      const innerHeightMm = pdfHeight - (margin * 2);
+      const margin = 0; // Use 0 margin as QuoteTemplate has its own padding
+      const innerHeightMm = pdfHeight;
       
       // Calculate pixels per mm based on the captured canvas
       const pxPerMm = canvas.width / pdfWidth;
@@ -82,7 +82,7 @@ export default function Calculator() {
         const pageData = pageCanvas.toDataURL("image/png");
         const displayHeight = pageCanvas.height / pxPerMm;
         
-        pdf.addImage(pageData, "PNG", 0, margin, pdfWidth, displayHeight);
+        pdf.addImage(pageData, "PNG", 0, 0, pdfWidth, displayHeight);
         
         currentY += innerHeightPx;
         isFirstPage = false;
