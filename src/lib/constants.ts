@@ -30,6 +30,7 @@ export const FEATURES: { value: Feature; label: string; hours: number }[] = [
 ];
 
 export const ROUNDING_MODES: { value: RoundingMode; label: string }[] = [
+  { value: 'none', label: 'None (Exact Price)' },
   { value: 'nearest_1000', label: 'Nearest ₱1,000' },
   { value: 'nearest_5000', label: 'Nearest ₱5,000' },
 ];

@@ -10,7 +10,7 @@ export type Feature =
   | 'dashboard_admin'
   | 'payment_integration'
   | 'api_integration';
-export type RoundingMode = 'nearest_1000' | 'nearest_5000';
+export type RoundingMode = 'none' | 'nearest_1000' | 'nearest_5000';
 export type HostingPlan = 'none' | 'basic' | 'standard' | 'advanced';
 
 export type ProposalStatus = 'draft' | 'sent' | 'viewed' | 'approved' | 'rejected' | 'converted' | 'paid';
@@ -112,6 +112,7 @@ function getHostingPrice(plan: HostingPlan): number {
 // ─── Rounding ───
 
 function roundToNearest(value: number, mode: RoundingMode): number {
+  if (mode === 'none') return Math.round(value);
   const base = mode === 'nearest_1000' ? 1000 : 5000;
   return Math.round(value / base) * base;
 }
