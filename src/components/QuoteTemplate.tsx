@@ -11,7 +11,7 @@ interface QuoteTemplateProps {
   projectId?: string | null;
 }
 
-export default function QuoteTemplate({ mode, input, result }: QuoteTemplateProps) {
+export default function QuoteTemplate({ mode, input, result, projectId }: QuoteTemplateProps) {
   const [docId, setDocId] = useState("");
   const [dates, setDates] = useState({ today: "", validUntil: "" });
   const [mounted, setMounted] = useState(false);
