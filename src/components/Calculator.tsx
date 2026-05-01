@@ -16,7 +16,6 @@ import { useEffect } from "react";
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
-  const [isClientMode, setIsClientMode] = useState(false);
   const [activeTab, setActiveTab] = useState<'calculator' | 'proposal' | 'contract' | 'invoice'>('calculator');
   const [showLibrary, setShowLibrary] = useState(false);
 
@@ -254,17 +253,6 @@ export default function Calculator() {
 
           <div className="flex items-center gap-4">
 
-            <button
-              onClick={() => setIsClientMode(!isClientMode)}
-              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 border transition-all ${
-                isClientMode 
-                  ? "bg-nw-acid text-white border-nw-acid" 
-                  : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-acid hover:text-nw-black"
-              }`}
-            >
-              <Icon icon={isClientMode ? "solar:eye-linear" : "solar:eye-closed-linear"} />
-              Client Mode: {isClientMode ? "ON" : "OFF"}
-            </button>
 
             <button
               onClick={exportToPDF}
@@ -345,7 +333,6 @@ export default function Calculator() {
               <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
                 <OutputPanel 
                   result={result} 
-                  isClientMode={isClientMode} 
                   status={config.status}
                   onStatusChange={(s) => updateConfig({ status: s })}
                 />

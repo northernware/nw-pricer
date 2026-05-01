@@ -11,14 +11,12 @@ function fmt(n: number): string {
 
 interface OutputPanelProps {
   result: CalculatorOutput;
-  isClientMode?: boolean;
   status: ProposalStatus;
   onStatusChange: (status: ProposalStatus) => void;
 }
 
 export default function OutputPanel({ 
   result, 
-  isClientMode,
   status,
   onStatusChange
 }: OutputPanelProps) {
@@ -84,27 +82,25 @@ export default function OutputPanel({
       </div>
 
       {/* Estimated Hours & Base Cost */}
-      {!isClientMode && (
-        <div className="grid grid-cols-2 gap-3">
-          <div className="border border-nw-graphite/20 p-5">
-            <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
-              Estimated Hours
-            </div>
-            <div className="font-display font-bold text-2xl track-tighter text-nw-black">
-              {result.adjustedHours}<span className="text-nw-graphite text-base ml-1">hrs</span>
-            </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="border border-nw-graphite/20 p-5">
+          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+            Estimated Hours
           </div>
-
-          <div className="border border-nw-graphite/20 p-5">
-            <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
-              Base Cost
-            </div>
-            <div className="font-display font-bold text-2xl track-tighter text-nw-black">
-              {fmt(result.baseCost)}
-            </div>
+          <div className="font-display font-bold text-2xl track-tighter text-nw-black">
+            {result.adjustedHours}<span className="text-nw-graphite text-base ml-1">hrs</span>
           </div>
         </div>
-      )}
+
+        <div className="border border-nw-graphite/20 p-5">
+          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+            Base Cost
+          </div>
+          <div className="font-display font-bold text-2xl track-tighter text-nw-black">
+            {fmt(result.baseCost)}
+          </div>
+        </div>
+      </div>
 
       {/* FINAL PRICE — highlighted */}
       <div className="bg-nw-black text-nw-bone p-6 clip-button relative overflow-hidden">
@@ -136,41 +132,37 @@ export default function OutputPanel({
       )}
 
       {/* Breakdown Toggle */}
-      {!isClientMode && (
-        <>
-          <button
-            type="button"
-            onClick={() => setShowBreakdown((v) => !v)}
-            className="w-full flex items-center justify-between font-mono text-[10px] uppercase track-widest text-nw-graphite border border-nw-graphite/20 px-4 py-3 hover:border-nw-acid hover:text-nw-black transition-all duration-200"
-          >
-            <span>{showBreakdown ? "Hide" : "Show"} Breakdown</span>
-            <Icon
-              icon="solar:alt-arrow-down-linear"
-              className={`text-base transition-transform duration-300 ${showBreakdown ? "rotate-180" : ""}`}
-            />
-          </button>
+      <button
+        type="button"
+        onClick={() => setShowBreakdown((v) => !v)}
+        className="w-full flex items-center justify-between font-mono text-[10px] uppercase track-widest text-nw-graphite border border-nw-graphite/20 px-4 py-3 hover:border-nw-acid hover:text-nw-black transition-all duration-200"
+      >
+        <span>{showBreakdown ? "Hide" : "Show"} Breakdown</span>
+        <Icon
+          icon="solar:alt-arrow-down-linear"
+          className={`text-base transition-transform duration-300 ${showBreakdown ? "rotate-180" : ""}`}
+        />
+      </button>
 
-          {showBreakdown && (
-            <div className="border border-nw-graphite/20 divide-y divide-nw-graphite/10 font-mono text-xs uppercase track-widest animate-[fadeIn_0.3s_ease]">
-              <Row label="Pages → Hours" value={`${result.pagesHours} hrs`} />
-              <Row label="Design → Hours" value={`${result.designHours} hrs`} />
-              <Row label="Features → Hours" value={`${result.featureHours} hrs`} />
-              <Row label="Base Hours" value={`${result.baseHours} hrs`} accent />
-              <Row label="Complexity" value={`×${result.complexityMultiplier}`} />
-              <Row label="Adjusted Hours" value={`${result.adjustedHours} hrs`} accent />
-              <Row label="Base Cost" value={fmt(result.baseCost)} />
-              <Row label="+ Project Buffer" value={fmt(result.finalPrice + result.discountAmount - result.baseCost)} />
-              {result.discountAmount > 0 && (
-                <Row label="- Discount Applied" value={`-${fmt(result.discountAmount)}`} accent />
-              )}
-              <Row label="Final (unrounded)" value={fmt(result.finalPrice)} />
-              <Row label="Rounded Price" value={fmt(result.roundedPrice)} accent />
-              {result.hostingPrice > 0 && (
-                <Row label="Hosting / Month" value={fmt(result.hostingPrice)} accent />
-              )}
-            </div>
+      {showBreakdown && (
+        <div className="border border-nw-graphite/20 divide-y divide-nw-graphite/10 font-mono text-xs uppercase track-widest animate-[fadeIn_0.3s_ease]">
+          <Row label="Pages → Hours" value={`${result.pagesHours} hrs`} />
+          <Row label="Design → Hours" value={`${result.designHours} hrs`} />
+          <Row label="Features → Hours" value={`${result.featureHours} hrs`} />
+          <Row label="Base Hours" value={`${result.baseHours} hrs`} accent />
+          <Row label="Complexity" value={`×${result.complexityMultiplier}`} />
+          <Row label="Adjusted Hours" value={`${result.adjustedHours} hrs`} accent />
+          <Row label="Base Cost" value={fmt(result.baseCost)} />
+          <Row label="+ Project Buffer" value={fmt(result.finalPrice + result.discountAmount - result.baseCost)} />
+          {result.discountAmount > 0 && (
+            <Row label="- Discount Applied" value={`-${fmt(result.discountAmount)}`} accent />
           )}
-        </>
+          <Row label="Final (unrounded)" value={fmt(result.finalPrice)} />
+          <Row label="Rounded Price" value={fmt(result.roundedPrice)} accent />
+          {result.hostingPrice > 0 && (
+            <Row label="Hosting / Month" value={fmt(result.hostingPrice)} accent />
+          )}
+        </div>
       )}
     </div>
   );
