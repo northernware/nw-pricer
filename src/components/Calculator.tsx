@@ -11,8 +11,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Icon } from "@iconify/react";
 import { generateId, type StoredProject } from "@/lib/storage";
-import { getSavedProjects, saveProjectAction } from "@/app/actions";
-import { useEffect } from "react";
+import { getSavedProjects, saveProjectAction, deleteProjectAction } from "@/app/actions";
 
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
@@ -73,6 +72,19 @@ export default function Calculator() {
     setConfig(project.config);
     setCurrentProjectId(project.id);
     setShowLibrary(false);
+  };
+
+  const handleDelete = async (e: React.MouseEvent, id: string, name: string) => {
+    e.stopPropagation();
+    if (confirm(`Are you sure you want to permanently delete "${name}"?`)) {
+      const res = await deleteProjectAction(id);
+      if (res.success) {
+        if (currentProjectId === id) setCurrentProjectId(null);
+        fetchProjects();
+      } else {
+        alert("Failed to delete project. Error: " + res.error);
+      }
+    }
   };
 
   const handleNew = () => {
@@ -307,15 +319,28 @@ export default function Calculator() {
                 projects.map((p) => (
                   <div 
                     key={p.id} 
-                    className="border border-nw-bone/10 p-4 hover:border-nw-acid transition-all cursor-pointer group"
+                    className="border border-nw-bone/10 p-4 hover:border-nw-acid transition-all cursor-pointer group flex flex-col justify-between"
                     onClick={() => handleLoad(p)}
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="font-mono text-[10px] text-nw-acid uppercase tracking-tighter">ID: {p.id}</div>
-                      <div className="font-mono text-[9px] text-nw-graphite uppercase">{new Date(p.lastModified).toLocaleDateString()}</div>
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="font-bold text-sm truncate">{p.name}</div>
+                        <button 
+                          onClick={(e) => handleDelete(e, p.id, p.name)}
+                          className="opacity-0 group-hover:opacity-100 text-nw-graphite hover:text-nw-acid transition-all p-1"
+                          title="Delete Project"
+                        >
+                          <Icon icon="solar:trash-bin-trash-linear" width="16" />
+                        </button>
+                      </div>
+                      <div className="text-[11px] text-nw-graphite mb-4 truncate">{p.client}</div>
                     </div>
-                    <div className="font-display font-bold text-lg mb-1 group-hover:text-nw-acid transition-colors">{p.name || "Untitled"}</div>
-                    <div className="font-mono text-[10px] text-nw-bone/60 uppercase track-widest">{p.client || "No Client"}</div>
+                    <div className="flex justify-between items-center text-[9px] text-nw-graphite uppercase font-mono track-widest">
+                      <span>{new Date(p.lastModified).toLocaleDateString()}</span>
+                      <span className="text-nw-acid flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        Open <Icon icon="solar:arrow-right-linear" />
+                      </span>
+                    </div>
                   </div>
                 ))
               )}
