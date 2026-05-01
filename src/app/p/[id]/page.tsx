@@ -11,8 +11,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   return { title: `Proposal for ${project.client}` };
 }
 
-export default async function MagicLinkPage({ params }: { params: { id: string } }) {
+export default async function MagicLinkPage({ params, searchParams }: { params: { id: string }, searchParams: { mode?: string } }) {
   const { id } = await params;
+  const { mode } = await searchParams;
   const project = await prisma.project.findUnique({ where: { id } });
 
   if (!project) {
@@ -27,6 +28,19 @@ export default async function MagicLinkPage({ params }: { params: { id: string }
 
   const fmt = (n: number) => "₱" + n.toLocaleString();
 
+  const isProposal = mode === 'proposal' || !mode;
+  const isContract = mode === 'contract';
+  const isInvoice = mode === 'invoice';
+  const isQuote = mode === 'quote';
+
+  const docTitle = isProposal ? "STRATEGIC PROJECT PROPOSAL" :
+                   isContract ? "MASTER SERVICES AGREEMENT" :
+                   isInvoice ? "TAX INVOICE" : "PROJECT QUOTATION";
+                   
+  const docPrefix = isProposal ? "PRP" :
+                    isContract ? "CTR" :
+                    isInvoice ? "INV" : "QUO";
+
   return (
     <div className="min-h-screen bg-nw-bone text-nw-black font-body selection-acid relative py-12 md:py-24 px-4 md:px-0">
       <div className="bg-noise"></div>
@@ -39,13 +53,18 @@ export default async function MagicLinkPage({ params }: { params: { id: string }
               northernware<span className="text-nw-acid text-xl align-super ml-1">®</span>
             </h1>
             <p className="mt-2 text-xs uppercase track-widest text-nw-graphite font-bold font-mono">
-              STRATEGIC PROJECT PROPOSAL
+              {docTitle}
             </p>
           </div>
           <div className="text-right text-xs text-nw-graphite leading-relaxed font-mono">
-            <strong>DOCUMENT ID:</strong> PRP-{id.toUpperCase()}<br />
+            <strong>DOCUMENT ID:</strong> {docPrefix}-{id.toUpperCase()}<br />
             <strong>DATE:</strong> {new Date(project.createdAt).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}<br />
-            <strong>VALID UNTIL:</strong> {input.proposal.validityPeriod || new Date(project.createdAt.getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}
+            {!isInvoice && (
+              <><strong>VALID UNTIL:</strong> {input.proposal.validityPeriod || new Date(project.createdAt.getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}</>
+            )}
+            {isInvoice && (
+              <><strong>DUE DATE:</strong> Upon Receipt</>
+            )}
           </div>
         </header>
 
@@ -65,23 +84,32 @@ export default async function MagicLinkPage({ params }: { params: { id: string }
         </section>
 
         {/* Narrative Sections */}
-        <div className="mb-12 space-y-8">
-          <Section title="1. Executive Summary" content={input.proposal.projectOverview} />
-          <Section title="2. Business Objectives" content={input.proposal.businessGoals} />
-          <Section title="3. Strategic Scope" content={input.proposal.scopeOfWork} />
-          <Section title="4. Key Deliverables" content={input.proposal.deliverables} />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 bg-nw-bone/30 p-6">
-            <div>
-              <h3 className="text-xs uppercase track-widest text-nw-acid mb-3 border-b border-nw-graphite/20 pb-2 font-mono">Estimated Timeline</h3>
-              <p className="text-sm">{input.proposal.timeline}</p>
+        {(isProposal || isContract) && (
+          <div className="mb-12 space-y-8">
+            <Section title="1. Executive Summary" content={input.proposal.projectOverview} />
+            {isProposal && <Section title="2. Business Objectives" content={input.proposal.businessGoals} />}
+            <Section title={isProposal ? "3. Strategic Scope" : "2. Scope of Work"} content={input.proposal.scopeOfWork} />
+            <Section title={isProposal ? "4. Key Deliverables" : "3. Deliverables"} content={input.proposal.deliverables} />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 bg-nw-bone/30 p-6">
+              <div>
+                <h3 className="text-xs uppercase track-widest text-nw-acid mb-3 border-b border-nw-graphite/20 pb-2 font-mono">Estimated Timeline</h3>
+                <p className="text-sm">{input.proposal.timeline}</p>
+              </div>
+              <div>
+                <h3 className="text-xs uppercase track-widest text-nw-acid mb-3 border-b border-nw-graphite/20 pb-2 font-mono">Project Type</h3>
+                <p className="text-sm">{projectTypeLabel} ({input.complexity})</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xs uppercase track-widest text-nw-acid mb-3 border-b border-nw-graphite/20 pb-2 font-mono">Project Type</h3>
-              <p className="text-sm">{projectTypeLabel} ({input.complexity})</p>
-            </div>
+
+            {isContract && (
+              <div className="mt-8 space-y-8">
+                <Section title="4. Exclusions" content={input.proposal.exclusions} />
+                <Section title="5. Technical Assumptions" content={input.proposal.assumptions} />
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Investment Breakdown */}
         <div className="mb-16">
@@ -160,28 +188,30 @@ export default async function MagicLinkPage({ params }: { params: { id: string }
         </div>
 
         {/* Signatures placeholder (to be replaced by interactive acceptance later) */}
-        <div className="border-t-2 border-nw-black pt-12 mt-12">
-          <div className="flex flex-col md:flex-row justify-between gap-12 md:gap-0">
-            <div className="w-full md:w-[45%]">
-              <div className="text-[10px] font-bold uppercase track-widest mb-16 text-nw-graphite font-mono">Accepted By (Client)</div>
-              <div className="border-b border-nw-black mb-2"></div>
-              <div className="text-xs">Signature / Full Name</div>
-              <div className="text-xs text-nw-graphite mt-2 font-mono">Date: ____________________</div>
-            </div>
-            <div className="w-full md:w-[45%]">
-              <div className="text-[10px] font-bold uppercase track-widest mb-6 text-nw-graphite font-mono">Authorized Representative</div>
-              <div className="border-b border-nw-black mb-2 pb-1 h-[45px] flex items-end">
-                 <img src="https://northernware.ph/sig.png" alt="Signature" className="h-[35px] -mb-1" />
+        {!isQuote && (
+          <div className="border-t-2 border-nw-black pt-12 mt-12">
+            <div className="flex flex-col md:flex-row justify-between gap-12 md:gap-0">
+              <div className="w-full md:w-[45%]">
+                <div className="text-[10px] font-bold uppercase track-widest mb-16 text-nw-graphite font-mono">Accepted By (Client)</div>
+                <div className="border-b border-nw-black mb-2"></div>
+                <div className="text-xs">Signature / Full Name</div>
+                <div className="text-xs text-nw-graphite mt-2 font-mono">Date: ____________________</div>
               </div>
-              <div className="text-xs font-bold">Kenji Von Ashley F. Edillo</div>
-              <div className="text-xs text-nw-graphite">CEO, Northernware</div>
+              <div className="w-full md:w-[45%]">
+                <div className="text-[10px] font-bold uppercase track-widest mb-6 text-nw-graphite font-mono">Authorized Representative</div>
+                <div className="border-b border-nw-black mb-2 pb-1 h-[45px] flex items-end">
+                   <img src="https://northernware.ph/sig.png" alt="Signature" className="h-[35px] -mb-1" />
+                </div>
+                <div className="text-xs font-bold">Kenji Von Ashley F. Edillo</div>
+                <div className="text-xs text-nw-graphite">CEO, Northernware</div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </main>
       
       <footer className="text-center py-8 text-nw-graphite text-[10px] font-mono track-widest uppercase relative z-10">
-        CONFIDENTIAL PROPOSAL • NORTHERNWARE DIGITAL AGENCY
+        CONFIDENTIAL DOCUMENT • NORTHERNWARE DIGITAL AGENCY
       </footer>
     </div>
   );

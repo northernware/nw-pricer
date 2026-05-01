@@ -70,7 +70,7 @@ export default function Calculator() {
 
   const handleCopyMagicLink = () => {
     if (!currentProjectId) return;
-    const url = `${window.location.origin}/p/${currentProjectId}`;
+    const url = `${window.location.origin}/p/${currentProjectId}?mode=${activeTab}`;
     navigator.clipboard.writeText(url);
     alert("Magic Link copied to clipboard:\n" + url);
   };
