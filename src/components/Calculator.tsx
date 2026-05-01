@@ -68,6 +68,13 @@ export default function Calculator() {
     }
   };
 
+  const handleCopyMagicLink = () => {
+    if (!currentProjectId) return;
+    const url = `${window.location.origin}/p/${currentProjectId}`;
+    navigator.clipboard.writeText(url);
+    alert("Magic Link copied to clipboard:\n" + url);
+  };
+
   const handleLoad = (project: StoredProject) => {
     setConfig(project.config);
     setCurrentProjectId(project.id);
@@ -273,6 +280,17 @@ export default function Calculator() {
               <Icon icon="solar:diskette-linear" />
               {isSaving ? 'Saving...' : 'Save'}
             </button>
+
+            {currentProjectId && (
+              <button
+                onClick={handleCopyMagicLink}
+                className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-bone text-nw-acid border border-nw-acid hover:bg-nw-acid hover:text-nw-bone transition-all"
+                title="Copy Client Proposal Link"
+              >
+                <Icon icon="solar:link-linear" />
+                Magic Link
+              </button>
+            )}
 
             <button
               onClick={() => setShowLibrary(!showLibrary)}
