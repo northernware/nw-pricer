@@ -46,6 +46,24 @@ export async function saveProjectAction(data: { id: string, name: string, client
   }
 }
 
+export async function approveProjectAction(id: string, signatureName: string) {
+  try {
+    await prisma.project.update({
+      where: { id },
+      data: {
+        approvedAt: new Date(),
+        signedBy: signatureName,
+      }
+    });
+    revalidatePath(`/p/${id}`);
+    revalidatePath("/");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to approve project:", error);
+    return { success: false, error: error.message || String(error) };
+  }
+}
+
 export async function deleteProjectAction(id: string) {
   try {
     await prisma.project.delete({ where: { id } });

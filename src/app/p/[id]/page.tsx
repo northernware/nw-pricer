@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { calculate, type CalculatorInput } from "@/lib/calculator";
 import { PROJECT_TYPES, FEATURES, HOSTING_PLANS } from "@/lib/constants";
 import { Metadata } from "next";
+import SignatureBlock from "@/components/SignatureBlock";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const { id } = await params;
@@ -191,12 +192,12 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
         {!isQuote && (
           <div className="border-t-2 border-nw-black pt-12 mt-12">
             <div className="flex flex-col md:flex-row justify-between gap-12 md:gap-0">
-              <div className="w-full md:w-[45%]">
-                <div className="text-[10px] font-bold uppercase track-widest mb-16 text-nw-graphite font-mono">Accepted By (Client)</div>
-                <div className="border-b border-nw-black mb-2"></div>
-                <div className="text-xs">Signature / Full Name</div>
-                <div className="text-xs text-nw-graphite mt-2 font-mono">Date: ____________________</div>
-              </div>
+              <SignatureBlock 
+                projectId={project.id} 
+                isApproved={!!project.approvedAt} 
+                signedBy={project.signedBy} 
+                approvedAt={project.approvedAt} 
+              />
               <div className="w-full md:w-[45%]">
                 <div className="text-[10px] font-bold uppercase track-widest mb-6 text-nw-graphite font-mono">Authorized Representative</div>
                 <div className="border-b border-nw-black mb-2 pb-1 h-[45px] flex items-end">
