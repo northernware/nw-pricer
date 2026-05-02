@@ -213,20 +213,7 @@ export default function Calculator() {
 
       <div className="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)] relative z-10">
         {/* Section Header */}
-        <div className="mb-12">
-          <div className="font-mono text-[10px] md:text-xs uppercase track-widest text-nw-graphite mb-4 flex items-center gap-4 before:content-[''] before:w-8 before:h-px before:bg-nw-acid">
-            [PRICING ENGINE]
-          </div>
-          <h1 className="font-display font-bold text-[clamp(2rem,4vw,3.5rem)] leading-[0.95] track-tightest text-nw-black mb-4">
-            {activeTab === 'calculator' ? 'Calculate project scope.' : 
-             activeTab === 'proposal' ? 'Craft the proposal.' : 'Finalize the contract.'}
-          </h1>
-          <p className="font-body text-[clamp(0.95rem,1.2vw,1.125rem)] text-nw-graphite max-w-[55ch]">
-            {activeTab === 'calculator' ? 'Configure inputs below. The output updates in real-time — no guesswork, no ambiguity.' :
-             activeTab === 'proposal' ? 'Add the narrative that sells. Detail the vision, goals, and terms.' :
-             'The legal foundation. Protecting both parties with clear boundaries.'}
-          </p>
-        </div>
+
 
         {/* Tab Navigation */}
         <div className="mb-8 flex border-b border-nw-graphite/20 no-print">
