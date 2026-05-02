@@ -268,82 +268,127 @@ export default function InputPanel({ activeTab, config, updateConfig, updateProp
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {ProjectInfo}
 
-        {activeTab === 'contract' && (
-          <InvoiceManager 
-            config={config} 
-            updateConfig={updateConfig} 
-            totalPrice={totalPrice} 
-            projectId={projectId}
-          />
-        )}
-
         {activeTab === 'proposal' && (
-          <>
-            <InputField 
-              label="Project Overview" 
-              value={config.proposal.projectOverview} 
-              onChange={(v) => updateProposal({ projectOverview: v })} 
-              textarea
-            />
-            <InputField 
-              label="Business Goals" 
-              value={config.proposal.businessGoals} 
-              onChange={(v) => updateProposal({ businessGoals: v })} 
-              textarea
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-4 w-1 bg-nw-acid"></div>
+                <h3 className="font-display font-bold text-lg uppercase tracking-tight">Project Narrative</h3>
+              </div>
               <InputField 
-                label="Scope of Work" 
-                value={config.proposal.scopeOfWork} 
-                onChange={(v) => updateProposal({ scopeOfWork: v })} 
+                label="Project Overview" 
+                value={config.proposal.projectOverview} 
+                onChange={(v) => updateProposal({ projectOverview: v })} 
+                placeholder="Describe the overall vision and context..."
                 textarea
               />
               <InputField 
-                label="Deliverables" 
-                value={config.proposal.deliverables} 
-                onChange={(v) => updateProposal({ deliverables: v })} 
+                label="Business Objectives" 
+                value={config.proposal.businessGoals} 
+                onChange={(v) => updateProposal({ businessGoals: v })} 
+                placeholder="What are the key goals for the business?"
                 textarea
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <InputField 
-                label="Timeline" 
-                value={config.proposal.timeline} 
-                onChange={(v) => updateProposal({ timeline: v })} 
-              />
-              <InputField 
-                label="Validity Period" 
-                value={config.proposal.validityPeriod} 
-                onChange={(v) => updateProposal({ validityPeriod: v })} 
+
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-4 w-1 bg-nw-acid"></div>
+                <h3 className="font-display font-bold text-lg uppercase tracking-tight">Scope & Deliverables</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField 
+                  label="Strategic Scope" 
+                  value={config.proposal.scopeOfWork} 
+                  onChange={(v) => updateProposal({ scopeOfWork: v })} 
+                  placeholder="High-level description of what's included..."
+                  textarea
+                />
+                <InputField 
+                  label="Key Deliverables" 
+                  value={config.proposal.deliverables} 
+                  onChange={(v) => updateProposal({ deliverables: v })} 
+                  placeholder="Specific items to be handed over..."
+                  textarea
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-4 w-1 bg-nw-acid"></div>
+                <h3 className="font-display font-bold text-lg uppercase tracking-tight">Execution Plan</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField 
+                  label="Timeline" 
+                  value={config.proposal.timeline} 
+                  onChange={(v) => updateProposal({ timeline: v })} 
+                  placeholder="e.g. 4-6 Weeks"
+                />
+                <InputField 
+                  label="Proposal Validity" 
+                  value={config.proposal.validityPeriod} 
+                  onChange={(v) => updateProposal({ validityPeriod: v })} 
+                  placeholder="e.g. 30 Days"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'contract' && (
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-4 w-1 bg-nw-acid"></div>
+                <h3 className="font-display font-bold text-lg uppercase tracking-tight">Payment Schedule</h3>
+              </div>
+              <InvoiceManager 
+                config={config} 
+                updateConfig={updateConfig} 
+                totalPrice={totalPrice} 
+                projectId={projectId}
               />
             </div>
-          </>
-        )}
 
-        {activeTab === 'contract' && (
-          <>
-            <InputField 
-              label="Exclusions" 
-              value={config.proposal.exclusions} 
-              onChange={(v) => updateProposal({ exclusions: v })} 
-              textarea
-            />
-            <InputField 
-              label="Assumptions" 
-              value={config.proposal.assumptions} 
-              onChange={(v) => updateProposal({ assumptions: v })} 
-              textarea
-            />
-          </>
-        )}
-
-        {activeTab === 'contract' && (
-          <InputField 
-            label="Payment Terms" 
-            value={config.proposal.paymentTerms} 
-            onChange={(v) => updateProposal({ paymentTerms: v })} 
-            textarea
-          />
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-4 w-1 bg-nw-acid"></div>
+                <h3 className="font-display font-bold text-lg uppercase tracking-tight">Legal & Technical Terms</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField 
+                  label="Detailed Scope" 
+                  value={config.proposal.scopeOfWork} 
+                  onChange={(v) => updateProposal({ scopeOfWork: v })} 
+                  textarea
+                />
+                <InputField 
+                  label="Payment Terms" 
+                  value={config.proposal.paymentTerms} 
+                  onChange={(v) => updateProposal({ paymentTerms: v })} 
+                  textarea
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <InputField 
+                  label="Exclusions" 
+                  value={config.proposal.exclusions} 
+                  onChange={(v) => updateProposal({ exclusions: v })} 
+                  placeholder="What is NOT included..."
+                  textarea
+                />
+                <InputField 
+                  label="Technical Assumptions" 
+                  value={config.proposal.assumptions} 
+                  onChange={(v) => updateProposal({ assumptions: v })} 
+                  placeholder="Platform requirements, client responsibilities..."
+                  textarea
+                />
+              </div>
+            </div>
+          </div>
         )}
 
         <div className="p-4 bg-nw-bone border-l-4 border-nw-acid">
