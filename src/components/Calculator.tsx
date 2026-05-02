@@ -245,18 +245,56 @@ export default function Calculator() {
           ))}
         </div>
 
-        {/* Toolbar */}
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-nw-graphite/20 pb-6 no-print">
-          <div className="flex items-center gap-4">
-            <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite">
-              Project Presets
+        {/* Reorganized Toolbar */}
+        <div className="mb-12 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-y border-nw-graphite/10 py-6 no-print">
+          {/* Left: Project Lifecycle Management */}
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setShowLibrary(!showLibrary)}
+              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 border transition-all ${
+                showLibrary 
+                  ? "bg-nw-acid text-white border-nw-acid shadow-lg shadow-nw-acid/20" 
+                  : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-black hover:text-nw-black"
+              }`}
+            >
+              <Icon icon="solar:folder-open-linear" />
+              Library
+            </button>
+            
+            <button
+              onClick={handleNew}
+              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-transparent text-nw-graphite border border-nw-graphite/20 hover:border-nw-black hover:text-nw-black transition-all"
+            >
+              <Icon icon="solar:document-add-linear" />
+              New Project
+            </button>
+
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 transition-all ${
+                isSaving 
+                  ? 'bg-nw-graphite/20 text-nw-graphite cursor-not-allowed border border-transparent' 
+                  : 'bg-nw-black text-nw-bone border border-nw-black hover:bg-nw-acid hover:border-nw-acid'
+              }`}
+            >
+              <Icon icon={isSaving ? "solar:refresh-linear" : "solar:diskette-linear"} className={isSaving ? "animate-spin" : ""} />
+              {isSaving ? 'Saving...' : 'Save Draft'}
+            </button>
+          </div>
+
+          {/* Center: Quick Presets */}
+          <div className="flex items-center gap-4 bg-nw-bone/50 px-4 py-2 border border-nw-graphite/5 rounded-sm">
+            <div className="font-mono text-[9px] uppercase track-widest text-nw-graphite flex items-center gap-2">
+              <Icon icon="solar:magic-stick-linear" />
+              Apply Template
             </div>
             <select
               onChange={(e) => applyTemplate(JSON.parse(e.target.value))}
-              className="bg-transparent border border-nw-graphite/20 px-3 py-2 font-mono text-xs text-nw-black uppercase track-widest cursor-pointer hover:border-nw-acid transition-colors"
+              className="bg-transparent border-b border-nw-graphite/30 hover:border-nw-acid focus:border-nw-acid outline-none font-mono text-[10px] text-nw-black uppercase track-widest cursor-pointer transition-colors py-0.5"
               defaultValue=""
             >
-              <option value="" disabled>Select a Template...</option>
+              <option value="" disabled>Select Starting Point...</option>
               {TEMPLATES.map((t) => (
                 <option key={t.label} value={JSON.stringify(t.config)} className="bg-nw-bone">
                   {t.label}
@@ -265,54 +303,21 @@ export default function Calculator() {
             </select>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleNew}
-              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-transparent text-nw-graphite border border-nw-graphite/20 hover:border-nw-black hover:text-nw-black transition-all"
-            >
-              <Icon icon="solar:document-add-linear" />
-              New
-            </button>
-
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black transition-all ${isSaving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-nw-acid hover:border-nw-acid'}`}
-            >
-              <Icon icon="solar:diskette-linear" />
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-
+          {/* Right: Delivery & Sharing */}
+          <div className="flex flex-wrap items-center gap-3">
             {currentProjectId && (
               <button
                 onClick={handleCopyMagicLink}
-                className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-bone text-nw-acid border border-nw-acid hover:bg-nw-acid hover:text-nw-bone transition-all"
-                title="Copy Client Proposal Link"
+                className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-bone text-nw-acid border border-nw-acid hover:bg-nw-acid hover:text-nw-bone transition-all group"
               >
-                <Icon icon="solar:link-linear" />
+                <Icon icon="solar:link-linear" className="group-hover:scale-110 transition-transform" />
                 Magic Link
               </button>
             )}
 
             <button
-              onClick={() => setShowLibrary(!showLibrary)}
-              className={`flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 border transition-all ${
-                showLibrary 
-                  ? "bg-nw-acid text-white border-nw-acid" 
-                  : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-black hover:text-nw-black"
-              }`}
-            >
-              <Icon icon="solar:folder-open-linear" />
-              Library
-            </button>
-          </div>
-
-          <div className="flex items-center gap-4">
-
-
-            <button
               onClick={exportToPDF}
-              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black hover:bg-nw-acid hover:border-nw-acid transition-all"
+              className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-transparent text-nw-black border border-nw-black hover:bg-nw-black hover:text-nw-bone transition-all"
             >
               <Icon icon="solar:download-minimalistic-linear" />
               Export PDF
