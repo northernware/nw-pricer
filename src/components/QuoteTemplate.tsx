@@ -58,7 +58,12 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
         position: "fixed",
         top: "-9999px",
         left: "-9999px",
-        lineHeight: "1.5"
+        lineHeight: "1.5",
+        background: isContract 
+          ? "linear-gradient(to bottom, #F9F9F9 0%, #FFFFFF 100%)" 
+          : isProposal 
+            ? "linear-gradient(to bottom, #FFFFFF 0%, #F4F4F0 100%)" 
+            : "#FFFFFF"
       }}
     >
       {/* Header */}
@@ -75,6 +80,7 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
           <strong>{isInvoice ? "INVOICE" : isContract ? "CONTRACT" : "DOCUMENT"} ID:</strong> {docId}{selectedInvoice ? `-${selectedInvoice.id.split('_')[1]}` : ''}<br />
           <strong>DATE:</strong> {dates.today}<br />
           {!isInvoice && <><strong>VALID UNTIL:</strong> {input.proposal.validityPeriod || dates.validUntil}</>}
+          {isContract && <><br /><strong>STATUS:</strong> LEGALLY BINDING</>}
         </div>
       </div>
 
@@ -113,9 +119,10 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
           </div>
 
           {isContract && (
-            <div style={{ marginTop: "30px" }}>
+            <div style={{ marginTop: "30px", padding: "20px", border: "1px solid #EEEEEE", backgroundColor: "#FFFFFF" }}>
               <Section title="4. Exclusions" content={input.proposal.exclusions} />
               <Section title="5. Technical Assumptions" content={input.proposal.assumptions} />
+              <Section title="6. Payment Terms" content={input.proposal.paymentTerms} />
             </div>
           )}
         </div>
