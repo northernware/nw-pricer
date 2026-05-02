@@ -19,7 +19,7 @@ export default function Calculator() {
   
   // Ensure we have a stable ID for the session even if not saved
   const sessionId = useMemo(() => currentProjectId || generateId(), [currentProjectId]);
-  const [activeTab, setActiveTab] = useState<'calculator' | 'proposal' | 'contract' | 'invoice'>('calculator');
+  const [activeTab, setActiveTab] = useState<'calculator' | 'proposal' | 'contract'>('calculator');
   const [showLibrary, setShowLibrary] = useState(false);
   const [projects, setProjects] = useState<StoredProject[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -72,7 +72,7 @@ export default function Calculator() {
   const handleCopyMagicLink = () => {
     if (!currentProjectId) return;
     let url = `${window.location.origin}/p/${currentProjectId}?mode=${activeTab}`;
-    if (activeTab === 'invoice' && selectedInvoiceId) {
+    if (activeTab === 'contract' && selectedInvoiceId) {
       url += `&invoiceId=${selectedInvoiceId}`;
     }
     navigator.clipboard.writeText(url);
@@ -189,8 +189,7 @@ export default function Calculator() {
       }
 
       const prefix = activeTab === 'calculator' ? 'Quotation' : 
-                     activeTab === 'proposal' ? 'Proposal' :
-                     activeTab === 'contract' ? 'Contract' : 'Invoice';
+                     activeTab === 'proposal' ? 'Proposal' : 'Contract';
       pdf.save(`NW-${prefix}-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error("PDF Export failed:", error);
@@ -230,20 +229,18 @@ export default function Calculator() {
           </div>
           <h1 className="font-display font-bold text-[clamp(2rem,4vw,3.5rem)] leading-[0.95] track-tightest text-nw-black mb-4">
             {activeTab === 'calculator' ? 'Calculate project scope.' : 
-             activeTab === 'proposal' ? 'Craft the proposal.' :
-             activeTab === 'contract' ? 'Finalize the contract.' : 'Generate the invoice.'}
+             activeTab === 'proposal' ? 'Craft the proposal.' : 'Finalize the contract.'}
           </h1>
           <p className="font-body text-[clamp(0.95rem,1.2vw,1.125rem)] text-nw-graphite max-w-[55ch]">
             {activeTab === 'calculator' ? 'Configure inputs below. The output updates in real-time — no guesswork, no ambiguity.' :
              activeTab === 'proposal' ? 'Add the narrative that sells. Detail the vision, goals, and terms.' :
-             activeTab === 'contract' ? 'The legal foundation. Protecting both parties with clear boundaries.' :
-             'Hope transforms into receivables. Finalize the numbers for payment.'}
+             'The legal foundation. Protecting both parties with clear boundaries.'}
           </p>
         </div>
 
         {/* Tab Navigation */}
         <div className="mb-8 flex border-b border-nw-graphite/20 no-print">
-          {(['calculator', 'proposal', 'contract', 'invoice'] as const).map((tab) => (
+          {(['calculator', 'proposal', 'contract'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

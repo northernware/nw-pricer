@@ -265,12 +265,12 @@ export default function InputPanel({ activeTab, config, updateConfig, updateProp
     );
   }
 
-  if (activeTab === 'proposal' || activeTab === 'contract' || activeTab === 'invoice') {
+  if (activeTab === 'proposal' || activeTab === 'contract') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {ProjectInfo}
 
-        {(activeTab === 'contract' || activeTab === 'invoice') && (
+        {activeTab === 'contract' && (
           <InvoiceManager 
             config={config} 
             updateConfig={updateConfig} 
@@ -341,7 +341,7 @@ export default function InputPanel({ activeTab, config, updateConfig, updateProp
           </>
         )}
 
-        {(activeTab === 'contract' || activeTab === 'invoice') && (
+        {activeTab === 'contract' && (
           <InputField 
             label="Payment Terms" 
             value={config.proposal.paymentTerms} 
