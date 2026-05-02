@@ -406,6 +406,9 @@ export default function Calculator() {
                 updateProposal={updateProposal}
                 toggleFeature={toggleFeature}
                 totalPrice={result.roundedPrice}
+                selectedInvoiceId={selectedInvoiceId}
+                onSelectInvoice={setSelectedInvoiceId}
+                projectId={currentProjectId}
               />
             </div>
           </div>

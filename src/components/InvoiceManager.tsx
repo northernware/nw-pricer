@@ -8,9 +8,12 @@ interface InvoiceManagerProps {
   config: CalculatorInput;
   updateConfig: (updates: Partial<CalculatorInput>) => void;
   totalPrice: number;
+  selectedInvoiceId: string | null;
+  onSelectInvoice: (id: string) => void;
+  projectId: string | null;
 }
 
-export default function InvoiceManager({ config, updateConfig, totalPrice }: InvoiceManagerProps) {
+export default function InvoiceManager({ config, updateConfig, totalPrice, selectedInvoiceId, onSelectInvoice, projectId }: InvoiceManagerProps) {
   const invoices = config.invoices || [];
 
   const addInvoice = () => {
@@ -56,13 +59,27 @@ export default function InvoiceManager({ config, updateConfig, totalPrice }: Inv
 
       <div className="space-y-4">
         {invoices.map((inv, index) => (
-          <div key={inv.id} className="group relative bg-nw-bone/30 p-4 border border-nw-graphite/10 hover:border-nw-acid transition-colors">
+          <div 
+            key={inv.id} 
+            onClick={() => onSelectInvoice(inv.id)}
+            className={`group relative p-4 border transition-all cursor-pointer ${
+              selectedInvoiceId === inv.id 
+                ? "bg-nw-acid/10 border-nw-acid shadow-[0_0_15px_rgba(255,56,0,0.1)]" 
+                : "bg-nw-bone/30 border-nw-graphite/10 hover:border-nw-acid/50"
+            }`}
+          >
+            {selectedInvoiceId === inv.id && (
+              <div className="absolute -top-2 -right-2 bg-nw-acid text-nw-white text-[8px] font-mono uppercase px-2 py-1 z-20">
+                Active for Link
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-              <div className="md:col-span-5">
+              <div className="md:col-span-4">
                 <label className="block font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Label</label>
                 <input
                   type="text"
                   value={inv.label}
+                  onClick={(e) => e.stopPropagation()}
                   onChange={(e) => updateInvoice(inv.id, { label: e.target.value })}
                   className="w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-1 transition-colors"
                   placeholder="e.g. Deposit"
@@ -73,6 +90,7 @@ export default function InvoiceManager({ config, updateConfig, totalPrice }: Inv
                 <input
                   type="number"
                   value={inv.percentage}
+                  onClick={(e) => e.stopPropagation()}
                   onChange={(e) => updateInvoice(inv.id, { percentage: Number(e.target.value) })}
                   className="w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-1 transition-colors"
                 />
@@ -83,16 +101,30 @@ export default function InvoiceManager({ config, updateConfig, totalPrice }: Inv
                   {((totalPrice * (inv.percentage || 0)) / 100).toLocaleString()}
                 </div>
               </div>
-              <div className="md:col-span-2 flex justify-end gap-2 pb-1">
+              <div className="md:col-span-3 flex justify-end gap-2 pb-1">
+                {projectId && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const url = `${window.location.origin}/p/${projectId}?mode=invoice&invoiceId=${inv.id}`;
+                      navigator.clipboard.writeText(url);
+                      alert(`Magic Link for "${inv.label}" copied!`);
+                    }}
+                    className="p-2 text-nw-graphite hover:text-nw-acid transition-colors"
+                    title="Copy Invoice Link"
+                  >
+                    <Icon icon="solar:link-linear" width="18" />
+                  </button>
+                )}
                 <button
-                  onClick={() => updateInvoice(inv.id, { status: inv.status === 'paid' ? 'unpaid' : 'paid' })}
-                  className={`p-2 transition-colors ${inv.status === 'paid' ? 'text-nw-emerald' : 'text-nw-graphite hover:text-nw-black'}`}
+                  onClick={(e) => { e.stopPropagation(); updateInvoice(inv.id, { status: inv.status === 'paid' ? 'unpaid' : 'paid' }); }}
+                  className={`p-2 transition-colors ${inv.status === 'paid' ? "text-nw-emerald" : "text-nw-graphite hover:text-nw-black"}`}
                   title={inv.status === 'paid' ? 'Mark as Unpaid' : 'Mark as Paid'}
                 >
                   <Icon icon={inv.status === 'paid' ? "solar:check-circle-bold" : "solar:check-circle-linear"} width="18" />
                 </button>
                 <button
-                  onClick={() => removeInvoice(inv.id)}
+                  onClick={(e) => { e.stopPropagation(); removeInvoice(inv.id); }}
                   className="p-2 text-nw-graphite hover:text-red-500 transition-colors"
                   title="Remove"
                 >
