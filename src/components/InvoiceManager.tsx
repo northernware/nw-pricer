@@ -3,6 +3,7 @@
 import { Icon } from "@iconify/react";
 import type { CalculatorInput, ProjectInvoice } from "@/lib/calculator";
 import { generateId } from "@/lib/storage";
+import { copyToClipboard } from "@/lib/utils";
 
 interface InvoiceManagerProps {
   config: CalculatorInput;
@@ -90,11 +91,15 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
               <div className="md:col-span-3 flex justify-end gap-2 pb-1">
                 {projectId && (
                   <button
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
                       const url = `${window.location.origin}/p/${projectId}?mode=invoice&invoiceId=${inv.id}`;
-                      navigator.clipboard.writeText(url);
-                      alert(`Magic Link for "${inv.label}" copied!`);
+                      const success = await copyToClipboard(url);
+                      if (success) {
+                        alert(`Magic Link for "${inv.label}" copied!`);
+                      } else {
+                        alert(`Failed to copy. URL: ${url}`);
+                      }
                     }}
                     className="p-2 text-nw-graphite hover:text-nw-acid transition-colors"
                     title="Copy Invoice Link"
