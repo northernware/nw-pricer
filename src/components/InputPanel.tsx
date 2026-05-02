@@ -4,6 +4,7 @@ import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, Hosti
 import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES } from "@/lib/constants";
 import { Icon } from "@iconify/react";
 import RichTextEditor from "./RichTextEditor";
+import InvoiceManager from "./InvoiceManager";
 
 interface InputPanelProps {
   activeTab: 'calculator' | 'proposal' | 'contract' | 'invoice';
@@ -11,6 +12,7 @@ interface InputPanelProps {
   updateConfig: (updates: Partial<CalculatorInput>) => void;
   updateProposal: (updates: Partial<ProposalContent>) => void;
   toggleFeature: (f: Feature) => void;
+  totalPrice: number;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -44,7 +46,7 @@ function InputField({ label, value, onChange, placeholder, textarea = false }: {
   );
 }
 
-export default function InputPanel({ activeTab, config, updateConfig, updateProposal, toggleFeature }: InputPanelProps) {
+export default function InputPanel({ activeTab, config, updateConfig, updateProposal, toggleFeature, totalPrice }: InputPanelProps) {
   const ProjectInfo = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-nw-graphite/20">
       <InputField 
@@ -264,6 +266,14 @@ export default function InputPanel({ activeTab, config, updateConfig, updateProp
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {ProjectInfo}
+
+        {(activeTab === 'contract' || activeTab === 'invoice') && (
+          <InvoiceManager 
+            config={config} 
+            updateConfig={updateConfig} 
+            totalPrice={totalPrice} 
+          />
+        )}
 
         {activeTab === 'proposal' && (
           <>

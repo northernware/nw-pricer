@@ -9,9 +9,10 @@ interface QuoteTemplateProps {
   input: CalculatorInput;
   result: CalculatorOutput;
   projectId?: string | null;
+  selectedInvoiceId?: string | null;
 }
 
-export default function QuoteTemplate({ mode, input, result, projectId }: QuoteTemplateProps) {
+export default function QuoteTemplate({ mode, input, result, projectId, selectedInvoiceId }: QuoteTemplateProps) {
   const [docId, setDocId] = useState("");
   const [dates, setDates] = useState({ today: "", validUntil: "" });
   const [mounted, setMounted] = useState(false);
@@ -43,6 +44,14 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
   const isContract = mode === 'contract';
   const isInvoice = mode === 'invoice';
 
+  const selectedInvoice = isInvoice && selectedInvoiceId && input.invoices
+    ? input.invoices.find(inv => inv.id === selectedInvoiceId)
+    : null;
+
+  const invoiceAmount = selectedInvoice 
+    ? (result.roundedPrice * selectedInvoice.percentage) / 100
+    : result.roundedPrice;
+
   return (
     <div 
       id="quote-template" 
@@ -65,11 +74,11 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
             northernware<span style={{ color: "#FF3800", fontSize: "16px", verticalAlign: "super", marginLeft: "2px" }}>®</span>
           </h1>
           <p style={{ margin: "5px 0 0 0", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.2em", color: "#5C5C5C", fontWeight: "bold" }}>
-            {isProposal ? "STRATEGIC PROJECT PROPOSAL" : isContract ? "SERVICE AGREEMENT & CONTRACT" : isInvoice ? "OFFICIAL INVOICE" : "PROJECT QUOTATION"}
+            {isProposal ? "STRATEGIC PROJECT PROPOSAL" : isContract ? "SERVICE AGREEMENT & CONTRACT" : isInvoice ? (selectedInvoice ? `INVOICE: ${selectedInvoice.label}` : "OFFICIAL INVOICE") : "PROJECT QUOTATION"}
           </p>
         </div>
         <div style={{ textAlign: "right", fontSize: "11px", color: "#5C5C5C", lineHeight: "1.8" }}>
-          <strong>{isInvoice ? "INVOICE" : isContract ? "CONTRACT" : "DOCUMENT"} ID:</strong> {docId}<br />
+          <strong>{isInvoice ? "INVOICE" : isContract ? "CONTRACT" : "DOCUMENT"} ID:</strong> {docId}{selectedInvoice ? `-${selectedInvoice.id.split('_')[1]}` : ''}<br />
           <strong>DATE:</strong> {dates.today}<br />
           {!isInvoice && <><strong>VALID UNTIL:</strong> {input.proposal.validityPeriod || dates.validUntil}</>}
         </div>
@@ -120,34 +129,61 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
 
       {/* Itemized Table — Always show for Quote/Invoice, show simplified for others */}
       <div style={{ marginBottom: "40px" }}>
-        <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FF3800", marginBottom: "15px" }}>Financial Investment</h2>
+        <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FF3800", marginBottom: "15px" }}>{isInvoice ? "Invoice Details" : "Financial Investment"}</h2>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "2px solid #0A0A0A" }}>
               <th style={{ textAlign: "left", padding: "10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C5C" }}>Description</th>
-              <th style={{ textAlign: "right", padding: "10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C5C" }}>Amount</th>
+              <th style={{ textAlign: "right", padding: "10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C5C" }}>{isInvoice ? "Percentage" : "Amount"}</th>
+              {isInvoice && <th style={{ textAlign: "right", padding: "10px 0", fontSize: "10px", textTransform: "uppercase", color: "#5C5C5C" }}>Amount</th>}
             </tr>
           </thead>
           <tbody>
-            <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
-              <td style={{ padding: "12px 0", fontSize: "13px" }}>
-                <div style={{ fontWeight: "bold" }}>Core Architecture & Development</div>
-                <div style={{ fontSize: "11px", color: "#5C5C5C" }}>Base setup + {input.pages} pages development + UI/UX design system</div>
-              </td>
-              <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(result.baseCost)}</td>
-            </tr>
-            
-            {input.features.length > 0 && (
-              <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
-                <td style={{ padding: "12px 0", fontSize: "13px" }}>
-                  <div style={{ fontWeight: "bold" }}>Custom Feature Integrations</div>
-                  <div style={{ fontSize: "11px", color: "#5C5C5C" }}>{input.features.map(f => FEATURES.find(x => x.value === f)?.label).join(", ")}</div>
-                </td>
-                <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(result.featureHours * result.complexityMultiplier * input.hourlyRate)}</td>
-              </tr>
+            {!isInvoice ? (
+              <>
+                <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
+                  <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                    <div style={{ fontWeight: "bold" }}>Core Architecture & Development</div>
+                    <div style={{ fontSize: "11px", color: "#5C5C5C" }}>Base setup + {input.pages} pages development + UI/UX design system</div>
+                  </td>
+                  <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(result.baseCost)}</td>
+                </tr>
+                
+                {input.features.length > 0 && (
+                  <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
+                    <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                      <div style={{ fontWeight: "bold" }}>Custom Feature Integrations</div>
+                      <div style={{ fontSize: "11px", color: "#5C5C5C" }}>{input.features.map(f => FEATURES.find(x => x.value === f)?.label).join(", ")}</div>
+                    </td>
+                    <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(result.featureHours * result.complexityMultiplier * input.hourlyRate)}</td>
+                  </tr>
+                )}
+              </>
+            ) : (
+              selectedInvoice ? (
+                <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
+                  <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                    <div style={{ fontWeight: "bold" }}>{selectedInvoice.label}</div>
+                    <div style={{ fontSize: "11px", color: "#5C5C5C" }}>Payment for {input.proposal.projectName}</div>
+                  </td>
+                  <td style={{ textAlign: "right", fontSize: "13px" }}>{selectedInvoice.percentage}%</td>
+                  <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(invoiceAmount)}</td>
+                </tr>
+              ) : (
+                (input.invoices || []).map((inv) => (
+                  <tr key={inv.id} style={{ borderBottom: "1px solid #EEEEEE" }}>
+                    <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                      <div style={{ fontWeight: "bold" }}>{inv.label}</div>
+                      <div style={{ fontSize: "11px", color: "#5C5C5C" }}>{inv.status === 'paid' ? 'Paid' : 'Unpaid'}</div>
+                    </td>
+                    <td style={{ textAlign: "right", fontSize: "13px" }}>{inv.percentage}%</td>
+                    <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt((result.roundedPrice * inv.percentage) / 100)}</td>
+                  </tr>
+                ))
+              )
             )}
 
-            {hostingPlan && hostingPlan.value !== 'none' && (
+            {hostingPlan && hostingPlan.value !== 'none' && !isInvoice && (
               <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
                 <td style={{ padding: "12px 0", fontSize: "13px" }}>
                   <div style={{ fontWeight: "bold" }}>{hostingPlan.label} (Monthly Recurring)</div>
@@ -174,8 +210,8 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", padding: "20px 15px", backgroundColor: "#0A0A0A", color: "#FFFFFF", marginTop: "10px" }}>
-            <span style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "0.1em" }}>{isInvoice ? "Total Amount Due" : "Total Investment"}</span>
-            <span style={{ fontSize: "24px", fontWeight: "bold", color: "#FF3800" }}>{fmt(result.roundedPrice)}</span>
+            <span style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "0.1em" }}>{isInvoice ? "Amount Due" : "Total Investment"}</span>
+            <span style={{ fontSize: "24px", fontWeight: "bold", color: "#FF3800" }}>{fmt(invoiceAmount)}</span>
           </div>
           <p style={{ fontSize: "10px", color: "#5C5C5C", textAlign: "right", marginTop: "10px", fontStyle: "italic" }}>
             * All prices are in Philippine Pesos (PHP).
@@ -187,7 +223,31 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
       {(isContract || isInvoice || isProposal) && (
         <div style={{ marginBottom: "40px", padding: "20px", backgroundColor: "#F9F9F9", border: "1px solid #EEEEEE" }}>
           <h3 style={{ fontSize: "12px", textTransform: "uppercase", color: "#FF3800", marginBottom: "10px" }}>Payment Terms & Conditions</h3>
-          <div style={{ fontSize: "12px", margin: 0, whiteSpace: "normal" }} dangerouslySetInnerHTML={{ __html: input.proposal.paymentTerms }} />
+          <div style={{ fontSize: "12px", margin: "0 0 20px 0", whiteSpace: "normal" }} dangerouslySetInnerHTML={{ __html: input.proposal.paymentTerms }} />
+          
+          {(isContract || isProposal) && input.invoices && input.invoices.length > 0 && (
+            <div style={{ marginTop: "20px" }}>
+              <div style={{ fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", color: "#5C5C5C", marginBottom: "10px" }}>Payment Schedule</div>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "11px" }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
+                    <th style={{ textAlign: "left", padding: "5px 0" }}>Milestone</th>
+                    <th style={{ textAlign: "right", padding: "5px 0" }}>Percentage</th>
+                    <th style={{ textAlign: "right", padding: "5px 0" }}>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {input.invoices.map((inv) => (
+                    <tr key={inv.id} style={{ borderBottom: "1px solid #F5F5F5" }}>
+                      <td style={{ padding: "8px 0" }}>{inv.label}</td>
+                      <td style={{ textAlign: "right", padding: "8px 0" }}>{inv.percentage}%</td>
+                      <td style={{ textAlign: "right", padding: "8px 0", fontWeight: "bold" }}>{fmt((result.roundedPrice * inv.percentage) / 100)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 

@@ -13,9 +13,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   return { title: `Proposal for ${project.client}` };
 }
 
-export default async function MagicLinkPage({ params, searchParams }: { params: { id: string }, searchParams: { mode?: string } }) {
+export default async function MagicLinkPage({ params, searchParams }: { params: { id: string }, searchParams: { mode?: string, invoiceId?: string } }) {
   const { id } = await params;
-  const { mode } = await searchParams;
+  const { mode, invoiceId } = await searchParams;
   const project = await prisma.project.findUnique({ where: { id } });
 
   if (!project) {
@@ -35,9 +35,17 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
   const isInvoice = mode === 'invoice';
   const isQuote = mode === 'quote';
 
+  const selectedInvoice = isInvoice && invoiceId && input.invoices
+    ? input.invoices.find(inv => inv.id === invoiceId)
+    : null;
+
+  const invoiceAmount = selectedInvoice 
+    ? (result.roundedPrice * selectedInvoice.percentage) / 100
+    : result.roundedPrice;
+
   const docTitle = isProposal ? "STRATEGIC PROJECT PROPOSAL" :
                    isContract ? "MASTER SERVICES AGREEMENT" :
-                   isInvoice ? "TAX INVOICE" : "PROJECT QUOTATION";
+                   isInvoice ? (selectedInvoice ? `TAX INVOICE: ${selectedInvoice.label}` : "TAX INVOICE") : "PROJECT QUOTATION";
                    
   const docPrefix = isProposal ? "PRP" :
                     isContract ? "CTR" :
@@ -59,7 +67,7 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
             </p>
           </div>
           <div className="text-right text-xs text-nw-graphite leading-relaxed font-mono">
-            <strong>DOCUMENT ID:</strong> {docPrefix}-{id.toUpperCase()}<br />
+            <strong>DOCUMENT ID:</strong> {docPrefix}-{id.toUpperCase()}{selectedInvoice ? `-${selectedInvoice.id.split('_')[1]}` : ''}<br />
             <strong>DATE:</strong> {new Date(project.createdAt).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}<br />
             {!isInvoice && (
               <><strong>VALID UNTIL:</strong> {input.proposal.validityPeriod || new Date(project.createdAt.getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}</>
@@ -125,31 +133,43 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-nw-graphite/20">
-                  <td className="py-4">
-                    <div className="font-bold text-sm mb-1">Core Architecture & Development</div>
-                    <div className="text-xs text-nw-graphite">Base setup + {input.pages} pages development + UI/UX design system</div>
-                  </td>
-                  <td className="py-4 text-right text-sm font-mono font-bold">{fmt(result.baseCost)}</td>
-                </tr>
-                
-                {input.features.length > 0 && (
-                  <tr className="border-b border-nw-graphite/20">
-                    <td className="py-4">
-                      <div className="font-bold text-sm mb-1">Custom Feature Integrations</div>
-                      <div className="text-xs text-nw-graphite">{input.features.map(f => FEATURES.find(x => x.value === f)?.label).join(", ")}</div>
-                    </td>
-                    <td className="py-4 text-right text-sm font-mono font-bold">{fmt(result.featureHours * result.complexityMultiplier * input.hourlyRate)}</td>
-                  </tr>
-                )}
+                {!selectedInvoice ? (
+                  <>
+                    <tr className="border-b border-nw-graphite/20">
+                      <td className="py-4">
+                        <div className="font-bold text-sm mb-1">Core Architecture & Development</div>
+                        <div className="text-xs text-nw-graphite">Base setup + {input.pages} pages development + UI/UX design system</div>
+                      </td>
+                      <td className="py-4 text-right text-sm font-mono font-bold">{fmt(result.baseCost)}</td>
+                    </tr>
+                    
+                    {input.features.length > 0 && (
+                      <tr className="border-b border-nw-graphite/20">
+                        <td className="py-4">
+                          <div className="font-bold text-sm mb-1">Custom Feature Integrations</div>
+                          <div className="text-xs text-nw-graphite">{input.features.map(f => FEATURES.find(x => x.value === f)?.label).join(", ")}</div>
+                        </td>
+                        <td className="py-4 text-right text-sm font-mono font-bold">{fmt(result.featureHours * result.complexityMultiplier * input.hourlyRate)}</td>
+                      </tr>
+                    )}
 
-                {hostingPlan && hostingPlan.value !== 'none' && (
+                    {hostingPlan && hostingPlan.value !== 'none' && (
+                      <tr className="border-b border-nw-graphite/20">
+                        <td className="py-4">
+                          <div className="font-bold text-sm mb-1">{hostingPlan.label} (Monthly Recurring)</div>
+                          <div className="text-xs text-nw-graphite">{hostingPlan.description}</div>
+                        </td>
+                        <td className="py-4 text-right text-sm font-mono font-bold">{fmt(hostingPlan.price)} <span className="text-[10px] text-nw-graphite">/mo</span></td>
+                      </tr>
+                    )}
+                  </>
+                ) : (
                   <tr className="border-b border-nw-graphite/20">
                     <td className="py-4">
-                      <div className="font-bold text-sm mb-1">{hostingPlan.label} (Monthly Recurring)</div>
-                      <div className="text-xs text-nw-graphite">{hostingPlan.description}</div>
+                      <div className="font-bold text-sm mb-1">{selectedInvoice.label}</div>
+                      <div className="text-xs text-nw-graphite">Payment for {input.proposal.projectName}</div>
                     </td>
-                    <td className="py-4 text-right text-sm font-mono font-bold">{fmt(hostingPlan.price)} <span className="text-[10px] text-nw-graphite">/mo</span></td>
+                    <td className="py-4 text-right text-sm font-mono font-bold">{fmt(invoiceAmount)}</td>
                   </tr>
                 )}
               </tbody>
@@ -162,8 +182,8 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
           {isInvoice ? (
             <PaymentBlock 
               projectId={project.id} 
-              amount={result.roundedPrice} 
-              description={`Invoice for ${input.proposal.projectName} - ${input.proposal.clientName}`} 
+              amount={invoiceAmount} 
+              description={`${selectedInvoice ? selectedInvoice.label : 'Invoice'} for ${input.proposal.projectName} - ${input.proposal.clientName}`} 
             />
           ) : (
             <div className="hidden md:block w-[45%]"></div>
@@ -181,8 +201,8 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
               </div>
             )}
             <div className="flex justify-between items-center p-6 bg-nw-black text-nw-bone mt-4">
-              <span className="text-sm font-bold uppercase track-widest font-mono">Total Investment</span>
-              <span className="text-3xl font-display font-bold text-nw-acid">{fmt(result.roundedPrice)}</span>
+              <span className="text-sm font-bold uppercase track-widest font-mono">{isInvoice ? 'Amount Due' : 'Total Investment'}</span>
+              <span className="text-3xl font-display font-bold text-nw-acid">{fmt(invoiceAmount)}</span>
             </div>
             <p className="text-[10px] text-nw-graphite text-right mt-3 italic">
               * All prices are in Philippine Pesos (PHP).
@@ -194,9 +214,35 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
         <div className="mb-16 p-6 md:p-8 bg-nw-bone/50 border border-nw-graphite/20">
           <h3 className="text-xs uppercase track-widest text-nw-acid mb-4 font-mono font-bold">Payment Terms & Conditions</h3>
           <div 
-            className="prose prose-sm max-w-none text-nw-black prose-p:leading-relaxed"
+            className="prose prose-sm max-w-none text-nw-black prose-p:leading-relaxed mb-8"
             dangerouslySetInnerHTML={{ __html: input.proposal.paymentTerms }} 
           />
+
+          {(isContract || isProposal) && input.invoices && input.invoices.length > 0 && (
+            <div className="mt-8 border-t border-nw-graphite/20 pt-6">
+              <div className="text-[10px] font-bold uppercase track-widest mb-4 text-nw-graphite font-mono">Payment Schedule</div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs font-mono">
+                  <thead>
+                    <tr className="border-b border-nw-graphite/20">
+                      <th className="py-2 font-bold text-nw-black uppercase">Milestone</th>
+                      <th className="py-2 text-right font-bold text-nw-black uppercase">Percentage</th>
+                      <th className="py-2 text-right font-bold text-nw-black uppercase">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {input.invoices.map((inv) => (
+                      <tr key={inv.id} className="border-b border-nw-graphite/10">
+                        <td className="py-3 text-nw-graphite">{inv.label}</td>
+                        <td className="py-3 text-right text-nw-graphite">{inv.percentage}%</td>
+                        <td className="py-3 text-right font-bold text-nw-black">{fmt((result.roundedPrice * inv.percentage) / 100)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Signatures placeholder (to be replaced by interactive acceptance later) */}

@@ -15,6 +15,13 @@ export type HostingPlan = 'none' | 'basic' | 'standard' | 'advanced';
 
 export type ProposalStatus = 'draft' | 'sent' | 'viewed' | 'approved' | 'rejected' | 'converted' | 'paid';
 
+export interface ProjectInvoice {
+  id: string;
+  label: string;
+  percentage: number;
+  status: 'unpaid' | 'paid';
+}
+
 export interface ProposalContent {
   clientName: string;
   projectName: string;
@@ -43,6 +50,7 @@ export interface CalculatorInput {
   // Proposal Engine fields
   status: ProposalStatus;
   proposal: ProposalContent;
+  invoices: ProjectInvoice[];
 }
 
 export interface CalculatorOutput {

@@ -138,7 +138,11 @@ export const DEFAULTS: CalculatorInput = {
     assumptions: "• Client will provide branding assets\n• Feedback cycles will be completed within 48 hours",
     paymentTerms: "50% upfront deposit to commence work. 50% upon project completion and deployment.",
     validityPeriod: "30 Days",
-  }
+  },
+  invoices: [
+    { id: 'inv_1', label: 'Downpayment (50%)', percentage: 50, status: 'unpaid' },
+    { id: 'inv_2', label: 'Final Payment (50%)', percentage: 50, status: 'unpaid' },
+  ]
 };
 
 export const TEMPLATES: { 
