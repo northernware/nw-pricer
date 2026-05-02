@@ -12,6 +12,7 @@ import jsPDF from "jspdf";
 import { Icon } from "@iconify/react";
 import { generateId, type StoredProject } from "@/lib/storage";
 import { getSavedProjects, saveProjectAction, deleteProjectAction } from "@/app/actions";
+import { copyToClipboard } from "@/lib/utils";
 
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
@@ -68,11 +69,15 @@ export default function Calculator() {
     }
   };
 
-  const handleCopyMagicLink = () => {
+  const handleCopyMagicLink = async () => {
     if (!currentProjectId) return;
     const url = `${window.location.origin}/p/${currentProjectId}?mode=${activeTab}`;
-    navigator.clipboard.writeText(url);
-    alert("Magic Link copied to clipboard:\n" + url);
+    const success = await copyToClipboard(url);
+    if (success) {
+      alert("Magic Link copied to clipboard:\n" + url);
+    } else {
+      alert("Failed to copy to clipboard. Please copy this manually:\n" + url);
+    }
   };
 
   const handleLoad = (project: StoredProject) => {
