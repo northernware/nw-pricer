@@ -315,15 +315,15 @@ export default function Calculator() {
         {/* Project Library Modal */}
         {showLibrary && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 no-print">
-            {/* Overlay */}
+            {/* Overlay - Always dark for contrast */}
             <div 
-              className="absolute inset-0 bg-nw-black/90 backdrop-blur-sm animate-in fade-in duration-300" 
+              className="absolute inset-0 bg-[#0A0A0A]/90 backdrop-blur-sm animate-in fade-in duration-300" 
               onClick={() => setShowLibrary(false)}
             ></div>
             
-            {/* Modal Content */}
-            <div className="relative w-full max-w-5xl max-h-[85vh] bg-nw-black text-nw-bone border border-nw-acid/30 shadow-[0_0_50px_rgba(255,56,0,0.15)] overflow-hidden flex flex-col animate-in zoom-in-95 fade-in duration-300">
-              <div className="p-8 border-b border-nw-bone/10 flex justify-between items-center">
+            {/* Modal Content - Follows theme (Dark in Dark mode, Light in Light mode) */}
+            <div className="relative w-full max-w-5xl max-h-[85vh] bg-nw-bone text-nw-black border border-nw-graphite/20 shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 fade-in duration-300">
+              <div className="p-8 border-b border-nw-graphite/10 flex justify-between items-center">
                 <div>
                   <div className="font-mono text-xs uppercase track-widest text-nw-acid mb-1 flex items-center gap-2">
                     <span className="w-2 h-2 bg-nw-acid rounded-full animate-pulse"></span>
@@ -333,7 +333,7 @@ export default function Calculator() {
                 </div>
                 <button 
                   onClick={() => setShowLibrary(false)} 
-                  className="p-3 text-nw-bone/50 hover:text-nw-acid hover:rotate-90 transition-all duration-300"
+                  className="p-3 text-nw-graphite/50 hover:text-nw-acid hover:rotate-90 transition-all duration-300"
                 >
                   <Icon icon="solar:close-circle-linear" className="text-3xl" />
                 </button>
@@ -350,12 +350,12 @@ export default function Calculator() {
                     projects.map((p) => (
                       <div 
                         key={p.id} 
-                        className="border border-nw-bone/10 p-6 hover:border-nw-acid hover:bg-nw-bone/5 transition-all cursor-pointer group flex flex-col justify-between"
+                        className="border border-nw-graphite/10 p-6 hover:border-nw-acid hover:bg-nw-acid/5 transition-all cursor-pointer group flex flex-col justify-between"
                         onClick={() => handleLoad(p)}
                       >
                         <div>
                           <div className="flex justify-between items-start mb-4">
-                            <div className="font-bold text-xl truncate tracking-tight text-nw-bone group-hover:text-nw-acid transition-colors">{p.name}</div>
+                            <div className="font-bold text-xl truncate tracking-tight text-nw-black group-hover:text-nw-acid transition-colors">{p.name}</div>
                             <button 
                               onClick={(e) => handleDelete(e, p.id, p.name)}
                               className="opacity-0 group-hover:opacity-100 text-nw-graphite hover:text-red-500 transition-all p-1"
@@ -366,7 +366,7 @@ export default function Calculator() {
                           </div>
                           <div className="text-xs text-nw-graphite mb-8 line-clamp-1 font-mono uppercase tracking-wider">{p.client || 'Unknown Client'}</div>
                         </div>
-                        <div className="flex justify-between items-center text-[10px] text-nw-graphite uppercase font-mono track-widest border-t border-nw-bone/5 pt-5">
+                        <div className="flex justify-between items-center text-[10px] text-nw-graphite uppercase font-mono track-widest border-t border-nw-graphite/5 pt-5">
                           <span>{new Date(p.lastModified).toLocaleDateString()}</span>
                           <span className="text-nw-acid flex items-center gap-2 font-bold opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">
                             LOAD <Icon icon="solar:arrow-right-linear" />
@@ -378,7 +378,7 @@ export default function Calculator() {
                 </div>
               </div>
 
-              <div className="px-8 py-4 bg-nw-bone/5 border-t border-nw-bone/10 flex justify-between items-center font-mono text-[10px] uppercase track-widest text-nw-graphite">
+              <div className="px-8 py-4 bg-nw-graphite/5 border-t border-nw-graphite/10 flex justify-between items-center font-mono text-[10px] uppercase track-widest text-nw-graphite">
                 <span>Northernware Pricing Engine v1.0</span>
                 <span>Total Projects: {projects.length}</span>
               </div>
