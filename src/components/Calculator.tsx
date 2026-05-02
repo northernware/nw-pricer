@@ -23,7 +23,6 @@ export default function Calculator() {
   const [showLibrary, setShowLibrary] = useState(false);
   const [projects, setProjects] = useState<StoredProject[]>([]);
   const [isSaving, setIsSaving] = useState(false);
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
 
   const fetchProjects = async () => {
     const data = await getSavedProjects();
@@ -71,10 +70,7 @@ export default function Calculator() {
 
   const handleCopyMagicLink = () => {
     if (!currentProjectId) return;
-    let url = `${window.location.origin}/p/${currentProjectId}?mode=${activeTab}`;
-    if (activeTab === 'contract' && selectedInvoiceId) {
-      url += `&invoiceId=${selectedInvoiceId}`;
-    }
+    const url = `${window.location.origin}/p/${currentProjectId}?mode=${activeTab}`;
     navigator.clipboard.writeText(url);
     alert("Magic Link copied to clipboard:\n" + url);
   };
@@ -83,10 +79,6 @@ export default function Calculator() {
     setConfig(project.config);
     setCurrentProjectId(project.id);
     setShowLibrary(false);
-    // Default to first invoice if available
-    if (project.config.invoices?.length > 0) {
-      setSelectedInvoiceId(project.config.invoices[0].id);
-    }
   };
 
   const handleDelete = async (e: React.MouseEvent, id: string, name: string) => {
@@ -110,14 +102,7 @@ export default function Calculator() {
   };
 
   const updateConfig = (updates: Partial<CalculatorInput>) => {
-    setConfig(prev => {
-      const next = { ...prev, ...updates };
-      // If invoices changed and no invoice is selected, select the first one
-      if (updates.invoices && updates.invoices.length > 0 && !selectedInvoiceId) {
-        setSelectedInvoiceId(updates.invoices[0].id);
-      }
-      return next;
-    });
+    setConfig(prev => ({ ...prev, ...updates }));
   };
 
   const updateProposal = (updates: Partial<typeof DEFAULTS.proposal>) => {
@@ -403,8 +388,6 @@ export default function Calculator() {
                 updateProposal={updateProposal}
                 toggleFeature={toggleFeature}
                 totalPrice={result.roundedPrice}
-                selectedInvoiceId={selectedInvoiceId}
-                onSelectInvoice={setSelectedInvoiceId}
                 projectId={currentProjectId}
               />
             </div>
@@ -442,7 +425,6 @@ export default function Calculator() {
           input={config} 
           result={result} 
           projectId={sessionId}
-          selectedInvoiceId={selectedInvoiceId}
         />
       </div>
     </section>
