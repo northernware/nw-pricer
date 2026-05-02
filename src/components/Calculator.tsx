@@ -207,7 +207,7 @@ export default function Calculator() {
   );
 
   return (
-    <section className="py-[clamp(3rem,6vw,6rem)] relative">
+    <section className="pt-8 pb-[clamp(3rem,6vw,6rem)] relative">
       {/* Background grid */}
       <div className="absolute inset-0 bg-tech-grid opacity-40 pointer-events-none"></div>
 
@@ -216,7 +216,7 @@ export default function Calculator() {
 
 
         {/* Reorganized Toolbar */}
-        <div className="mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-y border-nw-graphite/10 py-6 no-print">
+        <div className="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 no-print">
           {/* Left: Project Lifecycle Management */}
           <div className="flex flex-wrap items-center gap-3">
             <button
