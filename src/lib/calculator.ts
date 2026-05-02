@@ -13,7 +13,6 @@ export type Feature =
 export type RoundingMode = 'none' | 'nearest_1000' | 'nearest_5000';
 export type HostingPlan = 'none' | 'basic' | 'standard' | 'advanced';
 
-export type ProposalStatus = 'draft' | 'sent' | 'viewed' | 'approved' | 'rejected' | 'converted' | 'paid';
 
 export interface ProjectInvoice {
   id: string;
@@ -48,7 +47,6 @@ export interface CalculatorInput {
   hostingPlan: HostingPlan;
   discountPercent: number;
   // Proposal Engine fields
-  status: ProposalStatus;
   proposal: ProposalContent;
   invoices: ProjectInvoice[];
 }

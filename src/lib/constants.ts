@@ -104,15 +104,6 @@ export const HOSTING_PLANS: {
   }
 ];
 
-export const PROPOSAL_STATUSES = [
-  { value: 'draft', label: 'Draft', icon: 'solar:pen-new-square-linear', color: 'text-nw-graphite' },
-  { value: 'sent', label: 'Sent', icon: 'solar:letter-linear', color: 'text-blue-500' },
-  { value: 'viewed', label: 'Viewed', icon: 'solar:eye-linear', color: 'text-purple-500' },
-  { value: 'approved', label: 'Approved', icon: 'solar:check-circle-linear', color: 'text-nw-emerald' },
-  { value: 'rejected', label: 'Rejected', icon: 'solar:close-circle-linear', color: 'text-red-500' },
-  { value: 'converted', label: 'Converted', icon: 'solar:transfer-horizontal-linear', color: 'text-nw-acid' },
-  { value: 'paid', label: 'Paid', icon: 'solar:dollar-minimalistic-linear', color: 'text-emerald-600' },
-];
 
 export const DEFAULTS: CalculatorInput = {
   hourlyRate: 600,
@@ -125,7 +116,6 @@ export const DEFAULTS: CalculatorInput = {
   hostingPlan: 'standard' as HostingPlan,
   features: [] as Feature[],
   discountPercent: 0,
-  status: 'draft',
   proposal: {
     clientName: "",
     projectName: "",
