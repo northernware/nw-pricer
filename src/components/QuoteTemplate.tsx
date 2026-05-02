@@ -271,7 +271,8 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
             <div style={{ fontSize: "11px", color: "#5C5C5C" }}>CEO, Northernware</div>
           </div>
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 }
