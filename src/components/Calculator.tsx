@@ -215,25 +215,8 @@ export default function Calculator() {
         {/* Section Header */}
 
 
-        {/* Tab Navigation */}
-        <div className="mb-8 flex border-b border-nw-graphite/20 no-print">
-          {(['calculator', 'proposal', 'contract'] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-3 font-mono text-[10px] uppercase track-widest transition-all border-b-2 ${
-                activeTab === tab 
-                  ? "border-nw-acid text-nw-black bg-nw-acid/5" 
-                  : "border-transparent text-nw-graphite hover:text-nw-black hover:bg-nw-bone"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
         {/* Reorganized Toolbar */}
-        <div className="mb-12 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-y border-nw-graphite/10 py-6 no-print">
+        <div className="mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-y border-nw-graphite/10 py-6 no-print">
           {/* Left: Project Lifecycle Management */}
           <div className="flex flex-wrap items-center gap-3">
             <button
@@ -310,6 +293,23 @@ export default function Calculator() {
               Export PDF
             </button>
           </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="mb-12 flex border-b border-nw-graphite/20 no-print">
+          {(['calculator', 'proposal', 'contract'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-3 font-mono text-[10px] uppercase track-widest transition-all border-b-2 ${
+                activeTab === tab 
+                  ? "border-nw-acid text-nw-black bg-nw-acid/5" 
+                  : "border-transparent text-nw-graphite hover:text-nw-black hover:bg-nw-bone"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
         {/* Project Library Dropdown/Overlay */}
