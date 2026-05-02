@@ -221,7 +221,7 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
       </div>
 
       {/* Payment Terms Section */}
-      {(isContract || isInvoice || isProposal) && (
+      {(isContract || isInvoice) && (
         <div style={{ marginBottom: "40px", padding: "20px", backgroundColor: "#F9F9F9", border: "1px solid #EEEEEE" }}>
           <h3 style={{ fontSize: "12px", textTransform: "uppercase", color: "#FF3800", marginBottom: "10px" }}>Payment Terms & Conditions</h3>
           <div style={{ fontSize: "12px", margin: "0 0 20px 0", whiteSpace: "normal" }} dangerouslySetInnerHTML={{ __html: input.proposal.paymentTerms }} />
@@ -253,7 +253,8 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
       )}
 
       {/* Acceptance Section */}
-      <div style={{ borderTop: "2px solid #0A0A0A", paddingTop: "30px", marginTop: "auto" }}>
+      {isContract && (
+        <div style={{ borderTop: "2px solid #0A0A0A", paddingTop: "30px", marginTop: "auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ width: "45%" }}>
             <div style={{ fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", marginBottom: "40px", color: "#5C5C5C" }}>Accepted By (Client)</div>
@@ -270,7 +271,7 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
             <div style={{ fontSize: "11px", color: "#5C5C5C" }}>CEO, Northernware</div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
