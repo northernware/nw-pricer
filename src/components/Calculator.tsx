@@ -13,6 +13,7 @@ import { Icon } from "@iconify/react";
 import { generateId, type StoredProject } from "@/lib/storage";
 import { getSavedProjects, saveProjectAction, deleteProjectAction } from "@/app/actions";
 import { copyToClipboard } from "@/lib/utils";
+import { toast } from "react-hot-toast";
 
 export default function Calculator() {
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
@@ -65,9 +66,9 @@ export default function Calculator() {
     if (res.success) {
       setCurrentProjectId(id);
       fetchProjects();
-      alert(`Project "${name}" saved to database.`);
+      toast.success(`Project "${name}" saved to database.`);
     } else {
-      alert("Failed to save project to database. Error: " + res.error);
+      toast.error("Failed to save project. " + res.error);
     }
   };
 
@@ -76,9 +77,9 @@ export default function Calculator() {
     const url = `${window.location.origin}/p/${currentProjectId}?mode=${activeTab}`;
     const success = await copyToClipboard(url);
     if (success) {
-      alert("Magic Link copied to clipboard:\n" + url);
+      toast.success("Magic Link copied to clipboard");
     } else {
-      alert("Failed to copy to clipboard. Please copy this manually:\n" + url);
+      toast.error("Failed to copy link");
     }
   };
 
@@ -95,8 +96,9 @@ export default function Calculator() {
       if (res.success) {
         if (currentProjectId === id) setCurrentProjectId(null);
         fetchProjects();
+        toast.success("Project deleted");
       } else {
-        alert("Failed to delete project. Error: " + res.error);
+        toast.error("Failed to delete. " + res.error);
       }
     }
   };
@@ -199,7 +201,7 @@ export default function Calculator() {
       pdf.save(`NW-${prefix}-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error("PDF Export failed:", error);
-      alert("Failed to generate PDF. Falling back to print dialog.");
+      toast.error("PDF generation failed. Use browser print.");
       window.print();
     } finally {
       // Put it back
