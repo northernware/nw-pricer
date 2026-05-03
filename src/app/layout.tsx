@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   description: "Internal tool for generating project quotes and estimates. Input scope → output price.",
 };
 
+import NorthernwareToaster from "@/components/NorthernwareToaster";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,6 +40,7 @@ export default function RootLayout({
       <body className="bg-nw-bone text-nw-black font-body antialiased selection-acid relative min-h-screen" suppressHydrationWarning>
         <Providers>
           <div className="bg-noise"></div>
+          <NorthernwareToaster />
           {children}
         </Providers>
       </body>

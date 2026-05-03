@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import type { CalculatorInput, ProjectInvoice } from "@/lib/calculator";
 import { generateId } from "@/lib/storage";
 import { copyToClipboard } from "@/lib/utils";
+import { toast } from "react-hot-toast";
 
 interface InvoiceManagerProps {
   config: CalculatorInput;
@@ -96,9 +97,9 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
                       const url = `${window.location.origin}/p/${projectId}?mode=invoice&invoiceId=${inv.id}`;
                       const success = await copyToClipboard(url);
                       if (success) {
-                        alert(`Magic Link for "${inv.label}" copied!`);
+                        toast.success(`Link for "${inv.label}" copied`);
                       } else {
-                        alert(`Failed to copy. URL: ${url}`);
+                        toast.error(`Failed to copy link`);
                       }
                     }}
                     className="p-2 text-nw-graphite hover:text-nw-acid transition-colors"
