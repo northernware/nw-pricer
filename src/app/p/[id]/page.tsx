@@ -5,6 +5,7 @@ import { PROJECT_TYPES, FEATURES, HOSTING_PLANS } from "@/lib/constants";
 import { Metadata } from "next";
 import SignatureBlock from "@/components/SignatureBlock";
 import PaymentBlock from "@/components/PaymentBlock";
+import PublicTemplate from "@/components/PublicTemplate";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const { id } = await params;
