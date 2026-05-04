@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { CalculatorOutput, CalculatorInput } from "@/lib/calculator";
+import type { CalculatorOutput, CalculatorInput, ProjectInvoice } from "@/lib/calculator";
 import { PROJECT_TYPES, FEATURES, HOSTING_PLANS } from "@/lib/constants";
 
 interface QuoteTemplateProps {
@@ -43,7 +43,7 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
   const isContract = mode === 'contract';
   const isInvoice = mode === 'invoice';
 
-  const selectedInvoice = null;
+  const selectedInvoice: ProjectInvoice | null = null;
   const invoiceAmount = result.roundedPrice;
 
   return (
