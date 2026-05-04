@@ -14,8 +14,6 @@ interface InputPanelProps {
   toggleFeature: (f: Feature) => void;
   totalPrice: number;
   projectId: string | null;
-  viewingInvoiceId: string | null;
-  setViewingInvoiceId: (id: string | null) => void;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -56,9 +54,7 @@ export default function InputPanel({
   updateProposal, 
   toggleFeature, 
   totalPrice, 
-  projectId,
-  viewingInvoiceId,
-  setViewingInvoiceId
+  projectId
 }: InputPanelProps) {
   const ProjectInfo = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-nw-graphite/20">
@@ -336,8 +332,6 @@ export default function InputPanel({
               updateConfig={updateConfig} 
               totalPrice={totalPrice} 
               projectId={projectId}
-              viewingInvoiceId={viewingInvoiceId}
-              setViewingInvoiceId={setViewingInvoiceId}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
