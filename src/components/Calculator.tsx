@@ -27,7 +27,6 @@ export default function Calculator() {
   const [isSaving, setIsSaving] = useState(false);
   const [showNewModal, setShowNewModal] = useState(false);
   const [newProjectInfo, setNewProjectInfo] = useState({ name: "", client: "" });
-  const [viewingInvoiceId, setViewingInvoiceId] = useState<string | null>(null);
 
   const fetchProjects = async () => {
     const data = await getSavedProjects();
@@ -506,8 +505,6 @@ export default function Calculator() {
                 toggleFeature={toggleFeature}
                 totalPrice={result.roundedPrice}
                 projectId={currentProjectId}
-                viewingInvoiceId={viewingInvoiceId}
-                setViewingInvoiceId={setViewingInvoiceId}
               />
             </div>
           </div>
@@ -542,7 +539,6 @@ export default function Calculator() {
           input={config} 
           result={result} 
           projectId={sessionId}
-          invoiceId={viewingInvoiceId}
         />
       </div>
     </section>
