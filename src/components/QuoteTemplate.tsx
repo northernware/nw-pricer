@@ -10,9 +10,10 @@ interface QuoteTemplateProps {
   result: CalculatorOutput;
   projectId?: string | null;
   invoiceId?: string | null;
+  isInline?: boolean;
 }
 
-export default function QuoteTemplate({ mode, input, result, projectId, invoiceId }: QuoteTemplateProps) {
+export default function QuoteTemplate({ mode, input, result, projectId, invoiceId, isInline }: QuoteTemplateProps) {
   const [docId, setDocId] = useState("");
   const [dates, setDates] = useState({ today: "", validUntil: "" });
   const [mounted, setMounted] = useState(false);
@@ -54,16 +55,20 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
 
   return (
     <div 
-      id="quote-template" 
+      id={isInline ? "quote-preview" : "quote-template"} 
       style={{ 
         width: "800px", 
         padding: "0 60px 40px 60px", 
         backgroundColor: "#FFFFFF", 
         color: "#0A0A0A",
         fontFamily: "sans-serif",
-        position: "fixed",
-        top: "-9999px",
-        left: "-9999px",
+        position: isInline ? "relative" : "fixed",
+        top: isInline ? "0" : "-9999px",
+        left: isInline ? "0" : "-9999px",
+        transform: isInline ? "scale(var(--preview-scale, 1))" : "none",
+        transformOrigin: "top left",
+        boxShadow: isInline ? "0 20px 50px rgba(0,0,0,0.1)" : "none",
+        zIndex: isInline ? 1 : -1,
         lineHeight: "1.5",
         background: isContract 
           ? "linear-gradient(to bottom, #F9F9F9 0%, #FFFFFF 100%)" 

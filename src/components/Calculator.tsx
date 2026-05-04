@@ -6,6 +6,7 @@ import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, Calcu
 import { DEFAULTS, TEMPLATES, PROJECT_PRESETS } from "@/lib/constants";
 import InputPanel from "./InputPanel";
 import OutputPanel from "./OutputPanel";
+import LivePreview from "./LivePreview";
 import QuoteTemplate from "./QuoteTemplate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -529,24 +530,35 @@ export default function Calculator() {
 
           {/* Output Column */}
           <div className="col-span-12 lg:col-span-5">
-            <div className="lg:sticky lg:top-28">
-              <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
-                <OutputPanel 
-                  result={result} 
-                  invoices={config.invoices}
-                />
-              </div>
+            <div className="lg:sticky lg:top-28 h-[calc(100vh-160px)] flex flex-col">
+              {activeTab === 'calculator' ? (
+                <div className="flex flex-col h-full">
+                  <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
+                    <OutputPanel 
+                      result={result} 
+                      invoices={config.invoices}
+                    />
+                  </div>
 
-              {/* Quick summary bar */}
-              <div className="mt-4 bg-nw-black text-nw-bone p-4 font-mono text-[10px] uppercase track-widest flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-nw-acid animate-pulse"></span>
-                  Live calculation
-                </span>
-                <span className="text-nw-acid">
-                  {result.adjustedHours}h · {config.features.length} features
-                </span>
-              </div>
+                  {/* Quick summary bar */}
+                  <div className="mt-4 bg-nw-black text-nw-bone p-4 font-mono text-[10px] uppercase track-widest flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-nw-acid animate-pulse"></span>
+                      Live calculation
+                    </span>
+                    <span className="text-nw-acid">
+                      {result.adjustedHours}h · {config.features.length} features
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <LivePreview 
+                  mode={activeTab}
+                  input={config}
+                  result={result}
+                  projectId={sessionId}
+                />
+              )}
             </div>
           </div>
         </div>
