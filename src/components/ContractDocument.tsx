@@ -87,47 +87,44 @@ export default function ContractDocument({
   };
 
   return (
-    <div className="bg-nw-white font-body text-nw-black">
-      {/* ── Cover Page ── */}
-      <div className="min-h-screen flex flex-col justify-between p-16 border-b-4 border-nw-acid">
+    <div className="bg-nw-white p-8 md:p-16 border-t-4 border-nw-acid shadow-xl relative z-10 w-full font-body text-nw-black">
+
+      {/* ── Header (matches proposal) ── */}
+      <header className="flex flex-col md:flex-row justify-between items-start mb-12 border-b-2 border-nw-black pb-8 gap-6 md:gap-0">
         <div>
-          <h1 className="text-5xl font-display font-bold tracking-tighter leading-tight mb-2">
-            northernware<span className="text-nw-acid text-2xl align-super ml-1">®</span>
+          <h1 className="text-4xl font-display font-bold track-tighter m-0">
+            northernware<span className="text-nw-acid text-xl align-super ml-1">®</span>
           </h1>
-          <p className="font-mono text-xs uppercase tracking-widest text-nw-graphite mb-16">
-            Website Development Services Agreement
+          <p className="mt-2 text-xs uppercase track-widest text-nw-graphite font-bold font-mono">
+            Master Services Agreement
           </p>
-
-          <div className="border-l-4 border-nw-acid pl-8 mb-10">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-nw-graphite mb-2">Prepared For</div>
-            <div className="text-3xl font-display font-bold">{clientFull}</div>
-            {clientCompany !== clientFull && (
-              <div className="text-sm text-nw-graphite mt-1">{clientCompany}</div>
-            )}
-          </div>
-
-          <div className="border-l-4 border-nw-graphite/20 pl-8 mb-10">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-nw-graphite mb-2">Created By</div>
-            <div className="text-2xl font-display font-bold">{senderFull}</div>
-            <div className="text-sm text-nw-graphite">{SENDER.company}</div>
-          </div>
         </div>
-
-        <div className="flex justify-between items-end">
-          <div className="font-mono text-xs text-nw-graphite space-y-1">
-            <div><span className="text-nw-black font-bold">Document ID:</span> CTR-{id.toUpperCase()}</div>
-            <div><span className="text-nw-black font-bold">Date:</span> {dateStr}</div>
-            <div><span className="text-nw-black font-bold">Project:</span> {p.projectName || "Website Development Project"}</div>
-          </div>
-          <div className="text-right">
-            <div className="text-4xl font-display font-bold text-nw-acid">{fmt(result.roundedPrice)}</div>
-            <div className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite">Total Investment</div>
-          </div>
+        <div className="text-right text-xs text-nw-graphite leading-relaxed font-mono">
+          <strong>DOCUMENT ID:</strong> CTR-{id.toUpperCase()}<br />
+          <strong>DATE:</strong> {dateStr}<br />
+          <strong>PROJECT:</strong> {p.projectName || "Website Development Project"}
         </div>
-      </div>
+      </header>
+
+      {/* ── Client Info (matches proposal) ── */}
+      <section className="flex flex-col md:flex-row justify-between mb-12 bg-nw-bone/50 p-6 md:p-8 border-l-4 border-nw-acid gap-8 md:gap-0">
+        <div className="w-full md:w-1/2">
+          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared For</div>
+          <div className="text-2xl font-display font-bold mb-1">{clientFull}</div>
+          {clientCompany !== clientFull && (
+            <div className="text-sm text-nw-graphite">{clientCompany}</div>
+          )}
+        </div>
+        <div className="w-full md:w-2/5 md:text-right">
+          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Service Provider</div>
+          <div className="text-sm font-bold mb-1">{SENDER.company}</div>
+          <div className="text-xs text-nw-graphite mb-1">{SENDER.state}, {SENDER.country}</div>
+          <div className="text-xs text-nw-graphite">www.northernware.ph</div>
+        </div>
+      </section>
 
       {/* ── Document Body ── */}
-      <div className="p-16">
+      <div>
 
         {/* Preamble */}
         <div className="mb-10 p-6 bg-nw-bone/50 border-l-4 border-nw-acid text-sm leading-relaxed space-y-3">
