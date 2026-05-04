@@ -70,11 +70,7 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
         boxShadow: isInline ? "0 20px 50px rgba(0,0,0,0.1)" : "none",
         zIndex: isInline ? 1 : -1,
         lineHeight: "1.5",
-        background: isContract 
-          ? "linear-gradient(to bottom, #F9F9F9 0%, #FFFFFF 100%)" 
-          : isProposal 
-            ? "linear-gradient(to bottom, #FFFFFF 0%, #F4F4F0 100%)" 
-            : "#FFFFFF"
+        background: "#FFFFFF"
       }}
     >
       {/* Header */}
