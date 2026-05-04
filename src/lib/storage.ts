@@ -6,6 +6,7 @@ export interface StoredProject {
   client: string;
   lastModified: number;
   config: CalculatorInput;
+  isApproved?: boolean;
 }
 
 const STORAGE_KEY = "nw_pricer_projects";

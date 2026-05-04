@@ -15,6 +15,7 @@ export async function getSavedProjects() {
       client: p.client,
       config: p.config as unknown as CalculatorInput,
       lastModified: p.updatedAt.getTime(),
+      isApproved: !!p.approvedAt,
     }));
   } catch (error) {
     console.error("Failed to fetch projects:", error);
@@ -111,5 +112,23 @@ export async function deleteProjectAction(id: string) {
   } catch (error) {
     console.error("Failed to delete project:", error);
     return { success: false, error };
+  }
+}
+
+export async function unlockProjectAction(id: string) {
+  try {
+    await prisma.project.update({
+      where: { id },
+      data: {
+        approvedAt: null,
+        signedBy: null,
+      }
+    });
+    revalidatePath(`/p/${id}`);
+    revalidatePath("/");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to unlock project:", error);
+    return { success: false, error: error.message || String(error) };
   }
 }

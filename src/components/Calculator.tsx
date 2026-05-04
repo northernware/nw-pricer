@@ -12,7 +12,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Icon } from "@iconify/react";
 import { generateId, type StoredProject } from "@/lib/storage";
-import { getSavedProjects, saveProjectAction, deleteProjectAction } from "@/app/actions";
+import { getSavedProjects, saveProjectAction, deleteProjectAction, unlockProjectAction } from "@/app/actions";
 import { copyToClipboard } from "@/lib/utils";
 import { toast } from "react-hot-toast";
 
@@ -31,8 +31,14 @@ export default function Calculator() {
 
   const fetchProjects = async () => {
     const data = await getSavedProjects();
-    setProjects(data);
+    setProjects(data as StoredProject[]);
   };
+
+  const isLocked = useMemo(() => {
+    if (!currentProjectId) return false;
+    const p = projects.find(proj => proj.id === currentProjectId);
+    return !!p?.isApproved;
+  }, [projects, currentProjectId]);
 
   useEffect(() => {
     fetchProjects();
@@ -151,6 +157,19 @@ export default function Calculator() {
     updateProposal(updates);
     setActiveTab('contract');
     toast.success(`Promoted to Contract: Loaded ${config.projectType.replace('_', ' ')} presets.`);
+  };
+
+  const handleUnlock = async () => {
+    if (!currentProjectId) return;
+    if (confirm("Are you sure you want to unlock this document? This will clear the existing signatures and marks the document as a draft again.")) {
+      const res = await unlockProjectAction(currentProjectId);
+      if (res.success) {
+        fetchProjects();
+        toast.success("Document unlocked for editing");
+      } else {
+        toast.error("Failed to unlock: " + res.error);
+      }
+    }
   };
 
   const applyTemplate = (templateConfig: Partial<CalculatorInput>) => {
@@ -524,6 +543,8 @@ export default function Calculator() {
                 totalPrice={result.roundedPrice}
                 projectId={currentProjectId}
                 onPromoteToContract={handlePromoteToContract}
+                isLocked={isLocked}
+                onUnlock={handleUnlock}
               />
             </div>
           </div>
