@@ -520,7 +520,7 @@ export default function Calculator() {
 
         <div id="calculator-content" className="grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)]">
           {/* Input Column */}
-          <div className="col-span-12 lg:col-span-7">
+          <div className="col-span-12 lg:col-span-6">
             <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
               <div className="flex justify-between items-center mb-8 border-b border-nw-graphite/20 pb-4">
                 <div className="font-mono text-xs text-nw-black uppercase track-widest flex items-center gap-2">
@@ -550,7 +550,7 @@ export default function Calculator() {
           </div>
 
           {/* Output Column */}
-          <div className="col-span-12 lg:col-span-5">
+          <div className="col-span-12 lg:col-span-6">
             <div className="lg:sticky lg:top-28 h-[calc(100vh-160px)] flex flex-col">
               {activeTab === 'calculator' ? (
                 <div className="flex flex-col h-full">

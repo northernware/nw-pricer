@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import PublicTemplate from "./PublicTemplate";
 import type { CalculatorOutput, CalculatorInput } from "@/lib/calculator";
 import { Icon } from "@iconify/react";
@@ -12,16 +13,44 @@ interface LivePreviewProps {
 }
 
 export default function LivePreview({ mode, input, result, projectId }: LivePreviewProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.4);
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const newScale = containerWidth / 900;
+        setScale(newScale);
+      }
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
+
   return (
     <div className="flex flex-col h-full">
-      <div className="relative flex-1 overflow-y-auto bg-nw-bone/30 border border-nw-graphite/10 rounded-sm scrollbar-hide">
-        <PublicTemplate 
-          id={projectId || "PREVIEW"}
-          mode={mode}
-          input={input}
-          result={result}
-          createdAt={new Date()}
-        />
+      <div 
+        ref={containerRef} 
+        className="relative flex-1 overflow-y-auto bg-nw-bone/30 border border-nw-graphite/10 rounded-sm scrollbar-hide"
+      >
+        <div 
+          className="absolute top-0 left-0 transition-transform duration-300 ease-out origin-top-left"
+          style={{ 
+            width: '900px',
+            transform: `scale(${scale})`,
+          }}
+        >
+          <PublicTemplate 
+            id={projectId || "PREVIEW"}
+            mode={mode}
+            input={input}
+            result={result}
+            createdAt={new Date()}
+          />
+        </div>
       </div>
       
       <div className="mt-4 p-4 bg-nw-black text-nw-bone font-mono text-[9px] uppercase track-widest flex items-center gap-3">
