@@ -14,6 +14,8 @@ interface InputPanelProps {
   toggleFeature: (f: Feature) => void;
   totalPrice: number;
   projectId: string | null;
+  viewingInvoiceId: string | null;
+  setViewingInvoiceId: (id: string | null) => void;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -47,7 +49,17 @@ function InputField({ label, value, onChange, placeholder, textarea = false }: {
   );
 }
 
-export default function InputPanel({ activeTab, config, updateConfig, updateProposal, toggleFeature, totalPrice, projectId }: InputPanelProps) {
+export default function InputPanel({ 
+  activeTab, 
+  config, 
+  updateConfig, 
+  updateProposal, 
+  toggleFeature, 
+  totalPrice, 
+  projectId,
+  viewingInvoiceId,
+  setViewingInvoiceId
+}: InputPanelProps) {
   const ProjectInfo = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-nw-graphite/20">
       <InputField 
@@ -324,6 +336,8 @@ export default function InputPanel({ activeTab, config, updateConfig, updateProp
               updateConfig={updateConfig} 
               totalPrice={totalPrice} 
               projectId={projectId}
+              viewingInvoiceId={viewingInvoiceId}
+              setViewingInvoiceId={setViewingInvoiceId}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
