@@ -33,17 +33,6 @@ export default function LivePreview({ mode, input, result, projectId }: LivePrev
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4 px-2">
-        <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite flex items-center gap-2">
-          <Icon icon="solar:globus-linear" className="text-nw-acid" />
-          Modern Web Preview
-        </div>
-        <div className="flex gap-1">
-          <div className="w-2 h-2 rounded-full bg-nw-acid animate-pulse"></div>
-          <span className="font-mono text-[8px] uppercase text-nw-acid">Magic Link View</span>
-        </div>
-      </div>
-      
       <div 
         ref={containerRef} 
         className="relative flex-1 overflow-y-auto bg-nw-bone/30 border border-nw-graphite/10 rounded-sm scrollbar-hide"
