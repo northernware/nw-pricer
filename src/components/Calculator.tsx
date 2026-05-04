@@ -332,7 +332,7 @@ export default function Calculator() {
 
         {/* Project Library Modal */}
         {showLibrary && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 no-print">
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 no-print">
             {/* Overlay - Theme-aware (Light in light mode, Dark in dark mode) */}
             <div 
               className="absolute inset-0 bg-nw-bone/80 backdrop-blur-md animate-in fade-in duration-300" 
@@ -406,7 +406,7 @@ export default function Calculator() {
 
         {/* New Project Modal */}
         {showNewModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 no-print">
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 no-print">
             {/* Overlay */}
             <div 
               className="absolute inset-0 bg-nw-bone/80 backdrop-blur-md animate-in fade-in duration-300" 

@@ -46,7 +46,7 @@ export default function SignatureBlock({
           Accepted & Approved By (Client)
         </div>
         
-        <div className="font-display text-2xl font-bold mb-1 italic text-nw-black break-words">
+        <div className="font-display text-2xl font-bold mb-1 italic text-nw-black wrap-break-word">
           {signedBy}
         </div>
         <div className="text-[11px] text-nw-graphite font-mono uppercase">
