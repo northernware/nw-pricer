@@ -11,9 +11,11 @@ interface InvoiceManagerProps {
   updateConfig: (updates: Partial<CalculatorInput>) => void;
   totalPrice: number;
   projectId: string | null;
+  viewingInvoiceId: string | null;
+  setViewingInvoiceId: (id: string | null) => void;
 }
 
-export default function InvoiceManager({ config, updateConfig, totalPrice, projectId }: InvoiceManagerProps) {
+export default function InvoiceManager({ config, updateConfig, totalPrice, projectId, viewingInvoiceId, setViewingInvoiceId }: InvoiceManagerProps) {
   const invoices = config.invoices || [];
 
   const addInvoice = () => {
@@ -108,6 +110,13 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
                     <Icon icon="solar:link-linear" width="18" />
                   </button>
                 )}
+                <button
+                  onClick={(e) => { e.stopPropagation(); setViewingInvoiceId(inv.id === viewingInvoiceId ? null : inv.id); }}
+                  className={`p-2 transition-colors ${inv.id === viewingInvoiceId ? "text-nw-acid" : "text-nw-graphite hover:text-nw-black"}`}
+                  title="Preview this invoice"
+                >
+                  <Icon icon={inv.id === viewingInvoiceId ? "solar:eye-bold" : "solar:eye-linear"} width="18" />
+                </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); updateInvoice(inv.id, { status: inv.status === 'paid' ? 'unpaid' : 'paid' }); }}
                   className={`p-2 transition-colors ${inv.status === 'paid' ? "text-nw-emerald" : "text-nw-graphite hover:text-nw-black"}`}

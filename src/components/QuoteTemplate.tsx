@@ -9,9 +9,10 @@ interface QuoteTemplateProps {
   input: CalculatorInput;
   result: CalculatorOutput;
   projectId?: string | null;
+  invoiceId?: string | null;
 }
 
-export default function QuoteTemplate({ mode, input, result, projectId }: QuoteTemplateProps) {
+export default function QuoteTemplate({ mode, input, result, projectId, invoiceId }: QuoteTemplateProps) {
   const [docId, setDocId] = useState("");
   const [dates, setDates] = useState({ today: "", validUntil: "" });
   const [mounted, setMounted] = useState(false);
@@ -43,8 +44,13 @@ export default function QuoteTemplate({ mode, input, result, projectId }: QuoteT
   const isContract = mode === 'contract';
   const isInvoice = mode === 'invoice';
 
-  const selectedInvoice: ProjectInvoice | null = null;
-  const invoiceAmount = result.roundedPrice;
+  const selectedInvoice = isInvoice && input.invoices
+    ? input.invoices.find(inv => inv.id === invoiceId) || null
+    : null;
+    
+  const invoiceAmount = selectedInvoice 
+    ? (result.roundedPrice * (selectedInvoice.percentage || 0)) / 100 
+    : result.roundedPrice;
 
   return (
     <div 
