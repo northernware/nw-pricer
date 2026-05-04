@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { calculate } from "@/lib/calculator";
 import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, CalculatorInput, HostingPlan } from "@/lib/calculator";
-import { DEFAULTS, TEMPLATES } from "@/lib/constants";
+import { DEFAULTS, TEMPLATES, PROJECT_PRESETS } from "@/lib/constants";
 import InputPanel from "./InputPanel";
 import OutputPanel from "./OutputPanel";
 import QuoteTemplate from "./QuoteTemplate";
@@ -133,6 +133,23 @@ export default function Calculator() {
       ...prev,
       proposal: { ...prev.proposal, ...updates }
     }));
+  };
+
+  const handlePromoteToContract = () => {
+    const presets = PROJECT_PRESETS[config.projectType];
+    const updates: Partial<typeof DEFAULTS.proposal> = {};
+    
+    // Only update if current fields are empty or generic default
+    if (!config.proposal.exclusions || config.proposal.exclusions === DEFAULTS.proposal.exclusions) {
+      updates.exclusions = presets.exclusions;
+    }
+    if (!config.proposal.assumptions || config.proposal.assumptions === DEFAULTS.proposal.assumptions) {
+      updates.assumptions = presets.assumptions;
+    }
+    
+    updateProposal(updates);
+    setActiveTab('contract');
+    toast.success(`Promoted to Contract: Loaded ${config.projectType.replace('_', ' ')} presets.`);
   };
 
   const applyTemplate = (templateConfig: Partial<CalculatorInput>) => {
@@ -505,6 +522,7 @@ export default function Calculator() {
                 toggleFeature={toggleFeature}
                 totalPrice={result.roundedPrice}
                 projectId={currentProjectId}
+                onPromoteToContract={handlePromoteToContract}
               />
             </div>
           </div>

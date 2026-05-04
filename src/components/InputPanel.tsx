@@ -14,6 +14,7 @@ interface InputPanelProps {
   toggleFeature: (f: Feature) => void;
   totalPrice: number;
   projectId: string | null;
+  onPromoteToContract?: () => void;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -54,7 +55,8 @@ export default function InputPanel({
   updateProposal, 
   toggleFeature, 
   totalPrice, 
-  projectId
+  projectId,
+  onPromoteToContract
 }: InputPanelProps) {
   const ProjectInfo = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-nw-graphite/20">
@@ -321,6 +323,16 @@ export default function InputPanel({
                 onChange={(v) => updateProposal({ validityPeriod: v })} 
                 placeholder="e.g. 30 Days"
               />
+            </div>
+
+            <div className="pt-8 border-t border-nw-graphite/10 flex justify-end">
+              <button
+                onClick={onPromoteToContract}
+                className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-6 py-3 bg-nw-black text-nw-bone hover:bg-nw-acid hover:text-nw-black transition-all group shadow-lg"
+              >
+                Promote to Contract
+                <Icon icon="solar:arrow-right-up-linear" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </button>
             </div>
           </div>
         )}

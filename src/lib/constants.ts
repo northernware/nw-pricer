@@ -105,6 +105,25 @@ export const HOSTING_PLANS: {
 ];
 
 
+export const PROJECT_PRESETS: Record<ProjectType, { exclusions: string; assumptions: string }> = {
+  business_website: {
+    exclusions: "• Content writing/Copywriting\n• Professional photography\n• Premium stock assets\n• Domain/Hosting subscription fees",
+    assumptions: "• Client will provide all brand assets (logo, colors)\n• Content will be provided in a structured format\n• Feedback cycles completed within 48 hours"
+  },
+  ecommerce: {
+    exclusions: "• Product photography/Editing\n• Payment gateway transaction fees\n• Shipping/Logistics setup beyond API integration\n• Bulk data entry of products",
+    assumptions: "• Client has an active merchant account\n• Inventory data is available in CSV/Excel\n• Tax rules are provided by the client"
+  },
+  redesign: {
+    exclusions: "• Content migration for legacy/broken links\n• Server-side fixing of old architecture\n• SEO ranking guarantees",
+    assumptions: "• Access to existing CMS/Hosting will be provided\n• Legacy database is accessible and documented\n• DNS management access is available"
+  },
+  custom_system: {
+    exclusions: "• Third-party API usage fees\n• Hardware procurement/Setup\n• User training beyond documented scope\n• Ongoing data entry",
+    assumptions: "• Technical specifications are finalized before dev\n• Client will provide a dedicated QA contact\n• Environment variables provided by client"
+  }
+};
+
 export const DEFAULTS: CalculatorInput = {
   hourlyRate: 600,
   bufferPercent: 10,
