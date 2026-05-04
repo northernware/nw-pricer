@@ -22,17 +22,27 @@ export interface ProjectInvoice {
 }
 
 export interface ProposalContent {
-  clientName: string;
+  // Shared
+  clientName: string;       // full name fallback / display
+  clientFirstName: string;
+  clientLastName: string;
+  clientCompany: string;
   projectName: string;
+  // Proposal fields
   projectOverview: string;
   businessGoals: string;
   scopeOfWork: string;
   deliverables: string;
   timeline: string;
+  validityPeriod: string;
+  // Contract-specific
+  presentationDate: string;
+  backupTerm: string;
+  maintenanceDays: string;
+  // Legacy / kept for compatibility
   exclusions: string;
   assumptions: string;
   paymentTerms: string;
-  validityPeriod: string;
 }
 
 export interface CalculatorInput {

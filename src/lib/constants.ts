@@ -137,16 +137,24 @@ export const DEFAULTS: CalculatorInput = {
   discountPercent: 0,
   proposal: {
     clientName: "",
+    clientFirstName: "",
+    clientLastName: "",
+    clientCompany: "",
     projectName: "",
     projectOverview: "A high-performance digital presence designed to elevate brand authority and drive conversions.",
     businessGoals: "1. Increase online visibility\n2. Streamline customer acquisition\n3. Establish professional digital credibility",
     scopeOfWork: "End-to-end development including UI/UX design, frontend development, CMS integration, and deployment.",
     deliverables: "• Responsive Website\n• Content Management System\n• Technical Documentation\n• 30-day Post-launch Support",
-    timeline: "Estimated 4-6 weeks from kickoff to deployment.",
+    timeline: "4–6 weeks from kickoff to deployment.",
+    validityPeriod: "30 Days",
+    // Contract-specific
+    presentationDate: "",
+    backupTerm: "6 months",
+    maintenanceDays: "3",
+    // Legacy
     exclusions: "• Content writing/Copywriting\n• Professional photography\n• Third-party API subscription fees",
     assumptions: "• Client will provide branding assets\n• Feedback cycles will be completed within 48 hours",
     paymentTerms: "50% upfront deposit to commence work. 50% upon project completion and deployment.",
-    validityPeriod: "30 Days",
   },
   invoices: [
     { id: 'inv_1', label: 'Downpayment (50%)', percentage: 50, status: 'unpaid' },
