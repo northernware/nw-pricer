@@ -66,7 +66,7 @@ export default function InputPanel({
   onUnlock
 }: InputPanelProps) {
   const ProjectInfo = (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-nw-graphite/20">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <InputField 
         label="Client Name / Company" 
         value={config.proposal.clientName} 
@@ -228,7 +228,7 @@ export default function InputPanel({
         </div>
 
         {/* Advanced Settings */}
-        <div className="border-t border-nw-graphite/20 pt-6">
+        <div className="pt-2">
           <Label>Advanced Settings</Label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
             <div>
@@ -278,7 +278,7 @@ export default function InputPanel({
         </div>
 
         {/* Managed Hosting */}
-        <div className="border-t border-nw-graphite/20 pt-6">
+        <div className="pt-2">
           <Label>Managed Hosting & Maintenance</Label>
           <div className="grid grid-cols-1 gap-2">
             {HOSTING_PLANS.map((hp) => (
@@ -370,7 +370,7 @@ export default function InputPanel({
             </div>
 
             {!isLocked && (
-              <div className="pt-8 border-t border-nw-graphite/10 flex justify-end">
+              <div className="pt-4 flex justify-end">
                 <button
                   onClick={onPromoteToContract}
                   className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-6 py-3 bg-nw-black text-nw-bone hover:bg-nw-acid hover:text-nw-black transition-all group shadow-lg"
