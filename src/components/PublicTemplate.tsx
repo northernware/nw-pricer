@@ -5,6 +5,7 @@ import type { CalculatorInput, CalculatorOutput } from "@/lib/calculator";
 import { Icon } from "@iconify/react";
 import SignatureBlock from "./SignatureBlock";
 import PaymentBlock from "./PaymentBlock";
+import ContractDocument from "./ContractDocument";
 
 interface PublicTemplateProps {
   id: string;
@@ -34,9 +35,24 @@ export default function PublicTemplate({
 
   const fmt = (n: number) => "₱" + n.toLocaleString();
 
-  const isProposal = mode === 'proposal' || mode === 'quote'; // Treat quote as proposal for web view
+  const isProposal = mode === 'proposal' || mode === 'quote';
   const isContract = mode === 'contract';
   const isInvoice = mode === 'invoice';
+
+  // Contract mode: use the fully auto-generated legal document
+  if (isContract) {
+    return (
+      <ContractDocument
+        id={id}
+        input={input}
+        result={result}
+        createdAt={createdAt}
+        isApproved={isApproved}
+        signedBy={signedBy}
+        approvedAt={approvedAt}
+      />
+    );
+  }
 
   const selectedInvoice = isInvoice && invoiceId && input.invoices
     ? input.invoices.find(inv => inv.id === invoiceId)

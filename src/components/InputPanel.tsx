@@ -392,39 +392,67 @@ export default function InputPanel({
               projectId={projectId}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InputField 
-                label="Detailed Scope" 
-                value={config.proposal.scopeOfWork} 
-                onChange={(v) => updateProposal({ scopeOfWork: v })} 
-                textarea
-                disabled={isLocked}
-              />
-              <InputField 
-                label="Payment Terms" 
-                value={config.proposal.paymentTerms} 
-                onChange={(v) => updateProposal({ paymentTerms: v })} 
-                textarea
+            <div>
+              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-4">Client Information</div>
+              <div className="grid grid-cols-2 gap-4">
+                <InputField
+                  label="First Name"
+                  value={config.proposal.clientFirstName || ""}
+                  onChange={(v) => updateProposal({ clientFirstName: v, clientName: `${v} ${config.proposal.clientLastName || ""}`.trim() })}
+                  placeholder="e.g. Juan"
+                  disabled={isLocked}
+                />
+                <InputField
+                  label="Last Name"
+                  value={config.proposal.clientLastName || ""}
+                  onChange={(v) => updateProposal({ clientLastName: v, clientName: `${config.proposal.clientFirstName || ""} ${v}`.trim() })}
+                  placeholder="e.g. dela Cruz"
+                  disabled={isLocked}
+                />
+              </div>
+              <InputField
+                label="Company / Organization"
+                value={config.proposal.clientCompany || ""}
+                onChange={(v) => updateProposal({ clientCompany: v })}
+                placeholder="e.g. Acme Corp (leave blank if individual)"
                 disabled={isLocked}
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <InputField 
-                label="Exclusions" 
-                value={config.proposal.exclusions} 
-                onChange={(v) => updateProposal({ exclusions: v })} 
-                placeholder="What is NOT included..."
-                textarea
-                disabled={isLocked}
-              />
-              <InputField 
-                label="Technical Assumptions" 
-                value={config.proposal.assumptions} 
-                onChange={(v) => updateProposal({ assumptions: v })} 
-                placeholder="Platform requirements, client responsibilities..."
-                textarea
-                disabled={isLocked}
-              />
+
+            <div>
+              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-4">Contract Terms</div>
+              <div className="grid grid-cols-3 gap-4">
+                <InputField
+                  label="Presentation Date"
+                  value={config.proposal.presentationDate || ""}
+                  onChange={(v) => updateProposal({ presentationDate: v })}
+                  placeholder="e.g. June 15, 2026"
+                  disabled={isLocked}
+                />
+                <InputField
+                  label="Backup Retention"
+                  value={config.proposal.backupTerm || ""}
+                  onChange={(v) => updateProposal({ backupTerm: v })}
+                  placeholder="e.g. 6 months"
+                  disabled={isLocked}
+                />
+                <InputField
+                  label="Maintenance SLA (days)"
+                  value={config.proposal.maintenanceDays || ""}
+                  onChange={(v) => updateProposal({ maintenanceDays: v })}
+                  placeholder="e.g. 3"
+                  disabled={isLocked}
+                />
+              </div>
+            </div>
+
+            <div className="p-4 bg-nw-bone border-l-4 border-nw-acid">
+              <div className="flex items-start gap-3">
+                <Icon icon="solar:magic-stick-linear" className="text-nw-acid mt-0.5 text-lg shrink-0" />
+                <div className="text-[11px] text-nw-graphite leading-relaxed">
+                  All legal clauses — Scope, Developer Requirements, Web Hosting, Design, Pricing, Termination, and Conflict Resolution — are <strong>auto-generated</strong> from your Calculator selections. Just fill in the variables above.
+                </div>
+              </div>
             </div>
           </div>
         )}
