@@ -165,12 +165,10 @@ export default function ContractDocument({
             </ul>
           </div>
 
-          {p.timeline && (
-            <div className="mt-4 p-4 bg-nw-bone/30 border border-nw-graphite/20">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite">Estimated Timeline: </span>
-              <span className="text-sm">{p.timeline}</span>
-            </div>
-          )}
+          <div className="mt-4 p-4 bg-nw-bone/30 border border-nw-graphite/20">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite">Estimated Timeline: </span>
+            <span className="text-sm">Approximately {Math.ceil(result.adjustedHours / 40)} weeks from project kickoff</span>
+          </div>
 
           <Clause>
             Any changes to the scope of work must be submitted in writing and approved by both Parties prior to implementation. Scope changes may result in revised timelines and pricing.
