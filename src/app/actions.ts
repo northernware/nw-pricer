@@ -121,6 +121,17 @@ export async function updateClientAction(id: string, data: { firstName: string, 
   }
 }
 
+export async function deleteClientAction(id: string) {
+  try {
+    await prisma.client.delete({ where: { id } });
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete client:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {
   try {
     const firstName = data.config.proposal?.clientFirstName || 'Unknown';

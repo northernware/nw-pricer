@@ -1,5 +1,5 @@
 import { useState, useTransition } from "react";
-import { updateClientStatusAction, createClientAction, updateClientAction } from "@/app/actions";
+import { updateClientStatusAction, createClientAction, updateClientAction, deleteClientAction } from "@/app/actions";
 import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
 import { formatDistanceToNow } from "date-fns";
@@ -25,6 +25,9 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
   const [clients, setClients] = useState(initialClients);
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState<any>(null);
+  const [confirmName, setConfirmName] = useState("");
   const [formData, setFormData] = useState<ClientFormData>({
     firstName: "",
     lastName: "",
@@ -58,6 +61,33 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
     setShowModal(true);
   };
 
+  const handleDeleteClick = (client: any) => {
+    setClientToDelete(client);
+    setConfirmName("");
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!clientToDelete) return;
+    const fullName = `${clientToDelete.firstName} ${clientToDelete.lastName}`;
+    if (confirmName !== fullName) {
+      toast.error("Name does not match");
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await deleteClientAction(clientToDelete.id);
+      if (result.success) {
+        toast.success("Client deleted");
+        setShowDeleteModal(false);
+        setClientToDelete(null);
+        window.location.reload();
+      } else {
+        toast.error(result.error || "Failed to delete client");
+      }
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(async () => {
@@ -72,7 +102,6 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
         toast.success(formData.id ? "Client updated" : "Client created");
         setShowModal(false);
         setFormData({ firstName: "", lastName: "", company: "", email: "", phone: "" });
-        // Refresh local state (simplest is to refresh page or rely on revalidatePath)
         window.location.reload();
       } else {
         toast.error(result.error || "Failed to save client");
@@ -128,12 +157,22 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
                           </div>
                         )}
                       </div>
-                      <button
-                        onClick={() => handleEdit(client)}
-                        className="text-nw-graphite/40 hover:text-nw-black transition-colors"
-                      >
-                        <Icon icon="solar:pen-linear" className="w-4 h-4" />
-                      </button>
+                      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleEdit(client)}
+                          className="text-nw-graphite/40 hover:text-nw-black transition-colors"
+                          title="Edit"
+                        >
+                          <Icon icon="solar:pen-linear" className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(client)}
+                          className="text-nw-graphite/40 hover:text-red-500 transition-colors"
+                          title="Delete"
+                        >
+                          <Icon icon="solar:trash-bin-trash-linear" className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                     
                     <div className="flex flex-col gap-1 mb-6">
@@ -184,7 +223,7 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
         })}
       </div>
 
-      {/* Modal */}
+      {/* Edit/Add Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-nw-black/20 backdrop-blur-sm" onClick={() => setShowModal(false)}></div>
@@ -264,6 +303,53 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && clientToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-nw-black/20 backdrop-blur-sm" onClick={() => setShowDeleteModal(false)}></div>
+          <div className="relative bg-nw-bone border border-red-500 p-8 rounded-2xl w-full max-w-md shadow-2xl">
+            <h2 className="font-display font-black text-2xl uppercase tracking-tighter text-red-500 mb-2">
+              Danger Zone
+            </h2>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mb-6">
+              This action cannot be undone. All projects and data associated with this client will be affected.
+            </p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mb-2 block">
+                  Type <span className="text-nw-black font-bold">"{clientToDelete.firstName} {clientToDelete.lastName}"</span> to confirm
+                </label>
+                <input
+                  type="text"
+                  value={confirmName}
+                  onChange={e => setConfirmName(e.target.value)}
+                  placeholder="Type full name here"
+                  className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-red-500 outline-none font-body text-sm py-2"
+                />
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteModal(false)}
+                  className="flex-1 border border-nw-graphite/20 py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-nw-graphite/5 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  disabled={isPending || confirmName !== `${clientToDelete.firstName} ${clientToDelete.lastName}`}
+                  className="flex-1 bg-red-500 text-white py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-red-600 transition-all disabled:opacity-50 disabled:grayscale"
+                >
+                  {isPending ? "Deleting..." : "Delete Client"}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
