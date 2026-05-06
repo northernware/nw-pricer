@@ -113,10 +113,12 @@ export default function ContractDocument({
           {p.clientCompany ? (
             <>
               <div className="text-2xl font-display font-bold mb-1">{p.clientCompany}</div>
-              <div className="text-sm text-nw-graphite">Attn: {clientFull}</div>
+              {clientFull && (
+                <div className="text-sm text-nw-graphite">Attn: {clientFull}</div>
+              )}
             </>
           ) : (
-            <div className="text-2xl font-display font-bold mb-1">{clientFull}</div>
+            <div className="text-2xl font-display font-bold mb-1">{clientFull || "Valued Client"}</div>
           )}
         </div>
         <div className="w-full md:w-2/5 md:text-right">

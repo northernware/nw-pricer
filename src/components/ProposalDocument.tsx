@@ -88,9 +88,8 @@ export default function ProposalDocument({
     day: "numeric",
   });
 
-  const clientName = p.clientName || p.clientFirstName
-    ? `${p.clientFirstName || ""} ${p.clientLastName || ""}`.trim() || p.clientName
-    : "Valued Client";
+  const clientNameRaw = `${p.clientFirstName || ""} ${p.clientLastName || ""}`.trim() || p.clientName || "";
+  const clientName = clientNameRaw || "Valued Client";
 
   const projectTypeLabel = PROJECT_TYPES.find(pt => pt.value === input.projectType)?.label || input.projectType;
   const designLevel = DESIGN_LEVELS.find(dl => dl.value === input.designLevel);
@@ -174,7 +173,9 @@ export default function ProposalDocument({
           {p.clientCompany ? (
             <>
               <div className="text-2xl font-display font-bold mb-1">{p.clientCompany}</div>
-              <div className="text-sm text-nw-graphite">Attn: {clientName}</div>
+              {clientNameRaw && (
+                <div className="text-sm text-nw-graphite">Attn: {clientNameRaw}</div>
+              )}
             </>
           ) : (
             <div className="text-2xl font-display font-bold mb-1">{clientName}</div>
