@@ -111,15 +111,15 @@ export default function PublicTemplate({
       <section className="flex flex-col md:flex-row justify-between mb-12 bg-nw-bone/50 p-6 md:p-8 border-l-4 border-nw-acid gap-8 md:gap-0 text-left">
         <div className="w-full md:w-1/2 text-left">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared For</div>
-          {input.proposal.clientCompany ? (
+          {(input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim()) ? (
             <>
-              <div className="text-2xl font-display font-bold mb-1">{input.proposal.clientCompany}</div>
-              {((input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim())) && (
-                <div className="text-sm text-nw-graphite">Attn: {input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim()}</div>
+              <div className="text-2xl font-display font-bold mb-1">{input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim()}</div>
+              {input.proposal.clientCompany && (
+                <div className="text-sm text-nw-graphite">{input.proposal.clientCompany}</div>
               )}
             </>
           ) : (
-            <div className="text-2xl font-display font-bold mb-1">{input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim() || "Valued Client"}</div>
+            <div className="text-2xl font-display font-bold mb-1">{input.proposal.clientCompany || "Valued Client"}</div>
           )}
           <div className="text-sm text-nw-graphite mt-1">{input.proposal.projectName || "New Digital Project"}</div>
         </div>
