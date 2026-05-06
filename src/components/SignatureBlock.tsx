@@ -7,12 +7,14 @@ export default function SignatureBlock({
   projectId, 
   isApproved, 
   signedBy, 
-  approvedAt 
+  approvedAt,
+  title
 }: { 
   projectId: string, 
   isApproved: boolean, 
   signedBy?: string | null, 
-  approvedAt?: Date | null 
+  approvedAt?: Date | null,
+  title?: string
 }) {
   const [signature, setSignature] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,6 +51,11 @@ export default function SignatureBlock({
         <div className="font-display text-2xl font-bold mb-1 italic text-nw-black wrap-break-word">
           {signedBy}
         </div>
+        {title && (
+          <div className="text-[10px] text-nw-acid font-mono uppercase mb-1">
+            {title}
+          </div>
+        )}
         <div className="text-[11px] text-nw-graphite font-mono uppercase">
           Digitally Signed
         </div>

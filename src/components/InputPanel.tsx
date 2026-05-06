@@ -83,7 +83,7 @@ export default function InputPanel({
           disabled={isLocked}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <InputField
           label="Client First Name"
           value={config.proposal.clientFirstName || ""}
@@ -96,6 +96,13 @@ export default function InputPanel({
           value={config.proposal.clientLastName || ""}
           onChange={(v) => updateProposal({ clientLastName: v, clientName: `${config.proposal.clientFirstName || ""} ${v}`.trim() })}
           placeholder="e.g. dela Cruz"
+          disabled={isLocked}
+        />
+        <InputField
+          label="Signer Title / Role"
+          value={config.proposal.clientSignerTitle || ""}
+          onChange={(v) => updateProposal({ clientSignerTitle: v })}
+          placeholder="e.g. Director"
           disabled={isLocked}
         />
       </div>
