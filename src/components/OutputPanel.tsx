@@ -86,30 +86,6 @@ export default function OutputPanel({
         </div>
       )}
 
-      {/* Payment Schedule Summary */}
-      {invoices && invoices.length > 0 && (
-        <div className="border border-nw-graphite/20 p-5">
-          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-4 flex items-center justify-between">
-            <span>Payment Schedule</span>
-            <Icon icon="solar:bill-list-linear" className="text-nw-acid" />
-          </div>
-          <div className="space-y-3">
-            {invoices.map((inv, idx) => (
-              <div key={idx} className="flex justify-between items-center text-[10px] font-mono uppercase track-widest">
-                <div className="flex items-center gap-2">
-                  <div className={`w-1.5 h-1.5 rounded-full ${inv.status === 'paid' ? 'bg-nw-emerald' : 'bg-nw-graphite/30'}`}></div>
-                  <span className={inv.status === 'paid' ? 'text-nw-emerald line-through opacity-60' : 'text-nw-black'}>{inv.label}</span>
-                </div>
-                <div className="flex gap-4">
-                  <span className="text-nw-graphite">{inv.percentage}%</span>
-                  <span className="font-bold text-nw-black">{fmt((result.roundedPrice * inv.percentage) / 100)}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Breakdown Toggle */}
       <button
         type="button"
