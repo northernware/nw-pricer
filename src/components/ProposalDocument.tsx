@@ -396,7 +396,7 @@ export default function ProposalDocument({
                 </table>
               </div>
               <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-                {hostingPlan.includes.map((item, i) => (
+                {(hostingPlan.fullIncludes || hostingPlan.includes).map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-[10px] text-nw-graphite">
                     <span className="text-nw-acid font-bold">✓</span> {item}
                   </div>
