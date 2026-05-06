@@ -397,7 +397,7 @@ export default function ContractDocument({
             </div>
 
             {/* Sender signature (Digital Seal) */}
-            <div className="flex-1">
+            <div className="flex-1 flex flex-col items-center text-center">
               <div className="text-[10px] font-bold uppercase tracking-widest mb-6 text-nw-graphite font-mono">
                 Authorized Representative — {SENDER.company}
               </div>
@@ -409,7 +409,7 @@ export default function ContractDocument({
                 
                 {/* Seal Content */}
                 <div className="relative flex flex-col items-center justify-center text-center p-4">
-                  <img src="/northernware-logo.png" alt="Northernware Logo" className="w-12 h-12 object-contain mb-2 invert" />
+                  <img src="/northernware-logo.png" alt="Northernware Logo" className="w-12 h-12 object-contain mb-2" />
                   <div className="font-display font-black text-[10px] tracking-tighter uppercase leading-none mb-1">
                     Northernware
                   </div>
