@@ -110,9 +110,13 @@ export default function ContractDocument({
       <section className="flex flex-col md:flex-row justify-between mb-12 bg-nw-bone/50 p-6 md:p-8 border-l-4 border-nw-acid gap-8 md:gap-0">
         <div className="w-full md:w-1/2">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared For</div>
-          <div className="text-2xl font-display font-bold mb-1">{clientFull}</div>
-          {clientCompany !== clientFull && (
-            <div className="text-sm text-nw-graphite">{clientCompany}</div>
+          {p.clientCompany ? (
+            <>
+              <div className="text-2xl font-display font-bold mb-1">{p.clientCompany}</div>
+              <div className="text-sm text-nw-graphite">Attn: {clientFull}</div>
+            </>
+          ) : (
+            <div className="text-2xl font-display font-bold mb-1">{clientFull}</div>
           )}
         </div>
         <div className="w-full md:w-2/5 md:text-right">
@@ -131,7 +135,7 @@ export default function ContractDocument({
           <p>
             This Website Development Services Agreement (<strong>"Agreement"</strong>) is a legally binding agreement between{" "}
             <strong>{senderFull}</strong> (<strong>"Developer"</strong>) operating as {SENDER.company}, and{" "}
-            <strong>{clientFull}</strong> (<strong>"Client"</strong>), collectively referred to as the <strong>"Parties"</strong>.
+            <strong>{p.clientCompany || clientFull}</strong> (<strong>"Client"</strong>), collectively referred to as the <strong>"Parties"</strong>.
           </p>
           <p>
             The Client has agreed to retain the Developer to create, develop, test, and deploy a website in accordance with the scope of work described in this Agreement. The Developer is willing to undertake such work, and both Parties mutually agree to the terms and conditions set forth herein.
@@ -342,12 +346,18 @@ export default function ContractDocument({
 
           <div className="mt-10 flex flex-col md:flex-row justify-between gap-12">
             {/* Client signature */}
-            <SignatureBlock
-              projectId={id}
-              isApproved={!!isApproved}
-              signedBy={signedBy}
-              approvedAt={approvedAt}
-            />
+            <div className="w-full md:w-[45%]">
+              <div className="text-[10px] font-bold uppercase track-widest mb-6 text-nw-graphite font-mono">
+                Authorized Representative — {p.clientCompany || clientFull}
+              </div>
+              <SignatureBlock
+                projectId={id}
+                isApproved={!!isApproved}
+                signedBy={signedBy}
+                approvedAt={approvedAt}
+                title={p.clientSignerTitle}
+              />
+            </div>
 
             {/* Sender signature */}
             <div className="w-full md:w-[45%]">

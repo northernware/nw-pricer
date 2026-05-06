@@ -171,9 +171,13 @@ export default function ProposalDocument({
       <section className="flex flex-col md:flex-row justify-between mb-12 bg-nw-bone/50 p-6 md:p-8 border-l-4 border-nw-acid gap-8 md:gap-0">
         <div className="w-full md:w-1/2">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared For</div>
-          <div className="text-2xl font-display font-bold mb-1">{clientName}</div>
-          {p.clientCompany && p.clientCompany !== clientName && (
-            <div className="text-sm text-nw-graphite">{p.clientCompany}</div>
+          {p.clientCompany ? (
+            <>
+              <div className="text-2xl font-display font-bold mb-1">{p.clientCompany}</div>
+              <div className="text-sm text-nw-graphite">Attn: {clientName}</div>
+            </>
+          ) : (
+            <div className="text-2xl font-display font-bold mb-1">{clientName}</div>
           )}
           <div className="text-sm text-nw-graphite mt-1">{p.projectName || "Website Development Project"}</div>
         </div>
