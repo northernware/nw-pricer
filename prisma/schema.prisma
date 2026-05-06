@@ -6,11 +6,26 @@ datasource db {
   provider = "postgresql"
 }
 
+model Client {
+  id        String    @id @default(cuid())
+  firstName String
+  lastName  String
+  company   String?
+  email     String?
+  phone     String?
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
 model Project {
-  id        String   @id
-  name      String
-  client    String
-  config    Json
+  id           String    @id
+  name         String
+  clientId     String
+  client       Client    @relation(fields: [clientId], references: [id])
+  status       String    @default("lead")
+  config       Json
+
   approvedAt   DateTime?
   signedBy     String?
   ipAddress    String?
