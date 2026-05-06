@@ -28,6 +28,7 @@ export async function getSavedProjects() {
     console.error("Failed to fetch projects:", error);
     return [];
   }
+}
 
 export async function getClients() {
   try {
@@ -51,7 +52,6 @@ export async function getClients() {
     return [];
   }
 }
-}
 
 export async function updateProjectStatusAction(id: string, status: string) {
   try {
@@ -65,6 +65,7 @@ export async function updateProjectStatusAction(id: string, status: string) {
     console.error("Failed to update status:", error);
     return { success: false, error: error.message };
   }
+}
 
 export async function updateClientStatusAction(id: string, status: string) {
   try {
@@ -78,7 +79,6 @@ export async function updateClientStatusAction(id: string, status: string) {
     console.error("Failed to update client status:", error);
     return { success: false, error: error.message };
   }
-}
 }
 
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {

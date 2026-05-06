@@ -3,7 +3,10 @@ import type { CalculatorInput } from "./calculator";
 export interface StoredProject {
   id: string;
   name: string;
-  client: string;
+  clientName: string;
+  clientCompany: string | null;
+  client?: string; // Legacy field for older local storage data
+  status: string;
   lastModified: number;
   config: CalculatorInput;
   isApproved?: boolean;
