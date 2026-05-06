@@ -62,26 +62,26 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
         const stageProjects = projects.filter(p => p.status === stage.id || (!p.status && stage.id === 'lead'));
         
         return (
-          <div key={stage.id} className="flex-1 min-w-[300px] flex flex-col bg-white dark:bg-nw-black border border-nw-black dark:border-nw-graphite/50">
+          <div key={stage.id} className="flex-1 min-w-[300px] flex flex-col bg-white border border-nw-black">
             {/* Column Header */}
-            <div className={`p-4 border-b border-nw-black dark:border-nw-graphite/50 flex items-center justify-between ${stage.bg}`}>
-              <h2 className="font-mono text-xs uppercase tracking-widest font-bold text-nw-black dark:text-nw-bone">
+            <div className={`p-4 border-b border-nw-black flex items-center justify-between ${stage.bg}`}>
+              <h2 className="font-mono text-xs uppercase tracking-widest font-bold">
                 {stage.label}
               </h2>
-              <span className="text-[10px] font-mono bg-nw-black dark:bg-nw-bone text-nw-bone dark:text-nw-black px-2 py-0.5">
+              <span className="text-[10px] font-mono bg-nw-black text-nw-bone px-2 py-0.5">
                 {stageProjects.length}
               </span>
             </div>
 
             {/* Cards */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-nw-bone/50 dark:bg-nw-black/50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-nw-bone/50">
               {stageProjects.map((project) => (
                 <div 
                   key={project.id} 
-                  className={`bg-white dark:bg-[#111111] border ${stage.color} p-4 shadow-[4px_4px_0_0_#0a0a0a] dark:shadow-[4px_4px_0_0_#333333] group hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#0a0a0a] dark:hover:shadow-[6px_6px_0_0_#a3e635] transition-all relative`}
+                  className={`bg-white border ${stage.color} p-4 shadow-[4px_4px_0_0_#0a0a0a] group hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#0a0a0a] transition-all relative`}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <Link href={getUrl(project.id)} target="_blank" className="hover:underline text-nw-black dark:text-nw-bone">
+                    <Link href={getUrl(project.id)} target="_blank" className="hover:underline">
                       <h3 className="font-display font-bold text-lg leading-tight line-clamp-2 pr-6">
                         {project.name}
                       </h3>
@@ -94,11 +94,11 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
                     </button>
                   </div>
                   
-                  <div className="text-xs font-mono text-nw-graphite dark:text-nw-graphite/80 mb-4">
+                  <div className="text-xs font-mono text-nw-graphite mb-4">
                     {project.client}
                   </div>
 
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-nw-graphite/30">
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
                     <div className="text-[9px] font-mono text-nw-graphite uppercase">
                       {formatDistanceToNow(project.lastModified, { addSuffix: true })}
                     </div>
@@ -109,13 +109,13 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
                         value={stage.id}
                         onChange={(e) => handleStatusChange(project.id, e.target.value)}
                         disabled={isPending}
-                        className="appearance-none bg-transparent border border-nw-black dark:border-nw-graphite/50 text-nw-black dark:text-nw-bone text-[9px] font-mono uppercase tracking-wider px-2 py-1 pr-6 cursor-pointer focus:outline-none focus:ring-1 focus:ring-nw-acid disabled:opacity-50"
+                        className="appearance-none bg-transparent border border-nw-black text-[9px] font-mono uppercase tracking-wider px-2 py-1 pr-6 cursor-pointer focus:outline-none focus:ring-1 focus:ring-nw-acid disabled:opacity-50"
                       >
                         {STAGES.map(s => (
                           <option key={s.id} value={s.id}>{s.label}</option>
                         ))}
                       </select>
-                      <Icon icon="solar:alt-arrow-down-linear" className="absolute right-1 top-1.5 text-[10px] text-nw-black dark:text-nw-bone pointer-events-none" />
+                      <Icon icon="solar:alt-arrow-down-linear" className="absolute right-1 top-1.5 text-[10px] pointer-events-none" />
                     </div>
                   </div>
                   
@@ -123,7 +123,7 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                     <Link 
                       href={`/admin/calculator?project=${project.id}`}
-                      className="bg-nw-black dark:bg-nw-bone text-nw-bone dark:text-nw-black text-[9px] font-mono px-3 py-1 uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black dark:hover:bg-nw-acid border border-transparent transition-colors shadow-sm"
+                      className="bg-nw-black text-nw-bone text-[9px] font-mono px-3 py-1 uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black border border-transparent hover:border-nw-black transition-colors shadow-sm"
                     >
                       Edit
                     </Link>
