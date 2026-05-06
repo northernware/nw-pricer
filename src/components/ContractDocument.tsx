@@ -1,6 +1,7 @@
 import type { CalculatorInput, CalculatorOutput } from "@/lib/calculator";
 import { FEATURES, HOSTING_PLANS, PROJECT_TYPES } from "@/lib/constants";
 import SignatureBlock from "./SignatureBlock";
+import { Icon } from "@iconify/react";
 
 // ─── Northernware Sender Info ───
 const SENDER = {
@@ -395,17 +396,40 @@ export default function ContractDocument({
               />
             </div>
 
-            {/* Sender signature */}
+            {/* Sender signature (Digital Seal) */}
             <div className="flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest mb-6 text-nw-graphite font-mono">
                 Authorized Representative — {SENDER.company}
               </div>
-              <div className="border-b border-nw-black mb-2 pb-1 h-[45px] flex items-end">
-                <img src="https://northernware.ph/sig.png" alt="Signature" className="h-[35px] -mb-1" />
+              
+              <div className="relative w-48 h-48 flex items-center justify-center mb-4 group">
+                {/* Outer Ring */}
+                <div className="absolute inset-0 border-2 border-nw-acid/30 rounded-full animate-[spin_20s_linear_infinite]"></div>
+                <div className="absolute inset-2 border border-dashed border-nw-acid/20 rounded-full"></div>
+                
+                {/* Seal Content */}
+                <div className="relative flex flex-col items-center justify-center text-center p-4">
+                  <Icon icon="solar:box-minimalistic-bold" className="text-3xl text-nw-acid mb-2" />
+                  <div className="font-display font-black text-[10px] tracking-tighter uppercase leading-none mb-1">
+                    Northernware
+                  </div>
+                  <div className="font-mono text-[7px] uppercase tracking-[0.2em] text-nw-graphite mb-2">
+                    Verified Digital Seal
+                  </div>
+                  <div className="h-px w-12 bg-nw-acid/50 mb-2"></div>
+                  <div className="font-mono text-[8px] font-bold text-nw-black">
+                    {dateStr}
+                  </div>
+                </div>
+                
+                {/* Floating Labels */}
+                <div className="absolute -top-1 left-1/2 -translate-x-1/2 bg-nw-white px-2 py-0.5 border border-nw-acid/50 rounded-full font-mono text-[7px] font-bold text-nw-acid uppercase tracking-widest">
+                  Official
+                </div>
               </div>
-              <div className="text-xs font-bold">{senderFull}</div>
+
+              <div className="text-sm font-bold">{senderFull}</div>
               <div className="text-xs text-nw-graphite">CEO, {SENDER.company}</div>
-              <div className="text-[10px] text-nw-graphite font-mono mt-1">{dateStr}</div>
             </div>
           </div>
         </Section>
