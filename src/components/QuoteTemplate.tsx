@@ -86,7 +86,7 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
         <div style={{ textAlign: "right", fontSize: "11px", color: "#5C5C5C", lineHeight: "1.8" }}>
           <strong>{isInvoice ? "INVOICE" : isContract ? "CONTRACT" : "DOCUMENT"} ID:</strong> {docId}{selectedInvoice ? `-${selectedInvoice.id.split('_')[1]}` : ''}<br />
           <strong>DATE:</strong> {dates.today}<br />
-          {!isInvoice && <><strong>VALID UNTIL:</strong> {input.proposal.validityPeriod || dates.validUntil}</>}
+          {!isInvoice && <><strong>VALID UNTIL:</strong> {dates.validUntil}</>}
           {isContract && <><br /><strong>STATUS:</strong> LEGALLY BINDING</>}
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px", marginTop: "20px" }}>
             <div>
               <h3 style={{ fontSize: "12px", textTransform: "uppercase", color: "#FF3800", marginBottom: "10px", borderBottom: "1px solid #EEEEEE", paddingBottom: "5px" }}>Estimated Timeline</h3>
-              <p style={{ fontSize: "13px", margin: 0 }}>{input.proposal.timeline}</p>
+              <p style={{ fontSize: "13px", margin: 0 }}>Approximately {Math.ceil(result.adjustedHours / 40)} weeks from project kickoff</p>
             </div>
             <div>
               <h3 style={{ fontSize: "12px", textTransform: "uppercase", color: "#FF3800", marginBottom: "10px", borderBottom: "1px solid #EEEEEE", paddingBottom: "5px" }}>Project Type</h3>
