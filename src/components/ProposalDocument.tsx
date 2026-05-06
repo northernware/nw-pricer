@@ -180,7 +180,7 @@ export default function ProposalDocument({
           ) : (
             <div className="text-2xl font-display font-bold mb-1">{p.clientCompany || "Valued Client"}</div>
           )}
-          <div className="text-sm text-nw-graphite mt-1">{p.projectName || "Website Development Project"}</div>
+
         </div>
         <div className="w-full md:w-2/5 md:text-right">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Service Provider</div>
