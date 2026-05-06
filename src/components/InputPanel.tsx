@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput, ProposalContent } from "@/lib/calculator";
 import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES } from "@/lib/constants";
@@ -344,6 +344,16 @@ export default function InputPanel({
                   <span className="mt-1 text-[9px] opacity-60 normal-case tracking-normal leading-tight">
                     {hp.description}
                   </span>
+                  {hp.includes && hp.includes.length > 0 && (
+                    <ul className="mt-3 space-y-1 w-full flex-grow flex flex-col justify-end">
+                      {hp.includes.map((item, i) => (
+                        <li key={i} className="text-[8px] normal-case opacity-75 flex gap-1 items-start">
+                          <Icon icon="solar:check-circle-linear" className={`mt-0.5 shrink-0 ${config.hostingPlan === hp.value ? "text-nw-acid" : "text-nw-graphite"}`} />
+                          <span className="leading-tight">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </button>
               ))}
             </div>
