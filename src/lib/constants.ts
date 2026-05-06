@@ -141,6 +141,7 @@ export const DEFAULTS: CalculatorInput = {
     clientLastName: "",
     clientCompany: "",
     clientSignerTitle: "",
+    pageNames: [],
     projectName: "",
     projectOverview: "A high-performance digital presence designed to elevate brand authority and drive conversions.",
     businessGoals: "1. Increase online visibility\n2. Streamline customer acquisition\n3. Establish professional digital credibility",
