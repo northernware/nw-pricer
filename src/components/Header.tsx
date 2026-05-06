@@ -19,9 +19,15 @@ export default function Header() {
             <span className="w-1.5 h-1.5 rounded-full bg-nw-emerald"></span>
             Internal Tool
           </div>
-          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite border border-nw-graphite/20 px-3 py-1.5">
-            GMT+8
-          </div>
+          <button
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              window.location.href = "/login";
+            }}
+            className="font-mono text-[10px] uppercase track-widest text-nw-graphite hover:text-nw-acid transition-colors flex items-center gap-2"
+          >
+            Logout
+          </button>
           <ThemeToggle />
         </div>
       </div>
