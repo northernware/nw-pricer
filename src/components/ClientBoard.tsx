@@ -119,7 +119,7 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
                   >
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <h3 className="font-display font-bold text-lg tracking-tight text-nw-black leading-tight">
+                        <h3 className="font-display font-bold text-md tracking-tight text-nw-black leading-tight">
                           {client.firstName} {client.lastName}
                         </h3>
                         {client.company && (
@@ -149,10 +149,6 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
                           {client.phone}
                         </div>
                       )}
-                      <div className="text-[10px] font-mono text-nw-graphite flex items-center gap-2">
-                        <Icon icon="solar:folder-linear" className="w-3 h-3" />
-                        {client.projectCount} {client.projectCount === 1 ? 'project' : 'projects'}
-                      </div>
                     </div>
 
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-nw-graphite/5">
