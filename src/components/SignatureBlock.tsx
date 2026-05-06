@@ -40,7 +40,7 @@ export default function SignatureBlock({
 
   if (isApproved) {
     return (
-      <div className="w-full md:w-[45%] border border-nw-acid bg-nw-acid/5 p-6 relative overflow-hidden">
+      <div className="w-full border border-nw-acid bg-nw-acid/5 p-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 bg-nw-acid text-nw-black text-[9px] font-bold uppercase track-widest px-3 py-1 font-mono">
           LEGALLY BINDING
         </div>
@@ -69,7 +69,7 @@ export default function SignatureBlock({
   }
 
   return (
-    <div className="w-full md:w-[45%]">
+    <div className="w-full">
       <div className="text-[10px] font-bold uppercase track-widest mb-4 text-nw-graphite font-mono">
         Acceptance & Digital Signature
       </div>

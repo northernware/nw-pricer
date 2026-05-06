@@ -273,14 +273,16 @@ export default function PublicTemplate({
       {/* Signatures */}
       {!isProposal && !isInvoice && (
         <div className="border-t-2 border-nw-black pt-12 mt-12 text-left">
-          <div className="flex flex-col md:flex-row justify-between gap-12 md:gap-0">
-            <SignatureBlock 
-              projectId={id} 
-              isApproved={!!isApproved} 
-              signedBy={signedBy} 
-              approvedAt={approvedAt} 
-            />
-            <div className="w-full md:w-[45%] text-left">
+          <div className="flex flex-col md:flex-row justify-between gap-12">
+            <div className="flex-1">
+              <SignatureBlock 
+                projectId={id} 
+                isApproved={!!isApproved} 
+                signedBy={signedBy} 
+                approvedAt={approvedAt} 
+              />
+            </div>
+            <div className="flex-1 text-left">
               <div className="text-[10px] font-bold uppercase track-widest mb-6 text-nw-graphite font-mono">Authorized Representative</div>
               <div className="border-b border-nw-black mb-2 pb-1 h-[45px] flex items-end">
                  <img src="https://northernware.ph/sig.png" alt="Signature" className="h-[35px] -mb-1" />

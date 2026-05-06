@@ -375,7 +375,7 @@ export default function ContractDocument({
 
           <div className="mt-10 flex flex-col md:flex-row justify-between gap-12">
             {/* Client signature */}
-            <div className="w-full md:w-[45%]">
+            <div className="flex-1">
               <div className="text-[10px] font-bold uppercase track-widest mb-6 text-nw-graphite font-mono">
                 Authorized Representative — {p.clientCompany || clientFull}
               </div>
@@ -389,7 +389,7 @@ export default function ContractDocument({
             </div>
 
             {/* Sender signature */}
-            <div className="w-full md:w-[45%]">
+            <div className="flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest mb-6 text-nw-graphite font-mono">
                 Authorized Representative — {SENDER.company}
               </div>
