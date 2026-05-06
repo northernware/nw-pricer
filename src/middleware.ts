@@ -6,7 +6,11 @@ export function middleware(request: NextRequest) {
   const session = request.cookies.get("nw_auth_session");
 
   // Public paths
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/auth")) {
+  if (
+    pathname.startsWith("/login") || 
+    pathname.startsWith("/api/auth") || 
+    pathname.startsWith("/p/")
+  ) {
     return NextResponse.next();
   }
 
