@@ -57,45 +57,45 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
         const stageProjects = projects.filter(p => p.status === stage.id || (!p.status && stage.id === 'lead'));
         
         return (
-          <div key={stage.id} className="flex-1 min-w-[300px] flex flex-col">
+          <div key={stage.id} className="flex-1 min-w-[320px] flex flex-col bg-nw-bone/30 dark:bg-nw-black/20 rounded-xl border border-nw-graphite/10">
             {/* Column Header */}
-            <div className="flex justify-between items-center border-b border-nw-graphite/20 pb-4 mb-4">
-              <div className="font-mono text-xs text-nw-black uppercase tracking-widest flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${stage.dot}`}></div>
+            <div className="p-5 flex justify-between items-center border-b border-nw-graphite/10">
+              <div className="font-mono text-[10px] text-nw-black dark:text-nw-bone uppercase tracking-[0.2em] flex items-center gap-2">
+                <div className={`w-1.5 h-1.5 rounded-full ${stage.dot}`}></div>
                 {stage.label}
               </div>
-              <span className="text-[10px] font-mono text-nw-graphite">
-                {stageProjects.length} {stageProjects.length === 1 ? 'project' : 'projects'}
+              <span className="text-[10px] font-mono text-nw-graphite/60">
+                {stageProjects.length}
               </span>
             </div>
 
-            {/* Cards */}
-            <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+            {/* Cards Container */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {stageProjects.map((project) => (
                 <div 
                   key={project.id} 
-                  className="bg-transparent border border-nw-graphite/20 p-5 group hover:border-nw-graphite/50 transition-colors relative flex flex-col"
+                  className="bg-white dark:bg-nw-black/40 border border-nw-graphite/10 rounded-lg p-5 group hover:border-nw-acid/30 transition-all duration-300 relative flex flex-col shadow-sm"
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <Link href={getUrl(project.id)} target="_blank" className="hover:text-nw-acid transition-colors">
-                      <h3 className="font-display font-bold text-xl tracking-tighter text-nw-black line-clamp-2 pr-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <Link href={getUrl(project.id)} target="_blank" className="hover:text-nw-acid transition-colors flex-1">
+                      <h3 className="font-display font-bold text-lg tracking-tight text-nw-black dark:text-nw-bone leading-tight line-clamp-2 pr-4">
                         {project.name}
                       </h3>
                     </Link>
                     <button 
                       onClick={() => handleDelete(project.id)}
-                      className="absolute top-5 right-5 text-nw-graphite hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="text-nw-graphite/40 hover:text-red-500 transition-colors pt-1"
                     >
-                      <Icon icon="solar:trash-bin-trash-linear" />
+                      <Icon icon="solar:trash-bin-trash-linear" className="w-4 h-4" />
                     </button>
                   </div>
                   
-                  <div className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mb-6">
+                  <div className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite mb-6">
                     {project.client}
                   </div>
 
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-nw-graphite/10">
-                    <div className="text-[9px] font-mono text-nw-graphite/60 uppercase">
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-nw-graphite/5">
+                    <div className="text-[8px] font-mono text-nw-graphite/40 uppercase">
                       {formatDistanceToNow(project.lastModified, { addSuffix: true })}
                     </div>
 
@@ -105,28 +105,34 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
                           value={stage.id}
                           onChange={(e) => handleStatusChange(project.id, e.target.value)}
                           disabled={isPending}
-                          className="appearance-none bg-transparent text-[9px] font-mono uppercase tracking-wider text-nw-graphite cursor-pointer focus:outline-none hover:text-nw-black transition-colors pr-4 disabled:opacity-50"
+                          className="appearance-none bg-transparent text-[9px] font-mono uppercase tracking-widest text-nw-graphite hover:text-nw-black dark:hover:text-nw-bone cursor-pointer focus:outline-none pr-4 disabled:opacity-50"
                         >
                           {STAGES.map(s => (
-                            <option key={s.id} value={s.id}>{s.label}</option>
+                            <option key={s.id} value={s.id} className="bg-nw-bone dark:bg-nw-black">{s.label}</option>
                           ))}
                         </select>
-                        <Icon icon="solar:alt-arrow-down-linear" className="absolute right-0 top-1/2 -translate-y-1/2 text-[10px] text-nw-graphite pointer-events-none" />
+                        <Icon icon="solar:alt-arrow-down-linear" className="absolute right-0 top-1/2 -translate-y-1/2 text-[10px] text-nw-graphite/40 pointer-events-none" />
                       </div>
                       
-                      <div className="w-px h-3 bg-nw-graphite/20"></div>
+                      <div className="w-px h-3 bg-nw-graphite/10"></div>
 
                       <Link 
                         href={`/admin/calculator?project=${project.id}`}
-                        className="text-[9px] font-mono uppercase tracking-widest text-nw-graphite hover:text-nw-acid transition-colors flex items-center gap-1"
+                        className="text-nw-graphite/60 hover:text-nw-acid transition-colors"
+                        title="Edit Project"
                       >
-                        Edit
-                        <Icon icon="solar:pen-new-square-linear" />
+                        <Icon icon="solar:pen-new-square-linear" className="w-4 h-4" />
                       </Link>
                     </div>
                   </div>
                 </div>
               ))}
+              
+              {stageProjects.length === 0 && (
+                <div className="h-24 border border-dashed border-nw-graphite/10 rounded-lg flex items-center justify-center">
+                  <span className="text-[10px] font-mono text-nw-graphite/30 uppercase tracking-widest">No projects</span>
+                </div>
+              )}
             </div>
           </div>
         );
