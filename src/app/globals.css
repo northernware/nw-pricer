@@ -97,6 +97,16 @@
   .reveal.active {
     @apply opacity-100 translate-y-0;
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-nw-graphite/20 rounded-full hover:bg-nw-graphite/40 transition-colors;
+  }
 }
 
 ::-webkit-scrollbar { width: 8px; }

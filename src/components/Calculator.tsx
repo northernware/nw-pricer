@@ -554,7 +554,7 @@ export default function Calculator() {
             <div className="lg:sticky lg:top-28 h-[calc(100vh-160px)] flex flex-col">
               {activeTab === 'calculator' ? (
                 <div className="flex flex-col h-full">
-                  <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl">
+                  <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl flex-1 overflow-y-auto custom-scrollbar">
                     <OutputPanel 
                       result={result} 
                       invoices={config.invoices}
