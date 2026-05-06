@@ -129,7 +129,8 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
             <div style={{ marginTop: "30px", padding: "20px", border: "1px solid #EEEEEE", backgroundColor: "#FFFFFF" }}>
               <Section title="4. Exclusions" content={input.proposal.exclusions} />
               <Section title="5. Technical Assumptions" content={input.proposal.assumptions} />
-              <Section title="6. Payment Terms" content={input.proposal.paymentTerms} />
+              <Section title="6. Intellectual Property" content={`<p>Upon receipt of final payment, Northernware hereby assigns all rights and interest in the deliverables to the Client. Northernware retains ownership of its pre-existing tools and generic code, granting the Client a perpetual license for their use.</p>`} />
+              <Section title="7. Payment Terms" content={input.proposal.paymentTerms} />
             </div>
           )}
         </div>

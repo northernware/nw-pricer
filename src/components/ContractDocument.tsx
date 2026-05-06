@@ -80,10 +80,11 @@ export default function ContractDocument({
     devReq: 2,
     hosting: hasHosting ? 3 : null,
     design: hasHosting ? 4 : 3,
-    pricing: hasHosting ? 5 : 4,
-    termination: hasHosting ? 6 : 5,
-    conflict: hasHosting ? 7 : 6,
-    acceptance: hasHosting ? 8 : 7,
+    ip: hasHosting ? 5 : 4,
+    pricing: hasHosting ? 6 : 5,
+    termination: hasHosting ? 7 : 6,
+    conflict: hasHosting ? 8 : 7,
+    acceptance: hasHosting ? 9 : 8,
   };
 
   return (
@@ -243,6 +244,19 @@ export default function ContractDocument({
           </Clause>
           <Clause>
             Upon termination of this Agreement or expiry of the agreed backup term, {senderFull} will securely destroy all copies, files, and documents related to this project, unless otherwise instructed in writing by the Client.
+          </Clause>
+        </Section>
+  
+        {/* Intellectual Property Section */}
+        <Section num={`${sectionCount.ip}`} title="Intellectual Property">
+          <Clause>
+            Upon receipt of final payment, {senderFull} hereby assigns and transfers all rights, title, and interest in and to the final deliverables and source code created under this Agreement to {clientFull}.
+          </Clause>
+          <Clause>
+            {senderFull} shall retain ownership of any pre-existing code, libraries, frameworks, or generic tools used in the development of the website ("Developer Tools"). {clientFull} is granted a non-exclusive, perpetual, royalty-free license to use such Developer Tools as part of the website.
+          </Clause>
+          <Clause>
+            {senderFull} reserves the right to showcase the completed website and its components in their professional portfolio, website, or marketing materials as a demonstration of their work, unless otherwise restricted by a non-disclosure agreement.
           </Clause>
         </Section>
 

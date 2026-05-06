@@ -153,6 +153,7 @@ export default function PublicTemplate({
             <div className="mt-8 space-y-8 text-left">
               <Section title="4. Exclusions" content={input.proposal.exclusions} />
               <Section title="5. Technical Assumptions" content={input.proposal.assumptions} />
+              <Section title="6. Intellectual Property" content={`<p>Upon receipt of final payment, Northernware hereby assigns and transfers all rights, title, and interest in and to the final deliverables and source code created under this Agreement to the Client. Northernware shall retain ownership of any pre-existing code, libraries, or generic tools used in the development, granting the Client a perpetual, royalty-free license to use them as part of the website.</p><p>Northernware reserves the right to showcase the completed project in its professional portfolio unless otherwise restricted by an NDA.</p>`} />
             </div>
           )}
         </div>
