@@ -114,10 +114,12 @@ export default function PublicTemplate({
           {input.proposal.clientCompany ? (
             <>
               <div className="text-2xl font-display font-bold mb-1">{input.proposal.clientCompany}</div>
-              <div className="text-sm text-nw-graphite">Attn: {input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim()}</div>
+              {((input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim())) && (
+                <div className="text-sm text-nw-graphite">Attn: {input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim()}</div>
+              )}
             </>
           ) : (
-            <div className="text-2xl font-display font-bold mb-1">{input.proposal.clientName || "Valued Client"}</div>
+            <div className="text-2xl font-display font-bold mb-1">{input.proposal.clientName || `${input.proposal.clientFirstName} ${input.proposal.clientLastName}`.trim() || "Valued Client"}</div>
           )}
           <div className="text-sm text-nw-graphite mt-1">{input.proposal.projectName || "New Digital Project"}</div>
         </div>
