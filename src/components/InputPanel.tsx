@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput, ProposalContent } from "@/lib/calculator";
 import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES } from "@/lib/constants";
@@ -304,31 +304,49 @@ export default function InputPanel({
 
         {/* Managed Hosting */}
         <div className="pt-2">
-          <Label>Managed Hosting & Maintenance</Label>
-          <div className="grid grid-cols-1 gap-2">
-            {HOSTING_PLANS.map((hp) => (
+          <Label>Managed Hosting &amp; Maintenance</Label>
+          <div className="space-y-2">
+            {/* Free option - full width */}
+            {HOSTING_PLANS.filter(hp => hp.value === 'none').map((hp) => (
               <button
                 key={hp.value}
                 type="button"
                 disabled={isLocked}
                 onClick={() => updateConfig({ hostingPlan: hp.value })}
-                className={`flex flex-col font-mono text-xs uppercase track-widest px-4 py-3 border transition-all duration-200 text-left ${
+                className={`w-full flex justify-between items-center font-mono text-xs uppercase track-widest px-4 py-3 border transition-all duration-200 text-left ${
                   config.hostingPlan === hp.value
                     ? "bg-nw-black text-nw-bone border-nw-black"
                     : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-acid hover:text-nw-black"
                 } ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                <div className="flex justify-between items-center w-full">
-                  <span className="font-bold">{hp.label}</span>
-                  <span className={config.hostingPlan === hp.value ? "text-nw-acid" : "text-nw-graphite"}>
-                    {hp.price > 0 ? `₱${hp.price.toLocaleString()}/mo` : "FREE"}
-                  </span>
-                </div>
-                <div className="mt-1 text-[10px] opacity-60 normal-case tracking-normal">
-                  {hp.description}
-                </div>
+                <span className="font-bold">{hp.label}</span>
+                <span className={config.hostingPlan === hp.value ? "text-nw-acid" : "text-nw-graphite"}>FREE</span>
               </button>
             ))}
+            {/* Paid plans - 3-column grid */}
+            <div className="grid grid-cols-3 gap-2">
+              {HOSTING_PLANS.filter(hp => hp.value !== 'none').map((hp) => (
+                <button
+                  key={hp.value}
+                  type="button"
+                  disabled={isLocked}
+                  onClick={() => updateConfig({ hostingPlan: hp.value })}
+                  className={`flex flex-col font-mono text-xs uppercase track-widest px-3 py-3 border transition-all duration-200 text-left ${
+                    config.hostingPlan === hp.value
+                      ? "bg-nw-black text-nw-bone border-nw-black"
+                      : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-acid hover:text-nw-black"
+                  } ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <span className="font-bold text-[10px] leading-tight">{hp.label}</span>
+                  <span className={`mt-1 text-[10px] ${config.hostingPlan === hp.value ? "text-nw-acid" : "text-nw-graphite"}`}>
+                    {`${hp.price.toLocaleString()}/mo`}
+                  </span>
+                  <span className="mt-1 text-[9px] opacity-60 normal-case tracking-normal leading-tight">
+                    {hp.description}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
