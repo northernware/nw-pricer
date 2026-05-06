@@ -15,8 +15,13 @@ import { generateId, type StoredProject } from "@/lib/storage";
 import { getSavedProjects, saveProjectAction, deleteProjectAction, unlockProjectAction } from "@/app/actions";
 import { copyToClipboard } from "@/lib/utils";
 import { toast } from "react-hot-toast";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Calculator() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlProjectId = searchParams.get("project");
+
   const [config, setConfig] = useState<CalculatorInput>(DEFAULTS);
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
   
@@ -46,31 +51,26 @@ export default function Calculator() {
       const storedProjects = data as StoredProject[];
       setProjects(storedProjects);
 
-      // Sync currentProjectId from URL on mount
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("project");
-      
-      if (id) {
-        setCurrentProjectId(id);
-        const project = storedProjects.find(p => p.id === id);
+      // Sync currentProjectId from URL on mount or URL change
+      if (urlProjectId) {
+        setCurrentProjectId(urlProjectId);
+        const project = storedProjects.find(p => p.id === urlProjectId);
         if (project) {
           setConfig(project.config);
         }
       }
     };
     init();
-  }, []);
+  }, [urlProjectId]);
 
-  // Sync currentProjectId to URL whenever it changes
+  // Sync currentProjectId to URL whenever it changes (only update if it differs to avoid loops)
   useEffect(() => {
-    const url = new URL(window.location.href);
-    if (currentProjectId) {
-      url.searchParams.set("project", currentProjectId);
-    } else {
-      url.searchParams.delete("project");
+    if (currentProjectId && currentProjectId !== urlProjectId) {
+      router.replace(`?project=${currentProjectId}`);
+    } else if (!currentProjectId && urlProjectId) {
+      router.replace(`?`);
     }
-    window.history.replaceState({}, "", url.toString());
-  }, [currentProjectId]);
+  }, [currentProjectId, urlProjectId, router]);
 
   // Auto-save current work to local storage for crash recovery
   useEffect(() => {
