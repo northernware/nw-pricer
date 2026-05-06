@@ -35,8 +35,6 @@ export interface ProposalContent {
   businessGoals: string;
   scopeOfWork: string;
   deliverables: string;
-  timeline: string;
-  validityPeriod: string;
   // Contract-specific
   presentationDate: string;
   backupTerm: string;

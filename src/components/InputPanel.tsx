@@ -346,23 +346,6 @@ export default function InputPanel({
 
 
 
-            <div className="grid grid-cols-2 gap-4">
-              <InputField
-                label="Timeline Override"
-                value={config.proposal.timeline}
-                onChange={(v) => updateProposal({ timeline: v })}
-                placeholder="e.g. 4–6 weeks (auto-calculated if blank)"
-                disabled={isLocked}
-              />
-              <InputField
-                label="Proposal Validity"
-                value={config.proposal.validityPeriod}
-                onChange={(v) => updateProposal({ validityPeriod: v })}
-                placeholder="e.g. 30 Days"
-                disabled={isLocked}
-              />
-            </div>
-
             <div className="space-y-4">
               <div className="text-[10px] uppercase track-widest font-bold text-nw-graphite font-mono">Proposed Page Architecture</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 bg-nw-bone/30 p-6 border border-nw-graphite/10">

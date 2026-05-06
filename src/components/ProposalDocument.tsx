@@ -92,11 +92,9 @@ export default function ProposalDocument({
   const overview = PROJECT_OVERVIEWS[input.projectType] || PROJECT_OVERVIEWS.business_website;
   const solution = getSolution(input.projectType, input.features);
 
-  const validUntil = p.validityPeriod
-    ? `${p.validityPeriod} from date of issue`
-    : new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString("en-PH", {
-        year: "numeric", month: "long", day: "numeric",
-      });
+  const validUntil = new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString("en-PH", {
+    year: "numeric", month: "long", day: "numeric",
+  });
 
   // Calculate timeline estimates (simplified)
   const totalWeeks = Math.ceil(result.adjustedHours / 30);
