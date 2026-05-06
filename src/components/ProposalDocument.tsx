@@ -308,7 +308,7 @@ export default function ProposalDocument({
                     <div className="font-bold">Core Development & Design</div>
                     <div className="text-[10px] text-nw-graphite">{input.pages} pages · {designLevel?.label} design</div>
                   </td>
-                  <td className="p-4 text-right font-mono font-bold text-nw-black">{fmt(result.baseCost - (result.featureHours * result.complexityMultiplier * input.hourlyRate))}</td>
+                  <td className="p-4 text-right font-mono font-bold text-nw-black">{fmt((result.pagesHours + result.designHours) * input.hourlyRate)}</td>
                 </tr>
                 {selectedFeatures.length > 0 && (
                   <tr>
@@ -316,12 +316,21 @@ export default function ProposalDocument({
                       <div className="font-bold">Strategic Feature Integrations</div>
                       <div className="text-[10px] text-nw-graphite">{selectedFeatures.map(f => f.label).join(", ")}</div>
                     </td>
-                    <td className="p-4 text-right font-mono font-bold text-nw-black">{fmt(result.featureHours * result.complexityMultiplier * input.hourlyRate)}</td>
+                    <td className="p-4 text-right font-mono font-bold text-nw-black">{fmt(result.featureHours * input.hourlyRate)}</td>
                   </tr>
                 )}
+                <tr className="bg-nw-bone/30">
+                  <td className="p-4">
+                    <div className="font-bold text-nw-graphite">Technical Management & QA</div>
+                    <div className="text-[10px] text-nw-graphite">Complexity adjustment, project buffer, and quality assurance</div>
+                  </td>
+                  <td className="p-4 text-right font-mono font-bold text-nw-graphite">
+                    {fmt(result.roundedPrice + result.discountAmount - (result.baseHours * input.hourlyRate))}
+                  </td>
+                </tr>
                 {result.discountAmount > 0 && (
                   <tr className="bg-nw-acid/5 text-nw-acid">
-                    <td className="p-4 font-bold">Strategic Partnership Discount ({input.discountPercent}%)</td>
+                    <td className="p-4 font-bold uppercase tracking-widest text-[10px]">Strategic Partnership Discount ({input.discountPercent}%)</td>
                     <td className="p-4 text-right font-mono font-bold">-{fmt(result.discountAmount)}</td>
                   </tr>
                 )}
