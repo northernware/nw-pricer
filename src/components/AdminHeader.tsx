@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { logoutAction } from "@/app/login/actions";
 import { Icon } from "@iconify/react";
+import ThemeToggle from "./ThemeToggle";
 
 export default function AdminHeader() {
   return (
@@ -31,6 +32,8 @@ export default function AdminHeader() {
         </div>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <div className="w-px h-4 bg-nw-graphite/30"></div>
           <form action={logoutAction}>
             <button 
               type="submit" 
