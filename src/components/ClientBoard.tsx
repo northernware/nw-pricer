@@ -8,6 +8,8 @@ const CLIENT_STAGES = [
   { id: "prospect", label: "Prospect", dot: "bg-gray-400" },
   { id: "active", label: "Active", dot: "bg-blue-400" },
   { id: "retainer", label: "Retainer", dot: "bg-nw-emerald" },
+  { id: "completed", label: "Completed", dot: "bg-purple-400" },
+  { id: "declined", label: "Declined", dot: "bg-red-400" },
 ];
 
 interface ClientFormData {
