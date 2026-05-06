@@ -83,7 +83,7 @@ export default function PublicTemplate({
 
   const docTitle = isProposal ? "STRATEGIC PROJECT PROPOSAL" :
                    isContract ? "MASTER SERVICES AGREEMENT" :
-                   isInvoice ? (selectedInvoice ? `TAX INVOICE: ${selectedInvoice.label}` : "TAX INVOICE") : "PROJECT QUOTATION";
+                   isInvoice ? (selectedInvoice ? `INVOICE: ${selectedInvoice.label}` : "INVOICE") : "PROJECT QUOTATION";
                    
   const docPrefix = isProposal ? "PRP" :
                     isContract ? "CTR" :
