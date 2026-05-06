@@ -66,21 +66,39 @@ export default function InputPanel({
   onUnlock
 }: InputPanelProps) {
   const ProjectInfo = (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-      <InputField 
-        label="Client Name / Company" 
-        value={config.proposal.clientName} 
-        onChange={(v) => updateProposal({ clientName: v })} 
-        placeholder="e.g. Acme Corp"
-        disabled={isLocked}
-      />
-      <InputField 
-        label="Project Name" 
-        value={config.proposal.projectName} 
-        onChange={(v) => updateProposal({ projectName: v })} 
-        placeholder="e.g. Website Redesign 2024"
-        disabled={isLocked}
-      />
+    <div className="space-y-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField 
+          label="Project Name" 
+          value={config.proposal.projectName} 
+          onChange={(v) => updateProposal({ projectName: v })} 
+          placeholder="e.g. Website Redesign 2024"
+          disabled={isLocked}
+        />
+        <InputField
+          label="Company / Organization"
+          value={config.proposal.clientCompany || ""}
+          onChange={(v) => updateProposal({ clientCompany: v })}
+          placeholder="e.g. Acme Corp (leave blank if individual)"
+          disabled={isLocked}
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label="Client First Name"
+          value={config.proposal.clientFirstName || ""}
+          onChange={(v) => updateProposal({ clientFirstName: v, clientName: `${v} ${config.proposal.clientLastName || ""}`.trim() })}
+          placeholder="e.g. Juan"
+          disabled={isLocked}
+        />
+        <InputField
+          label="Client Last Name"
+          value={config.proposal.clientLastName || ""}
+          onChange={(v) => updateProposal({ clientLastName: v, clientName: `${config.proposal.clientFirstName || ""} ${v}`.trim() })}
+          placeholder="e.g. dela Cruz"
+          disabled={isLocked}
+        />
+      </div>
     </div>
   );
 
@@ -319,32 +337,7 @@ export default function InputPanel({
         {activeTab === 'proposal' && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-            <div>
-              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-4">Client Information</div>
-              <div className="grid grid-cols-2 gap-4">
-                <InputField
-                  label="First Name"
-                  value={config.proposal.clientFirstName || ""}
-                  onChange={(v) => updateProposal({ clientFirstName: v, clientName: `${v} ${config.proposal.clientLastName || ""}`.trim() })}
-                  placeholder="e.g. Juan"
-                  disabled={isLocked}
-                />
-                <InputField
-                  label="Last Name"
-                  value={config.proposal.clientLastName || ""}
-                  onChange={(v) => updateProposal({ clientLastName: v, clientName: `${config.proposal.clientFirstName || ""} ${v}`.trim() })}
-                  placeholder="e.g. dela Cruz"
-                  disabled={isLocked}
-                />
-              </div>
-              <InputField
-                label="Company / Organization"
-                value={config.proposal.clientCompany || ""}
-                onChange={(v) => updateProposal({ clientCompany: v })}
-                placeholder="e.g. Acme Corp (leave blank if individual)"
-                disabled={isLocked}
-              />
-            </div>
+
 
             <div className="grid grid-cols-2 gap-4">
               <InputField
@@ -395,32 +388,7 @@ export default function InputPanel({
               projectId={projectId}
             />
 
-            <div>
-              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-4">Client Information</div>
-              <div className="grid grid-cols-2 gap-4">
-                <InputField
-                  label="First Name"
-                  value={config.proposal.clientFirstName || ""}
-                  onChange={(v) => updateProposal({ clientFirstName: v, clientName: `${v} ${config.proposal.clientLastName || ""}`.trim() })}
-                  placeholder="e.g. Juan"
-                  disabled={isLocked}
-                />
-                <InputField
-                  label="Last Name"
-                  value={config.proposal.clientLastName || ""}
-                  onChange={(v) => updateProposal({ clientLastName: v, clientName: `${config.proposal.clientFirstName || ""} ${v}`.trim() })}
-                  placeholder="e.g. dela Cruz"
-                  disabled={isLocked}
-                />
-              </div>
-              <InputField
-                label="Company / Organization"
-                value={config.proposal.clientCompany || ""}
-                onChange={(v) => updateProposal({ clientCompany: v })}
-                placeholder="e.g. Acme Corp (leave blank if individual)"
-                disabled={isLocked}
-              />
-            </div>
+
 
             <div>
               <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-4">Contract Terms</div>
