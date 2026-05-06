@@ -25,7 +25,7 @@ export default function CRMView({ projects, clients }: CRMViewProps) {
               : 'text-nw-graphite hover:bg-nw-bone'
           }`}
         >
-          <Icon icon="solar: folder-2-linear" className="w-4 h-4" />
+          <Icon icon="solar:folder-2-linear" className="w-4 h-4" />
           Projects
         </button>
         <button
