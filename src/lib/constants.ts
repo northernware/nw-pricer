@@ -147,8 +147,6 @@ export const DEFAULTS: CalculatorInput = {
     businessGoals: "1. Increase online visibility\n2. Streamline customer acquisition\n3. Establish professional digital credibility",
     scopeOfWork: "End-to-end development including UI/UX design, frontend development, CMS integration, and deployment.",
     deliverables: "• Responsive Website\n• Content Management System\n• Technical Documentation\n• 30-day Post-launch Support",
-    timeline: "4–6 weeks from kickoff to deployment.",
-    validityPeriod: "30 Days",
     // Contract-specific
     presentationDate: "",
     backupTerm: "6 months",
