@@ -57,10 +57,10 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
         const stageProjects = projects.filter(p => p.status === stage.id || (!p.status && stage.id === 'lead'));
         
         return (
-          <div key={stage.id} className="flex-1 min-w-[320px] flex flex-col bg-white dark:bg-nw-black/40 rounded-xl border border-nw-graphite/10">
+          <div key={stage.id} className="flex-1 min-w-[320px] flex flex-col bg-nw-white rounded-xl border border-nw-graphite/10">
             {/* Column Header */}
             <div className="p-5 flex justify-between items-center border-b border-nw-graphite/10">
-              <div className="font-mono text-[10px] text-nw-black dark:text-nw-bone uppercase tracking-[0.2em] flex items-center gap-2">
+              <div className="font-mono text-[10px] text-nw-black uppercase tracking-[0.2em] flex items-center gap-2">
                 <div className={`w-1.5 h-1.5 rounded-full ${stage.dot}`}></div>
                 {stage.label}
               </div>
@@ -74,11 +74,11 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
               {stageProjects.map((project) => (
                 <div 
                   key={project.id} 
-                  className="bg-white dark:bg-nw-black/40 border border-nw-graphite/10 rounded-lg p-5 group hover:border-nw-acid/30 transition-all duration-300 relative flex flex-col shadow-sm"
+                  className="bg-white border border-nw-graphite/10 rounded-lg p-5 group hover:border-nw-acid/30 transition-all duration-300 relative flex flex-col shadow-sm"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <Link href={getUrl(project.id)} target="_blank" className="hover:text-nw-acid transition-colors flex-1">
-                      <h3 className="font-display font-bold text-lg tracking-tight text-nw-black dark:text-nw-bone leading-tight line-clamp-2 pr-4">
+                      <h3 className="font-display font-bold text-lg tracking-tight text-nw-black leading-tight line-clamp-2 pr-4">
                         {project.name}
                       </h3>
                     </Link>
@@ -105,10 +105,10 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
                           value={stage.id}
                           onChange={(e) => handleStatusChange(project.id, e.target.value)}
                           disabled={isPending}
-                          className="appearance-none bg-transparent text-[9px] font-mono uppercase tracking-widest text-nw-graphite hover:text-nw-black dark:hover:text-nw-bone cursor-pointer focus:outline-none pr-4 disabled:opacity-50"
+                          className="appearance-none bg-transparent text-[9px] font-mono uppercase tracking-widest text-nw-graphite hover:text-nw-black cursor-pointer focus:outline-none pr-4 disabled:opacity-50"
                         >
                           {STAGES.map(s => (
-                            <option key={s.id} value={s.id} className="bg-nw-bone dark:bg-nw-black">{s.label}</option>
+                            <option key={s.id} value={s.id} className="bg-nw-bone">{s.label}</option>
                           ))}
                         </select>
                         <Icon icon="solar:alt-arrow-down-linear" className="absolute right-0 top-1/2 -translate-y-1/2 text-[10px] text-nw-graphite/40 pointer-events-none" />
