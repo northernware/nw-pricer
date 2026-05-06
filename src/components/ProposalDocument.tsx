@@ -27,23 +27,29 @@ const PROJECT_OVERVIEWS: Record<string, string> = {
     "requires a purpose-built web application to automate and streamline core business workflows. This system will provide a secure, scalable, and user-centric platform tailored specifically to your team's operational requirements.",
 };
 
-const SOLUTION_DETAILS: Record<string, { tech: string; benefits: string[] }> = {
-  business_website: {
-    tech: "modern Content Management System (CMS)",
-    benefits: ["Easily update page content and images", "Integrate with analytics to track performance", "Post new content to your company blog"],
-  },
-  ecommerce: {
-    tech: "robust E-commerce Engine",
-    benefits: ["Manage products, inventory, and categories", "Process secure payments via multiple gateways", "Track orders and customer data in real-time"],
-  },
-  redesign: {
-    tech: "high-performance modern framework",
-    benefits: ["Significantly faster page load times", "Enhanced mobile responsiveness", "Improved SEO and conversion architecture"],
-  },
-  custom_system: {
-    tech: "bespoke full-stack architecture",
-    benefits: ["Automated internal workflows", "Role-based access and data security", "Scalable infrastructure for future growth"],
-  },
+const getSolution = (type: string, features: string[]) => {
+  const hasCMS = features.includes("cms_blog");
+  const solutions: Record<string, { tech: string; benefits: string[] }> = {
+    business_website: {
+      tech: hasCMS ? "modern Content Management System (CMS)" : "modern web architecture",
+      benefits: hasCMS 
+        ? ["Easily update page content and images", "Integrate with analytics to track performance", "Post new content to your company blog"]
+        : ["High-performance static or dynamic pages", "Search engine optimized architecture", "Seamless analytics integration"],
+    },
+    ecommerce: {
+      tech: "robust E-commerce Engine",
+      benefits: ["Manage products, inventory, and categories", "Process secure payments via multiple gateways", "Track orders and customer data in real-time"],
+    },
+    redesign: {
+      tech: "high-performance modern framework",
+      benefits: ["Significantly faster page load times", "Enhanced mobile responsiveness", "Improved SEO and conversion architecture"],
+    },
+    custom_system: {
+      tech: "bespoke full-stack architecture",
+      benefits: ["Automated internal workflows", "Role-based access and data security", "Scalable infrastructure for future growth"],
+    },
+  };
+  return solutions[type] || solutions.business_website;
 };
 
 function SectionTitle({ num, title }: { num: number; title: string }) {
@@ -84,7 +90,7 @@ export default function ProposalDocument({
   const selectedFeatures = FEATURES.filter(f => input.features.includes(f.value));
 
   const overview = PROJECT_OVERVIEWS[input.projectType] || PROJECT_OVERVIEWS.business_website;
-  const solution = SOLUTION_DETAILS[input.projectType] || SOLUTION_DETAILS.business_website;
+  const solution = getSolution(input.projectType, input.features);
 
   const validUntil = p.validityPeriod
     ? `${p.validityPeriod} from date of issue`
@@ -138,7 +144,7 @@ export default function ProposalDocument({
           )}
         </div>
         <div className="w-full md:w-2/5 md:text-right">
-          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-3 font-mono font-bold">Project Lead</div>
+          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-3 font-mono font-bold">Prepared By</div>
           <div className="text-xl font-display font-bold mb-1">{SENDER.fullName}</div>
           <div className="text-xs text-nw-graphite mb-1">{SENDER.company}</div>
           <div className="text-xs text-nw-graphite">{SENDER.address}</div>
@@ -316,7 +322,7 @@ export default function ProposalDocument({
           </div>
 
           {input.invoices && input.invoices.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-12">
               <div className="p-6 bg-nw-bone/30 border border-nw-graphite/10">
                 <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-nw-graphite mb-4">Payment Schedule</div>
                 <div className="space-y-4">
@@ -334,6 +340,38 @@ export default function ProposalDocument({
               <div className="text-xs text-nw-graphite leading-relaxed">
                 <p className="mb-2"><strong>Payment Terms:</strong> Invoices are payable via bank transfer or G-Cash. Each milestone payment is required before proceeding to the next project phase.</p>
                 <p>* All prices are in Philippine Pesos (PHP). Non-VAT.</p>
+              </div>
+            </div>
+          )}
+
+          {hasHosting && hostingPlan && (
+            <div>
+              <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-nw-graphite mb-4">Ongoing Maintenance & Support</div>
+              <div className="overflow-hidden border border-nw-graphite/20">
+                <table className="w-full border-collapse text-sm">
+                  <thead className="bg-nw-bone/50 font-mono text-[10px] uppercase tracking-widest text-nw-graphite border-b border-nw-graphite/20">
+                    <tr>
+                      <th className="p-4 text-left font-bold">Service Plan</th>
+                      <th className="p-4 text-right font-bold">Monthly Fee</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-4">
+                        <div className="font-bold">{hostingPlan.label}</div>
+                        <div className="text-[10px] text-nw-graphite">{hostingPlan.description}</div>
+                      </td>
+                      <td className="p-4 text-right font-mono font-bold text-nw-black">{fmt(hostingPlan.price)}/mo</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                {hostingPlan.includes.map((item, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[10px] text-nw-graphite">
+                    <span className="text-nw-acid font-bold">✓</span> {item}
+                  </div>
+                ))}
               </div>
             </div>
           )}
