@@ -318,59 +318,62 @@ export default function InputPanel({
 
         {activeTab === 'proposal' && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <InputField 
-              label="Project Overview" 
-              value={config.proposal.projectOverview} 
-              onChange={(v) => updateProposal({ projectOverview: v })} 
-              placeholder="Describe the overall vision and context..."
-              textarea
-              disabled={isLocked}
-            />
-            <InputField 
-              label="Business Goals" 
-              value={config.proposal.businessGoals} 
-              onChange={(v) => updateProposal({ businessGoals: v })} 
-              placeholder="What are the key goals for the business?"
-              textarea
-              disabled={isLocked}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InputField 
-                label="Strategic Scope" 
-                value={config.proposal.scopeOfWork} 
-                onChange={(v) => updateProposal({ scopeOfWork: v })} 
-                placeholder="High-level description of what's included..."
-                textarea
-                disabled={isLocked}
-              />
-              <InputField 
-                label="Key Deliverables" 
-                value={config.proposal.deliverables} 
-                onChange={(v) => updateProposal({ deliverables: v })} 
-                placeholder="Specific items to be handed over..."
-                textarea
+
+            <div>
+              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-4">Client Information</div>
+              <div className="grid grid-cols-2 gap-4">
+                <InputField
+                  label="First Name"
+                  value={config.proposal.clientFirstName || ""}
+                  onChange={(v) => updateProposal({ clientFirstName: v, clientName: `${v} ${config.proposal.clientLastName || ""}`.trim() })}
+                  placeholder="e.g. Juan"
+                  disabled={isLocked}
+                />
+                <InputField
+                  label="Last Name"
+                  value={config.proposal.clientLastName || ""}
+                  onChange={(v) => updateProposal({ clientLastName: v, clientName: `${config.proposal.clientFirstName || ""} ${v}`.trim() })}
+                  placeholder="e.g. dela Cruz"
+                  disabled={isLocked}
+                />
+              </div>
+              <InputField
+                label="Company / Organization"
+                value={config.proposal.clientCompany || ""}
+                onChange={(v) => updateProposal({ clientCompany: v })}
+                placeholder="e.g. Acme Corp (leave blank if individual)"
                 disabled={isLocked}
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InputField 
-                label="Timeline" 
-                value={config.proposal.timeline} 
-                onChange={(v) => updateProposal({ timeline: v })} 
-                placeholder="e.g. 4-6 Weeks"
+
+            <div className="grid grid-cols-2 gap-4">
+              <InputField
+                label="Timeline Override"
+                value={config.proposal.timeline}
+                onChange={(v) => updateProposal({ timeline: v })}
+                placeholder="e.g. 4–6 weeks (auto-calculated if blank)"
                 disabled={isLocked}
               />
-              <InputField 
-                label="Proposal Validity" 
-                value={config.proposal.validityPeriod} 
-                onChange={(v) => updateProposal({ validityPeriod: v })} 
+              <InputField
+                label="Proposal Validity"
+                value={config.proposal.validityPeriod}
+                onChange={(v) => updateProposal({ validityPeriod: v })}
                 placeholder="e.g. 30 Days"
                 disabled={isLocked}
               />
             </div>
 
+            <div className="p-4 bg-nw-bone border-l-4 border-nw-acid">
+              <div className="flex items-start gap-3">
+                <Icon icon="solar:magic-stick-linear" className="text-nw-acid mt-0.5 text-lg shrink-0" />
+                <div className="text-[11px] text-nw-graphite leading-relaxed">
+                  The proposal document is <strong>auto-generated</strong> from your Calculator selections — project type, design level, features, hosting plan, and pricing are all populated automatically.
+                </div>
+              </div>
+            </div>
+
             {!isLocked && (
-              <div className="pt-4 flex justify-end">
+              <div className="pt-2 flex justify-end">
                 <button
                   onClick={onPromoteToContract}
                   className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-6 py-3 bg-nw-black text-nw-bone hover:bg-nw-acid hover:text-nw-black transition-all group shadow-lg"

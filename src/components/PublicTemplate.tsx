@@ -6,6 +6,7 @@ import { Icon } from "@iconify/react";
 import SignatureBlock from "./SignatureBlock";
 import PaymentBlock from "./PaymentBlock";
 import ContractDocument from "./ContractDocument";
+import ProposalDocument from "./ProposalDocument";
 
 interface PublicTemplateProps {
   id: string;
@@ -50,6 +51,18 @@ export default function PublicTemplate({
         isApproved={isApproved}
         signedBy={signedBy}
         approvedAt={approvedAt}
+      />
+    );
+  }
+
+  // Proposal/quote mode: auto-generated narrative from calculator
+  if (isProposal) {
+    return (
+      <ProposalDocument
+        id={id}
+        input={input}
+        result={result}
+        createdAt={createdAt}
       />
     );
   }
