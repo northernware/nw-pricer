@@ -12,7 +12,7 @@ interface LivePreviewProps {
   projectId?: string | null;
 }
 
-export default function LivePreview({ mode, input, result, projectId }: LivePreviewProps) {
+export default function LivePreview({ mode, input, result, projectId, isApproved, signedBy, approvedAt }: LivePreviewProps & { isApproved?: boolean, signedBy?: string | null, approvedAt?: Date | null }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.4);
@@ -71,6 +71,9 @@ export default function LivePreview({ mode, input, result, projectId }: LivePrev
               input={input}
               result={result}
               createdAt={new Date()}
+              isApproved={isApproved}
+              signedBy={signedBy}
+              approvedAt={approvedAt}
             />
           </div>
         </div>

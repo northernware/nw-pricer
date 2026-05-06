@@ -578,6 +578,9 @@ export default function Calculator() {
                   input={config}
                   result={result}
                   projectId={sessionId}
+                  isApproved={!!projects.find(p => p.id === currentProjectId)?.isApproved}
+                  signedBy={projects.find(p => p.id === currentProjectId)?.signedBy}
+                  approvedAt={projects.find(p => p.id === currentProjectId)?.approvedAt}
                 />
               )}
             </div>

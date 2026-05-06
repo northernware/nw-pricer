@@ -7,6 +7,8 @@ export interface StoredProject {
   lastModified: number;
   config: CalculatorInput;
   isApproved?: boolean;
+  signedBy?: string | null;
+  approvedAt?: Date | null;
 }
 
 const STORAGE_KEY = "nw_pricer_projects";

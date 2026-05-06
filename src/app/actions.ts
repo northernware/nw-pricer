@@ -16,6 +16,8 @@ export async function getSavedProjects() {
       config: p.config as unknown as CalculatorInput,
       lastModified: p.updatedAt.getTime(),
       isApproved: !!p.approvedAt,
+      signedBy: p.signedBy,
+      approvedAt: p.approvedAt,
     }));
   } catch (error) {
     console.error("Failed to fetch projects:", error);
