@@ -236,10 +236,9 @@ export default function ProposalDocument({
                     <li className="text-sm font-bold text-nw-black">Home</li>
                     <li className="text-sm text-nw-graphite">About</li>
                     <li className="text-sm text-nw-graphite">Services / Products</li>
-                    <li className="text-sm text-nw-graphite">Blog / Insights</li>
                     <li className="text-sm text-nw-graphite">Contact</li>
-                    {input.pages > 5 && (
-                      <li className="text-sm text-nw-acid italic">+ {input.pages - 5} Additional Strategic Pages</li>
+                    {input.pages > 4 && (
+                      <li className="text-sm text-nw-acid italic">+ {input.pages - 4} Additional Strategic Pages</li>
                     )}
                   </>
                 )}
