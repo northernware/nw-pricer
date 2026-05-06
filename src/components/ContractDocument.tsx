@@ -121,7 +121,8 @@ export default function ContractDocument({
         </div>
         <div className="w-full md:w-2/5 md:text-right">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared By</div>
-          <div className="text-sm font-bold mb-1">{SENDER.company}</div>
+          <div className="text-sm font-bold mb-1">{SENDER.fullName}</div>
+          <div className="text-xs text-nw-graphite mb-1">{SENDER.company}</div>
           <div className="text-xs text-nw-graphite">{SENDER.address}</div>
         </div>
       </section>

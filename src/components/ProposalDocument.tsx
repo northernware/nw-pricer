@@ -112,7 +112,7 @@ export default function ProposalDocument({
     <div className="bg-nw-white p-8 md:p-16 border-t-4 border-nw-acid shadow-xl relative z-10 w-full font-body text-nw-black">
 
       {/* ── Header ── */}
-      <header className="flex flex-col md:flex-row justify-between items-start mb-16 border-b-2 border-nw-black pb-8 gap-6 md:gap-0">
+      <header className="flex flex-col md:flex-row justify-between items-start mb-12 border-b-2 border-nw-black pb-8 gap-6 md:gap-0">
         <div>
           <h1 className="text-4xl font-display font-bold track-tighter m-0">
             northernware<span className="text-nw-acid text-xl align-super ml-1">®</span>
