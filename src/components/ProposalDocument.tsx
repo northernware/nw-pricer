@@ -220,13 +220,28 @@ export default function ProposalDocument({
             <div>
               <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-nw-graphite mb-4">Proposed Page Architecture</div>
               <ul className="space-y-2 border-l border-nw-graphite/20 pl-4">
-                <li className="text-sm font-bold text-nw-black">Home</li>
-                <li className="text-sm text-nw-graphite">About</li>
-                <li className="text-sm text-nw-graphite">Services / Products</li>
-                <li className="text-sm text-nw-graphite">Blog / Insights</li>
-                <li className="text-sm text-nw-graphite">Contact</li>
-                {input.pages > 5 && (
-                  <li className="text-sm text-nw-acid italic">+ {input.pages - 5} Additional Strategic Pages</li>
+                {(p.pageNames && p.pageNames.filter(n => n.trim()).length > 0) ? (
+                  <>
+                    {p.pageNames.filter(n => n.trim()).map((name, i) => (
+                      <li key={i} className="text-sm font-bold text-nw-black">{name}</li>
+                    ))}
+                    {input.pages > p.pageNames.filter(n => n.trim()).length && (
+                      <li className="text-sm text-nw-acid italic">
+                        + {input.pages - p.pageNames.filter(n => n.trim()).length} Additional Strategic Pages
+                      </li>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <li className="text-sm font-bold text-nw-black">Home</li>
+                    <li className="text-sm text-nw-graphite">About</li>
+                    <li className="text-sm text-nw-graphite">Services / Products</li>
+                    <li className="text-sm text-nw-graphite">Blog / Insights</li>
+                    <li className="text-sm text-nw-graphite">Contact</li>
+                    {input.pages > 5 && (
+                      <li className="text-sm text-nw-acid italic">+ {input.pages - 5} Additional Strategic Pages</li>
+                    )}
+                  </>
                 )}
               </ul>
             </div>

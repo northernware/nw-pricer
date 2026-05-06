@@ -27,7 +27,8 @@ export interface ProposalContent {
   clientFirstName: string;
   clientLastName: string;
   clientCompany: string;
-  clientSignerTitle: string;
+  clientSignerTitle?: string;
+  pageNames?: string[];
   projectName: string;
   // Proposal fields
   projectOverview: string;
