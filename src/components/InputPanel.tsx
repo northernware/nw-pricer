@@ -345,7 +345,7 @@ export default function InputPanel({
                     {hp.description}
                   </span>
                   {hp.includes && hp.includes.length > 0 && (
-                    <ul className="mt-3 space-y-1 w-full flex-grow flex flex-col justify-end">
+                    <ul className="mt-3 space-y-1 w-full grow flex flex-col justify-end">
                       {hp.includes.map((item, i) => (
                         <li key={i} className="text-[8px] normal-case opacity-75 flex gap-1 items-start">
                           <Icon icon="solar:check-circle-linear" className={`mt-0.5 shrink-0 ${config.hostingPlan === hp.value ? "text-nw-acid" : "text-nw-graphite"}`} />

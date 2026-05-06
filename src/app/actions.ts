@@ -19,12 +19,27 @@ export async function getSavedProjects() {
       config: p.config as unknown as CalculatorInput,
       lastModified: p.updatedAt.getTime(),
       isApproved: !!p.approvedAt,
+      status: p.status,
       signedBy: p.signedBy,
       approvedAt: p.approvedAt,
     }));
   } catch (error) {
     console.error("Failed to fetch projects:", error);
     return [];
+  }
+}
+
+export async function updateProjectStatusAction(id: string, status: string) {
+  try {
+    await prisma.project.update({
+      where: { id },
+      data: { status }
+    });
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to update status:", error);
+    return { success: false, error: error.message };
   }
 }
 
