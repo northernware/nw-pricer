@@ -125,9 +125,8 @@ export default function PublicTemplate({
         </div>
         <div className="w-full md:w-2/5 md:text-right">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Service Provider</div>
-          <div className="text-sm font-bold mb-1">Northernware</div>
-          <div className="text-xs text-nw-graphite mb-1">Northern Luzon, Philippines</div>
-          <div className="text-xs text-nw-graphite">www.northernware.ph</div>
+          <div className="text-sm font-bold mb-1">Northernware Software Development Services</div>
+          <div className="text-xs text-nw-graphite">Tabuk City, Kalinga, Philippines</div>
         </div>
       </section>
 
