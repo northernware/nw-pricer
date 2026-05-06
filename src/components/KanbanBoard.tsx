@@ -37,14 +37,13 @@ interface ProjectCardProps {
 }
 
 function KanbanCard({ project, stageId, isDragging, onDelete, onStatusChange, getUrl, isPending }: ProjectCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: project.id,
     data: { project, stageId }
   });
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    transition,
     opacity: isDragging ? 0.3 : 1,
   };
 

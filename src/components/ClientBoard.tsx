@@ -47,14 +47,13 @@ interface ClientCardProps {
 }
 
 function ClientCard({ client, stageId, isDragging, onEdit, onDelete, onStatusChange, isPending }: ClientCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: client.id,
     data: { client, stageId }
   });
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    transition,
     opacity: isDragging ? 0.3 : 1,
   };
 
