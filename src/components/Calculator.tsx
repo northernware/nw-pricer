@@ -41,8 +41,36 @@ export default function Calculator() {
   }, [projects, currentProjectId]);
 
   useEffect(() => {
-    fetchProjects();
+    const init = async () => {
+      const data = await getSavedProjects();
+      const storedProjects = data as StoredProject[];
+      setProjects(storedProjects);
+
+      // Sync currentProjectId from URL on mount
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("project");
+      
+      if (id) {
+        setCurrentProjectId(id);
+        const project = storedProjects.find(p => p.id === id);
+        if (project) {
+          setConfig(project.config);
+        }
+      }
+    };
+    init();
   }, []);
+
+  // Sync currentProjectId to URL whenever it changes
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (currentProjectId) {
+      url.searchParams.set("project", currentProjectId);
+    } else {
+      url.searchParams.delete("project");
+    }
+    window.history.replaceState({}, "", url.toString());
+  }, [currentProjectId]);
 
   // Auto-save current work to local storage for crash recovery
   useEffect(() => {
@@ -161,10 +189,13 @@ export default function Calculator() {
 
   const handleUnlock = async () => {
     if (!currentProjectId) return;
-    if (confirm("Are you sure you want to unlock this document? This will clear the existing signatures and marks the document as a draft again.")) {
+    if (confirm("Are you sure you want to unlock this document? This will clear the existing signatures and mark the document as a draft again.")) {
       const res = await unlockProjectAction(currentProjectId);
       if (res.success) {
-        fetchProjects();
+        // Optimistically update local projects state for instant UI reaction
+        setProjects(prev => prev.map(p => 
+          p.id === currentProjectId ? { ...p, isApproved: false, signedBy: null, approvedAt: null } : p
+        ));
         toast.success("Document unlocked for editing");
       } else {
         toast.error("Failed to unlock: " + res.error);
