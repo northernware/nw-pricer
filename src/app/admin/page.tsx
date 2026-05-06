@@ -1,21 +1,21 @@
-import Header from "@/components/Header";
-import Calculator from "@/components/Calculator";
-import Footer from "@/components/Footer";
-import { logoutAction } from "../login/actions";
+import KanbanBoard from "@/components/KanbanBoard";
+import { getSavedProjects } from "@/app/actions";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const projects = await getSavedProjects();
+
   return (
-    <>
-      <Header />
-      <div className="max-w-4xl mx-auto px-4 pt-4 flex justify-end relative z-50">
-        <form action={logoutAction}>
-          <button type="submit" className="text-[10px] font-mono text-nw-graphite hover:text-red-500 uppercase tracking-widest transition-colors">
-            Logout
-          </button>
-        </form>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-8">
+        <h1 className="font-display font-black text-3xl uppercase tracking-tighter text-nw-black">
+          Pipeline Overview
+        </h1>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mt-2">
+          Manage your active projects and quotes
+        </p>
       </div>
-      <Calculator />
-      <Footer />
-    </>
+
+      <KanbanBoard initialProjects={projects} />
+    </div>
   );
 }
