@@ -28,6 +28,29 @@ export async function getSavedProjects() {
     console.error("Failed to fetch projects:", error);
     return [];
   }
+
+export async function getClients() {
+  try {
+    const clients = await prisma.client.findMany({
+      orderBy: { updatedAt: 'desc' },
+      include: { _count: { select: { projects: true } } }
+    });
+    return clients.map((c: any) => ({
+      id: c.id,
+      firstName: c.firstName,
+      lastName: c.lastName,
+      company: c.company,
+      email: c.email,
+      phone: c.phone,
+      status: c.status,
+      projectCount: c._count.projects,
+      lastModified: c.updatedAt.getTime(),
+    }));
+  } catch (error) {
+    console.error("Failed to fetch clients:", error);
+    return [];
+  }
+}
 }
 
 export async function updateProjectStatusAction(id: string, status: string) {
@@ -42,6 +65,20 @@ export async function updateProjectStatusAction(id: string, status: string) {
     console.error("Failed to update status:", error);
     return { success: false, error: error.message };
   }
+
+export async function updateClientStatusAction(id: string, status: string) {
+  try {
+    await prisma.client.update({
+      where: { id },
+      data: { status }
+    });
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to update client status:", error);
+    return { success: false, error: error.message };
+  }
+}
 }
 
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {

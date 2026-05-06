@@ -8,7 +8,7 @@ export default function AdminHeader() {
     <header className="border-b border-nw-black bg-nw-bone relative z-40">
       <div className="bg-noise absolute inset-0 z-0 pointer-events-none opacity-50"></div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex h-16 items-center justify-between">
+      <div className="w-full px-8 relative z-10 flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
           <div className="font-display font-black text-xl tracking-tighter uppercase text-nw-black flex items-center gap-2">
             <Icon icon="solar:box-minimalistic-bold" className="text-nw-acid" />
