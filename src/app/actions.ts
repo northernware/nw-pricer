@@ -15,7 +15,9 @@ export async function getSavedProjects() {
     return projects.map((p: any) => ({
       id: p.id,
       name: p.name,
-      clientName: p.client ? `${p.client.firstName} ${p.client.lastName}` : 'Unknown Client',
+      clientName: (p.client && p.client.firstName !== 'Unknown') 
+        ? `${p.client.firstName} ${p.client.lastName}` 
+        : (p.config as any).proposal?.clientName || 'Unknown Client',
       clientCompany: p.client?.company || null,
       config: p.config as unknown as CalculatorInput,
       lastModified: p.updatedAt.getTime(),
@@ -134,8 +136,22 @@ export async function deleteClientAction(id: string) {
 
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {
   try {
-    const firstName = data.config.proposal?.clientFirstName || 'Unknown';
-    const lastName = data.config.proposal?.clientLastName || 'Client';
+    const fullClientName = data.config.proposal?.clientName || "Unknown Client";
+    let firstName = data.config.proposal?.clientFirstName;
+    let lastName = data.config.proposal?.clientLastName;
+
+    // Fallback if individual names are missing but full name exists
+    if (!firstName || !lastName) {
+      const parts = fullClientName.trim().split(/\s+/);
+      if (parts.length > 0) {
+        firstName = firstName || parts[0];
+        lastName = lastName || (parts.slice(1).join(" ") || "Client");
+      } else {
+        firstName = firstName || "Unknown";
+        lastName = lastName || "Client";
+      }
+    }
+
     const company = data.config.proposal?.clientCompany || null;
 
     const existingProject = await prisma.project.findUnique({ where: { id: data.id } });
