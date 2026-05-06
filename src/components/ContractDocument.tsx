@@ -409,7 +409,7 @@ export default function ContractDocument({
                 
                 {/* Seal Content */}
                 <div className="relative flex flex-col items-center justify-center text-center p-4">
-                  <img src="/northernware-logo.png" alt="Northernware Logo" className="w-12 h-12 object-contain mb-2" />
+                  <img src="/northernware-logo.png" alt="Northernware Logo" className="w-12 h-12 object-contain mb-2 invert" />
                   <div className="font-display font-black text-[10px] tracking-tighter uppercase leading-none mb-1">
                     Northernware
                   </div>
