@@ -57,7 +57,7 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
         const stageProjects = projects.filter(p => p.status === stage.id || (!p.status && stage.id === 'lead'));
         
         return (
-          <div key={stage.id} className="flex-1 min-w-[320px] flex flex-col bg-nw-bone/30 dark:bg-nw-black/20 rounded-xl border border-nw-graphite/10">
+          <div key={stage.id} className="flex-1 min-w-[320px] flex flex-col bg-white dark:bg-nw-black/40 rounded-xl border border-nw-graphite/10">
             {/* Column Header */}
             <div className="p-5 flex justify-between items-center border-b border-nw-graphite/10">
               <div className="font-mono text-[10px] text-nw-black dark:text-nw-bone uppercase tracking-[0.2em] flex items-center gap-2">
