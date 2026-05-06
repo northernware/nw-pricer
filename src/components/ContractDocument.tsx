@@ -142,7 +142,8 @@ export default function ContractDocument({
           <p>
             This Website Development Services Agreement (<strong>"Agreement"</strong>) is a legally binding agreement between{" "}
             <strong>{senderFull}</strong> (<strong>"Developer"</strong>) operating as {SENDER.company}, and{" "}
-            <strong>{p.clientCompany || clientFull}</strong> (<strong>"Client"</strong>), collectively referred to as the <strong>"Parties"</strong>.
+            <strong>{clientFull}</strong> (<strong>"Client"</strong>)
+            {p.clientCompany ? <> of <strong>{p.clientCompany}</strong></> : ""}, collectively referred to as the <strong>"Parties"</strong>.
           </p>
           <p>
             The Client has agreed to retain the Developer to create, develop, test, and deploy a website in accordance with the scope of work described in this Agreement. The Developer is willing to undertake such work, and both Parties mutually agree to the terms and conditions set forth herein.
