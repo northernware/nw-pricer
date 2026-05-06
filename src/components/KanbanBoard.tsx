@@ -122,7 +122,7 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
                   {/* Actions overlay */}
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                     <Link 
-                      href={`/admin/calculator?load=${project.id}`}
+                      href={`/admin/calculator?project=${project.id}`}
                       className="bg-nw-black text-nw-bone text-[9px] font-mono px-3 py-1 uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black border border-transparent hover:border-nw-black transition-colors shadow-sm"
                     >
                       Edit
