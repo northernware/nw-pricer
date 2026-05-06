@@ -372,7 +372,7 @@ export default function InputPanel({
                     <input
                       type="text"
                       className="w-full bg-transparent border-b border-nw-graphite/20 py-1 text-sm focus:border-nw-acid outline-none transition-colors disabled:opacity-50"
-                      placeholder={i === 0 ? "Home" : i === 1 ? "About" : i === 2 ? "Services" : i === 3 ? "Contact" : `Page ${i + 1}`}
+                      placeholder={i === 0 ? "Home" : i === 1 ? "About" : i === 2 ? "Services / Products" : i === 3 ? "Contact" : `Page ${i + 1}`}
                       value={config.proposal.pageNames?.[i] || ""}
                       onChange={(e) => {
                         const newNames = [...(config.proposal.pageNames || [])];
