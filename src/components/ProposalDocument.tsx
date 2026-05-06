@@ -391,26 +391,7 @@ export default function ProposalDocument({
           )}
         </div>
 
-        {/* 7. Acceptance */}
-        <div>
-          <SectionTitle num={7} title="Acceptance" />
-          <div className="space-y-6 text-sm leading-relaxed max-w-3xl mb-12">
-            <p>
-              Once you've reviewed this proposal thoroughly, simply electronically sign below to indicate your approval and initiate the project. We're excited to build something exceptional with you.
-            </p>
-          </div>
-          
-          <div className="mt-10 pt-10 border-t-2 border-nw-black">
-             <div className="text-[10px] font-bold uppercase track-widest mb-6 text-nw-graphite font-mono">
-                Authorized Approval — {clientCompany}
-              </div>
-              <div className="h-32 border-b-2 border-nw-graphite/20 mb-4"></div>
-              <div className="flex justify-between font-mono text-[10px] uppercase text-nw-graphite">
-                <span>Signature</span>
-                <span>Date</span>
-              </div>
-          </div>
-        </div>
+
 
         {/* Footer bar */}
         <footer className="border-t border-nw-graphite/20 pt-8 flex justify-between items-center text-nw-graphite">
