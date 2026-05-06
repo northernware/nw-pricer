@@ -45,9 +45,9 @@ export async function updateProjectStatusAction(id: string, status: string) {
 
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {
   try {
-    const firstName = data.config.firstName || 'Unknown';
-    const lastName = data.config.lastName || 'Client';
-    const company = data.config.company || data.client;
+    const firstName = data.config.proposal?.clientFirstName || 'Unknown';
+    const lastName = data.config.proposal?.clientLastName || 'Client';
+    const company = data.config.proposal?.clientCompany || null;
 
     const existingProject = await prisma.project.findUnique({ where: { id: data.id } });
     let clientId = existingProject?.clientId;
@@ -55,7 +55,11 @@ export async function saveProjectAction(data: { id: string, name: string, client
     if (clientId) {
       await prisma.client.update({
         where: { id: clientId },
-        data: { firstName, lastName, company }
+        data: { 
+          firstName, 
+          lastName, 
+          ...(company ? { company } : {}) 
+        }
       });
     } else {
       const newClient = await prisma.client.create({
