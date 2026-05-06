@@ -24,10 +24,10 @@ export default function LoginPage() {
         window.location.href = "/";
       } else {
         const data = await res.json();
-        toast.error(data.error || "Invalid credentials");
+        toast.error(data.details ? `${data.error}: ${data.details}` : (data.error || "Invalid credentials"));
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
+      toast.error("Network error or server unavailable. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

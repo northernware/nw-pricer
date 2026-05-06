@@ -11,21 +11,28 @@ export async function POST(request: Request) {
     if (email === adminEmail && password === adminPassword) {
       const response = NextResponse.json({ success: true });
       
-      // Set an auth cookie
-      // In a real app, this should be an encrypted JWT
-      (await cookies()).set("nw_auth_session", "authenticated", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7, // 1 week
-        path: "/",
-      });
-
-      return response;
+      try {
+        const cookieStore = await cookies();
+        cookieStore.set("nw_auth_session", "authenticated", {
+          httpOnly: true,
+          secure: true, // Always secure for Vercel/Production
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+          path: "/",
+        });
+        return response;
+      } catch (cookieError) {
+        console.error("Cookie set error:", cookieError);
+        return NextResponse.json({ error: "Failed to set session" }, { status: 500 });
+      }
     }
 
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    return NextResponse.json({ 
+      error: "Invalid credentials",
+      details: !adminEmail || !adminPassword ? "Server configuration missing" : undefined
+    }, { status: 401 });
   } catch (error) {
-    return NextResponse.json({ error: "Authentication failed" }, { status: 500 });
+    console.error("Login API error:", error);
+    return NextResponse.json({ error: "Authentication failed", details: String(error) }, { status: 500 });
   }
 }
