@@ -3,12 +3,9 @@ import { FEATURES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS } from "@/lib/con
 
 // ─── Northernware Sender Info ───
 const SENDER = {
-  company: "Northernware",
-  firstName: "Kenji", // This should eventually come from config/env
-  lastName: "Vafe",
-  state: "Northern Luzon",
-  country: "Philippines",
-  website: "www.northernware.ph",
+  company: "Northernware Software Development Services",
+  fullName: "Kenji Von Ashley F. Edillo",
+  address: "Tabuk City, Kalinga, Philippines",
 };
 
 interface ProposalDocumentProps {
@@ -111,7 +108,7 @@ export default function ProposalDocument({
       {/* ── Header ── */}
       <header className="flex flex-col md:flex-row justify-between items-start mb-16 border-b-2 border-nw-black pb-8 gap-6 md:gap-0">
         <div>
-          <h1 className="text-4xl font-display font-bold track-tighter m-0 uppercase italic">
+          <h1 className="text-4xl font-display font-bold track-tighter m-0">
             northernware<span className="text-nw-acid text-xl align-super ml-1">®</span>
           </h1>
           <p className="mt-2 text-xs uppercase track-widest text-nw-graphite font-bold font-mono">
@@ -142,9 +139,9 @@ export default function ProposalDocument({
         </div>
         <div className="w-full md:w-2/5 md:text-right">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-3 font-mono font-bold">Project Lead</div>
-          <div className="text-xl font-display font-bold mb-1">{SENDER.firstName} {SENDER.lastName}</div>
-          <div className="text-xs text-nw-graphite mb-1">{SENDER.company} · {SENDER.website}</div>
-          <div className="text-xs text-nw-graphite">{SENDER.state}, {SENDER.country}</div>
+          <div className="text-xl font-display font-bold mb-1">{SENDER.fullName}</div>
+          <div className="text-xs text-nw-graphite mb-1">{SENDER.company}</div>
+          <div className="text-xs text-nw-graphite">{SENDER.address}</div>
         </div>
       </section>
 
@@ -165,7 +162,7 @@ export default function ProposalDocument({
               We've built websites for several brands with great success, and are quite excited to get to work on yours. In this proposal, you'll find what we feel is the optimal solution for your website development needs, along with the associated delivery timeline, costs, and project terms.
             </p>
             <div className="pt-4">
-              <p className="font-bold">{SENDER.firstName} {SENDER.lastName}</p>
+              <p className="font-bold">{SENDER.fullName}</p>
               <p className="text-xs text-nw-graphite font-mono uppercase tracking-widest">{SENDER.company}</p>
             </div>
           </div>
@@ -366,7 +363,7 @@ export default function ProposalDocument({
         {/* Footer bar */}
         <footer className="border-t border-nw-graphite/20 pt-8 flex justify-between items-center text-nw-graphite">
           <div className="font-mono text-[10px] uppercase tracking-[0.2em]">
-            {SENDER.company} · Confidential
+            {SENDER.company} · {SENDER.address}
           </div>
           <div className="font-mono text-[10px] uppercase tracking-[0.2em]">
             PRP-{id.toUpperCase()}

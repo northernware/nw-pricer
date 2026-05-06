@@ -4,11 +4,9 @@ import SignatureBlock from "./SignatureBlock";
 
 // ─── Northernware Sender Info ───
 const SENDER = {
-  firstName: "Kenji Von Ashley",
-  lastName: "Edillo",
-  company: "Northernware",
-  state: "Northern Luzon",
-  country: "Philippines",
+  company: "Northernware Software Development Services",
+  fullName: "Kenji Von Ashley F. Edillo",
+  address: "Tabuk City, Kalinga, Philippines",
 };
 
 interface ContractDocumentProps {
@@ -59,7 +57,7 @@ export default function ContractDocument({
   const clientLast = p.clientLastName || p.clientName.split(" ").slice(1).join(" ") || "";
   const clientFull = `${clientFirst} ${clientLast}`.trim();
   const clientCompany = p.clientCompany || clientFull;
-  const senderFull = `${SENDER.firstName} ${SENDER.lastName}`;
+  const senderFull = SENDER.fullName;
 
   const projectTypeLabel = PROJECT_TYPES.find(pt => pt.value === input.projectType)?.label || input.projectType;
   const hostingPlan = HOSTING_PLANS.find(h => h.value === input.hostingPlan);
@@ -124,8 +122,7 @@ export default function ContractDocument({
         <div className="w-full md:w-2/5 md:text-right">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Service Provider</div>
           <div className="text-sm font-bold mb-1">{SENDER.company}</div>
-          <div className="text-xs text-nw-graphite mb-1">{SENDER.state}, {SENDER.country}</div>
-          <div className="text-xs text-nw-graphite">www.northernware.ph</div>
+          <div className="text-xs text-nw-graphite">{SENDER.address}</div>
         </div>
       </section>
 
@@ -378,7 +375,7 @@ export default function ContractDocument({
 
         <div className="border-t border-nw-graphite/20 pt-6 text-center">
           <p className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite">
-            Confidential — {SENDER.company} · CTR-{id.toUpperCase()} · {dateStr}
+            {SENDER.company} · {SENDER.address} · CTR-{id.toUpperCase()} · {dateStr}
           </p>
         </div>
       </div>
