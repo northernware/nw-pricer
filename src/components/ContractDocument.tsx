@@ -257,10 +257,10 @@ export default function ContractDocument({
               <tbody>
                 <tr className="border-b border-nw-graphite/20">
                   <td className="py-3">
-                    <div className="font-bold">Core Development ({input.pages} pages, {result.adjustedHours}h)</div>
-                    <div className="text-xs text-nw-graphite">{projectTypeLabel} · {input.designLevel} design · {input.complexity} complexity</div>
+                    <div className="font-bold">Core Development & Design</div>
+                    <div className="text-xs text-nw-graphite">{input.pages} pages · {input.designLevel.replace("_", " ")} design</div>
                   </td>
-                  <td className="py-3 text-right font-mono font-bold">{fmt(result.baseCost)}</td>
+                  <td className="py-3 text-right font-mono font-bold">{fmt((result.pagesHours + result.designHours) * input.hourlyRate)}</td>
                 </tr>
                 {selectedFeatures.length > 0 && (
                   <tr className="border-b border-nw-graphite/20">
@@ -268,12 +268,21 @@ export default function ContractDocument({
                       <div className="font-bold">Custom Feature Integrations</div>
                       <div className="text-xs text-nw-graphite">{selectedFeatures.map(f => f.label).join(" · ")}</div>
                     </td>
-                    <td className="py-3 text-right font-mono font-bold">{fmt(result.featureHours * result.complexityMultiplier * input.hourlyRate)}</td>
+                    <td className="py-3 text-right font-mono font-bold">{fmt(result.featureHours * input.hourlyRate)}</td>
                   </tr>
                 )}
+                <tr className="border-b border-nw-graphite/20 bg-nw-bone/30">
+                  <td className="py-3">
+                    <div className="font-bold">Technical Management & QA</div>
+                    <div className="text-xs text-nw-graphite">Complexity adjustment, project buffer, and quality assurance</div>
+                  </td>
+                  <td className="py-3 text-right font-mono font-bold">
+                    {fmt(result.roundedPrice + result.discountAmount - (result.baseHours * input.hourlyRate))}
+                  </td>
+                </tr>
                 {result.discountAmount > 0 && (
                   <tr className="border-b border-nw-graphite/20 text-nw-acid">
-                    <td className="py-3">Strategic Discount ({input.discountPercent}%)</td>
+                    <td className="py-3 font-bold uppercase tracking-widest text-[10px]">Strategic Discount ({input.discountPercent}%)</td>
                     <td className="py-3 text-right font-mono font-bold">-{fmt(result.discountAmount)}</td>
                   </tr>
                 )}
