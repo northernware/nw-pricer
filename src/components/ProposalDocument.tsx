@@ -129,23 +129,23 @@ export default function ProposalDocument({
       </header>
 
       {/* ── Client / Provider Info ── */}
-      <section className="flex flex-col md:flex-row justify-between mb-20 bg-nw-bone/50 p-6 md:p-10 border-l-4 border-nw-acid gap-8 md:gap-0">
+      <section className="flex flex-col md:flex-row justify-between mb-12 bg-nw-bone/50 p-6 md:p-8 border-l-4 border-nw-acid gap-8 md:gap-0">
         <div className="w-full md:w-1/2">
-          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-3 font-mono font-bold">Prepared For</div>
+          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared For</div>
           {clientNameRaw ? (
             <>
-              <div className="text-3xl font-display font-bold mb-1">{clientNameRaw}</div>
+              <div className="text-2xl font-display font-bold mb-1">{clientNameRaw}</div>
               {p.clientCompany && (
-                <div className="text-sm text-nw-graphite font-medium">{p.clientCompany}</div>
+                <div className="text-sm text-nw-graphite">{p.clientCompany}</div>
               )}
             </>
           ) : (
-            <div className="text-3xl font-display font-bold mb-1">{p.clientCompany || "Valued Client"}</div>
+            <div className="text-2xl font-display font-bold mb-1">{p.clientCompany || "Valued Client"}</div>
           )}
         </div>
         <div className="w-full md:w-2/5 md:text-right">
-          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-3 font-mono font-bold">Prepared By</div>
-          <div className="text-xl font-display font-bold mb-1">{SENDER.fullName}</div>
+          <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared By</div>
+          <div className="text-sm font-bold mb-1">{SENDER.fullName}</div>
           <div className="text-xs text-nw-graphite mb-1">{SENDER.company}</div>
           <div className="text-xs text-nw-graphite">{SENDER.address}</div>
         </div>
