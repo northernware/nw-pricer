@@ -220,7 +220,7 @@ export default function ContractDocument({
             <div className="mt-4 p-4 bg-nw-bone/30 border border-nw-graphite/20">
               <div className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mb-2">Plan Includes</div>
               <ul className="space-y-1">
-                {hostingPlan!.includes.map((item, i) => (
+                {(hostingPlan!.fullIncludes || hostingPlan!.includes).map((item, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm">
                     <span className="text-nw-acid">✓</span> {item}
                   </li>

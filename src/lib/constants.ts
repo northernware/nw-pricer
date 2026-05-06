@@ -41,6 +41,7 @@ export const HOSTING_PLANS: {
   price: number; 
   description: string;
   includes: string[];
+  fullIncludes?: string[];
   bestFor: string[];
 }[] = [
   {
@@ -49,6 +50,7 @@ export const HOSTING_PLANS: {
     price: 0,
     description: 'Client handles hosting and maintenance.',
     includes: [],
+    fullIncludes: [],
     bestFor: []
   },
   {
@@ -57,6 +59,12 @@ export const HOSTING_PLANS: {
     price: 1500,
     description: 'Managed hosting for simple business websites.',
     includes: [
+      'Managed hosting',
+      'Domain connection + SSL',
+      'Basic monitoring',
+      'Email support'
+    ],
+    fullIncludes: [
       'Managed hosting',
       'Domain connection + SSL',
       'Basic monitoring',
@@ -79,6 +87,16 @@ export const HOSTING_PLANS: {
       'Minor content updates',
       'Performance checks'
     ],
+    fullIncludes: [
+      'Managed hosting',
+      'Domain connection + SSL',
+      'Basic monitoring',
+      'Email support',
+      'Ongoing maintenance',
+      'Bug fixes',
+      'Minor content updates',
+      'Performance checks'
+    ],
     bestFor: [
       'Most client websites',
       'SMEs'
@@ -91,6 +109,20 @@ export const HOSTING_PLANS: {
     description: 'Business-critical hosting with priority support and SEO.',
     includes: [
       'Everything in Standard',
+      'Priority support',
+      'SEO support (basic)',
+      'Analytics tracking',
+      'Faster turnaround'
+    ],
+    fullIncludes: [
+      'Managed hosting',
+      'Domain connection + SSL',
+      'Basic monitoring',
+      'Email support',
+      'Ongoing maintenance',
+      'Bug fixes',
+      'Minor content updates',
+      'Performance checks',
       'Priority support',
       'SEO support (basic)',
       'Analytics tracking',
