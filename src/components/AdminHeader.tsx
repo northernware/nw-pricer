@@ -12,7 +12,7 @@ export default function AdminHeader() {
         <div className="flex items-center gap-8">
           <div className="font-display font-black text-xl tracking-tighter uppercase text-nw-black flex items-center gap-2">
             <Icon icon="solar:box-minimalistic-bold" className="text-nw-acid" />
-            CRM
+            Northernware Pricer
           </div>
           
           <nav className="hidden md:flex gap-6">
