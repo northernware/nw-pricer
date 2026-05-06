@@ -15,7 +15,8 @@ export async function getSavedProjects() {
     return projects.map((p: any) => ({
       id: p.id,
       name: p.name,
-      client: p.client ? (p.client.company || `${p.client.firstName} ${p.client.lastName}`) : 'Unknown Client',
+      clientName: p.client ? `${p.client.firstName} ${p.client.lastName}` : 'Unknown Client',
+      clientCompany: p.client?.company || null,
       config: p.config as unknown as CalculatorInput,
       lastModified: p.updatedAt.getTime(),
       isApproved: !!p.approvedAt,

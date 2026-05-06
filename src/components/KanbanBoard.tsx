@@ -52,7 +52,7 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
   };
 
   return (
-    <div className="flex gap-6 h-[calc(100vh-100px)] overflow-x-auto pb-4">
+    <div className="flex gap-2 h-[calc(100vh-100px)] overflow-x-auto pb-4">
       {STAGES.map((stage) => {
         const stageProjects = projects.filter(p => p.status === stage.id || (!p.status && stage.id === 'lead'));
         
@@ -74,11 +74,11 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
               {stageProjects.map((project) => (
                 <div 
                   key={project.id} 
-                  className="bg-white border border-nw-graphite/10 rounded-lg p-5 group hover:border-nw-acid/30 transition-all duration-300 relative flex flex-col shadow-sm"
+                  className="bg-nw-bone border border-nw-graphite/10 rounded-lg p-5 group hover:border-nw-acid/30 transition-all duration-300 relative flex flex-col shadow-sm"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <Link href={getUrl(project.id)} target="_blank" className="hover:text-nw-acid transition-colors flex-1">
-                      <h3 className="font-display font-bold text-lg tracking-tight text-nw-black leading-tight line-clamp-2 pr-4">
+                      <h3 className="font-display font-bold text-md tracking-tight text-nw-black leading-tight line-clamp-2 pr-4">
                         {project.name}
                       </h3>
                     </Link>
@@ -90,8 +90,15 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
                     </button>
                   </div>
                   
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite mb-6">
-                    {project.client}
+                  <div className="mb-6">
+                    <div className="font-mono text-[10px] uppercase tracking-widest text-nw-black leading-tight">
+                      {project.clientName}
+                    </div>
+                    {project.clientCompany && (
+                      <div className="font-mono text-[8px] uppercase tracking-[0.15em] text-nw-graphite mt-1">
+                        {project.clientCompany}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-nw-graphite/5">
