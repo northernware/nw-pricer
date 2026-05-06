@@ -80,29 +80,29 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-end mb-4 px-2">
-        <button
-          onClick={() => {
-            setFormData({ firstName: "", lastName: "", company: "", email: "", phone: "" });
-            setShowModal(true);
-          }}
-          className="flex items-center gap-2 bg-nw-black text-nw-white px-4 py-2 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black transition-all"
-        >
-          <Icon icon="solar:user-plus-linear" className="w-4 h-4" />
-          Add Client
-        </button>
-      </div>
-
       <div className="flex gap-2 flex-1 overflow-x-auto pb-4">
         {CLIENT_STAGES.map((stage) => {
           const stageClients = clients.filter(c => c.status === stage.id || (!c.status && stage.id === 'prospect'));
           
           return (
             <div key={stage.id} className="flex-1 min-w-[320px] flex flex-col bg-nw-white rounded-xl border border-nw-graphite/10">
+              {/* Column Header */}
               <div className="p-5 flex justify-between items-center border-b border-nw-graphite/10">
                 <div className="font-mono text-[10px] text-nw-black uppercase tracking-[0.2em] flex items-center gap-2">
                   <div className={`w-1.5 h-1.5 rounded-full ${stage.dot}`}></div>
                   {stage.label}
+                  {stage.id === 'prospect' && (
+                    <button
+                      onClick={() => {
+                        setFormData({ firstName: "", lastName: "", company: "", email: "", phone: "" });
+                        setShowModal(true);
+                      }}
+                      className="ml-2 p-1 hover:text-nw-acid transition-colors"
+                      title="Add Prospect"
+                    >
+                      <Icon icon="solar:add-circle-linear" className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
                 <span className="text-[10px] font-mono text-nw-graphite/60">
                   {stageClients.length}
