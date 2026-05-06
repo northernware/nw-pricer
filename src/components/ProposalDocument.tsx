@@ -321,7 +321,7 @@ export default function ProposalDocument({
                     <td className="p-4 text-right font-mono font-bold text-nw-black">{fmt(result.featureHours * input.hourlyRate)}</td>
                   </tr>
                 )}
-                <tr className="bg-nw-bone/30">
+                <tr>
                   <td className="p-4">
                     <div className="font-bold text-nw-graphite">Technical Management & QA</div>
                     <div className="text-[10px] text-nw-graphite">Complexity adjustment, project buffer, and quality assurance</div>
@@ -331,10 +331,16 @@ export default function ProposalDocument({
                   </td>
                 </tr>
                 {result.discountAmount > 0 && (
-                  <tr className="bg-nw-acid/5 text-nw-acid">
-                    <td className="p-4 font-bold uppercase tracking-widest text-[10px]">Strategic Partnership Discount ({input.discountPercent}%)</td>
-                    <td className="p-4 text-right font-mono font-bold">-{fmt(result.discountAmount)}</td>
-                  </tr>
+                  <>
+                    <tr className="bg-nw-bone/30">
+                      <td className="p-4 font-bold uppercase tracking-widest text-[10px]">Gross Project Investment</td>
+                      <td className="p-4 text-right font-mono font-bold">{fmt(result.roundedPrice + result.discountAmount)}</td>
+                    </tr>
+                    <tr className="bg-nw-acid/5 text-nw-acid">
+                      <td className="p-4 font-bold uppercase tracking-widest text-[10px]">Strategic Partnership Discount ({input.discountPercent}%)</td>
+                      <td className="p-4 text-right font-mono font-bold">-{fmt(result.discountAmount)}</td>
+                    </tr>
+                  </>
                 )}
                 <tr className="bg-nw-black text-nw-bone">
                   <td className="p-4 font-display font-bold text-lg uppercase tracking-tight">Total Project Investment</td>

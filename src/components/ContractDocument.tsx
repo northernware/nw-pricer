@@ -273,7 +273,7 @@ export default function ContractDocument({
                     <td className="py-3 text-right font-mono font-bold">{fmt(result.featureHours * input.hourlyRate)}</td>
                   </tr>
                 )}
-                <tr className="border-b border-nw-graphite/20 bg-nw-bone/30">
+                <tr className="border-b border-nw-graphite/20">
                   <td className="py-3">
                     <div className="font-bold">Technical Management & QA</div>
                     <div className="text-xs text-nw-graphite">Complexity adjustment, project buffer, and quality assurance</div>
@@ -283,10 +283,16 @@ export default function ContractDocument({
                   </td>
                 </tr>
                 {result.discountAmount > 0 && (
-                  <tr className="border-b border-nw-graphite/20 text-nw-acid">
-                    <td className="py-3 font-bold uppercase tracking-widest text-[10px]">Strategic Discount ({input.discountPercent}%)</td>
-                    <td className="py-3 text-right font-mono font-bold">-{fmt(result.discountAmount)}</td>
-                  </tr>
+                  <>
+                    <tr className="border-b border-nw-graphite/20 bg-nw-bone/30">
+                      <td className="py-3 font-bold uppercase tracking-widest text-[10px]">Gross Investment (Pre-Discount)</td>
+                      <td className="py-3 text-right font-mono font-bold">{fmt(result.roundedPrice + result.discountAmount)}</td>
+                    </tr>
+                    <tr className="border-b border-nw-graphite/20 text-nw-acid">
+                      <td className="py-3 font-bold uppercase tracking-widest text-[10px]">Strategic Discount ({input.discountPercent}%)</td>
+                      <td className="py-3 text-right font-mono font-bold">-{fmt(result.discountAmount)}</td>
+                    </tr>
+                  </>
                 )}
               </tbody>
             </table>
