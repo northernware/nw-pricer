@@ -81,6 +81,46 @@ export async function updateClientStatusAction(id: string, status: string) {
   }
 }
 
+export async function createClientAction(data: { firstName: string, lastName: string, company?: string, email?: string, phone?: string }) {
+  try {
+    const client = await prisma.client.create({
+      data: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        company: data.company,
+        email: data.email,
+        phone: data.phone,
+        status: "prospect"
+      }
+    });
+    revalidatePath("/admin");
+    return { success: true, client };
+  } catch (error: any) {
+    console.error("Failed to create client:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateClientAction(id: string, data: { firstName: string, lastName: string, company?: string, email?: string, phone?: string }) {
+  try {
+    await prisma.client.update({
+      where: { id },
+      data: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        company: data.company,
+        email: data.email,
+        phone: data.phone
+      }
+    });
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to update client:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {
   try {
     const firstName = data.config.proposal?.clientFirstName || 'Unknown';
