@@ -9,12 +9,13 @@ import { createHash } from "crypto";
 export async function getSavedProjects() {
   try {
     const projects = await prisma.project.findMany({
-      orderBy: { updatedAt: 'desc' }
+      orderBy: { updatedAt: 'desc' },
+      include: { client: true }
     });
     return projects.map((p: any) => ({
       id: p.id,
       name: p.name,
-      client: p.client,
+      client: p.client ? (p.client.company || `${p.client.firstName} ${p.client.lastName}`) : 'Unknown Client',
       config: p.config as unknown as CalculatorInput,
       lastModified: p.updatedAt.getTime(),
       isApproved: !!p.approvedAt,
@@ -29,17 +30,36 @@ export async function getSavedProjects() {
 
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {
   try {
+    const firstName = data.config.firstName || 'Unknown';
+    const lastName = data.config.lastName || 'Client';
+    const company = data.config.company || data.client;
+
+    const existingProject = await prisma.project.findUnique({ where: { id: data.id } });
+    let clientId = existingProject?.clientId;
+
+    if (clientId) {
+      await prisma.client.update({
+        where: { id: clientId },
+        data: { firstName, lastName, company }
+      });
+    } else {
+      const newClient = await prisma.client.create({
+        data: { firstName, lastName, company }
+      });
+      clientId = newClient.id;
+    }
+
     await prisma.project.upsert({
       where: { id: data.id },
       update: {
         name: data.name,
-        client: data.client,
+        clientId: clientId,
         config: data.config,
       },
       create: {
         id: data.id,
         name: data.name,
-        client: data.client,
+        clientId: clientId,
         config: data.config,
       }
     });

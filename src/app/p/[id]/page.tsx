@@ -12,7 +12,10 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { id } = await params;
   const { mode } = await searchParams;
-  const project = await prisma.project.findUnique({ where: { id } });
+  const project = await prisma.project.findUnique({ 
+    where: { id },
+    include: { client: true }
+  });
   
   if (!project) return { title: "Document Not Found" };
   
@@ -20,13 +23,18 @@ export async function generateMetadata(
                   mode === 'invoice' ? 'Invoice' : 
                   mode === 'quote' ? 'Quotation' : 'Proposal';
                   
-  return { title: `${modeStr} | ${project.client} | Northernware` };
+  const clientName = project.client.company || `${project.client.firstName} ${project.client.lastName}`;
+                  
+  return { title: `${modeStr} | ${clientName} | Northernware` };
 }
 
 export default async function MagicLinkPage({ params, searchParams }: { params: { id: string }, searchParams: { mode?: string, invoiceId?: string } }) {
   const { id } = await params;
   const { mode, invoiceId } = await searchParams;
-  const project = await prisma.project.findUnique({ where: { id } });
+  const project = await prisma.project.findUnique({ 
+    where: { id },
+    include: { client: true }
+  });
 
   if (!project) {
     notFound();
