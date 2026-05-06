@@ -27,7 +27,7 @@ export default function Calculator() {
   const [projects, setProjects] = useState<StoredProject[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [showNewModal, setShowNewModal] = useState(false);
-  const [newProjectInfo, setNewProjectInfo] = useState({ name: "", client: "" });
+  const [newProjectInfo, setNewProjectInfo] = useState({ name: "", firstName: "", lastName: "", company: "" });
 
   const fetchProjects = async () => {
     const data = await getSavedProjects();
@@ -148,13 +148,16 @@ export default function Calculator() {
       proposal: {
         ...DEFAULTS.proposal,
         projectName: newProjectInfo.name,
-        clientName: newProjectInfo.client
+        clientName: `${newProjectInfo.firstName} ${newProjectInfo.lastName}`.trim(),
+        clientFirstName: newProjectInfo.firstName,
+        clientLastName: newProjectInfo.lastName,
+        clientCompany: newProjectInfo.company,
       }
     };
     setConfig(freshConfig);
     setCurrentProjectId(null);
     setShowNewModal(false);
-    setNewProjectInfo({ name: "", client: "" });
+    setNewProjectInfo({ name: "", firstName: "", lastName: "", company: "" });
     // Clear draft
     localStorage.removeItem("nw_pricer_draft");
   };
@@ -511,18 +514,40 @@ export default function Calculator() {
                       type="text"
                       value={newProjectInfo.name}
                       onChange={(e) => setNewProjectInfo(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="e.g. Acme Corp Redesign"
+                      placeholder="e.g. Acme Corp Website Redesign"
                       className="w-full bg-nw-white border border-nw-graphite/20 p-3 font-mono text-xs outline-none focus:border-nw-acid transition-colors"
                       autoFocus
                     />
                   </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Client First Name</label>
+                      <input 
+                        type="text"
+                        value={newProjectInfo.firstName}
+                        onChange={(e) => setNewProjectInfo(prev => ({ ...prev, firstName: e.target.value }))}
+                        placeholder="e.g. John"
+                        className="w-full bg-nw-white border border-nw-graphite/20 p-3 font-mono text-xs outline-none focus:border-nw-acid transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Client Last Name</label>
+                      <input 
+                        type="text"
+                        value={newProjectInfo.lastName}
+                        onChange={(e) => setNewProjectInfo(prev => ({ ...prev, lastName: e.target.value }))}
+                        placeholder="e.g. Doe"
+                        className="w-full bg-nw-white border border-nw-graphite/20 p-3 font-mono text-xs outline-none focus:border-nw-acid transition-colors"
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <label className="block font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Client Name</label>
+                    <label className="block font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Company / Organization <span className="text-nw-graphite/40 normal-case">(optional)</span></label>
                     <input 
                       type="text"
-                      value={newProjectInfo.client}
-                      onChange={(e) => setNewProjectInfo(prev => ({ ...prev, client: e.target.value }))}
-                      placeholder="e.g. John Doe"
+                      value={newProjectInfo.company}
+                      onChange={(e) => setNewProjectInfo(prev => ({ ...prev, company: e.target.value }))}
+                      placeholder="e.g. Acme Corp Ltd."
                       className="w-full bg-nw-white border border-nw-graphite/20 p-3 font-mono text-xs outline-none focus:border-nw-acid transition-colors"
                     />
                   </div>
