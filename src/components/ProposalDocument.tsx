@@ -96,8 +96,8 @@ export default function ProposalDocument({
     year: "numeric", month: "long", day: "numeric",
   });
 
-  // Calculate timeline estimates (simplified)
-  const totalWeeks = Math.ceil(result.adjustedHours / 30);
+  // Calculate timeline estimates (standard 40h work week)
+  const totalWeeks = Math.ceil(result.adjustedHours / 40);
   const stages = [
     { name: "Project Kickoff & Strategy", week: "Week 01" },
     { name: "UI/UX Design & Mockups", week: `Week ${Math.ceil(totalWeeks * 0.3).toString().padStart(2, "0")}` },
