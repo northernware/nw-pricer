@@ -99,7 +99,7 @@ export default function PublicTemplate({
           <strong>DOCUMENT ID:</strong> {docPrefix}-{id.toUpperCase()}{selectedInvoice ? `-${selectedInvoice.id.split('_')[1]}` : ''}<br />
           <strong>DATE:</strong> {new Date(createdAt).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}<br />
           {!isInvoice && (
-            <><strong>VALID UNTIL:</strong> {input.proposal.validityPeriod || new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}</>
+            <><strong>VALID UNTIL:</strong> {new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}</>
           )}
           {isInvoice && (
             <><strong>DUE DATE:</strong> Upon Receipt</>
@@ -141,7 +141,7 @@ export default function PublicTemplate({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 bg-nw-bone/30 p-6 text-left">
             <div>
               <h3 className="text-xs uppercase track-widest text-nw-acid mb-3 border-b border-nw-graphite/20 pb-2 font-mono">Estimated Timeline</h3>
-              <p className="text-sm">{input.proposal.timeline}</p>
+              <p className="text-sm">Approximately {Math.ceil(result.adjustedHours / 40)} weeks from project kickoff</p>
             </div>
             <div>
               <h3 className="text-xs uppercase track-widest text-nw-acid mb-3 border-b border-nw-graphite/20 pb-2 font-mono">Project Type</h3>
