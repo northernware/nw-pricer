@@ -97,10 +97,10 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
                         setFormData({ firstName: "", lastName: "", company: "", email: "", phone: "" });
                         setShowModal(true);
                       }}
-                      className="ml-2 p-1 text-nw-black hover:text-nw-acid transition-colors"
+                      className="ml-2 inline-flex items-center justify-center text-nw-black hover:text-nw-acid transition-colors"
                       title="Add Prospect"
                     >
-                      <Icon icon="solar:plus-bold" className="w-4 h-4" />
+                      <span className="text-lg leading-none font-bold">+</span>
                     </button>
                   )}
                 </div>
