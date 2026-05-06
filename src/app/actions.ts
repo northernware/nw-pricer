@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import type { CalculatorInput } from "@/lib/calculator";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+import { createHash } from "crypto";
 
 export async function getSavedProjects() {
   try {
@@ -51,11 +53,25 @@ export async function saveProjectAction(data: { id: string, name: string, client
 
 export async function approveProjectAction(id: string, signatureName: string) {
   try {
+    const project = await prisma.project.findUnique({ where: { id } });
+    if (!project) throw new Error("Project not found");
+
+    const headerList = await headers();
+    const ip = headerList.get("x-forwarded-for") || "unknown";
+    const userAgent = headerList.get("user-agent") || "unknown";
+
+    // Create a deterministic hash of the current config to ensure document integrity
+    const configString = JSON.stringify(project.config);
+    const hash = createHash("sha256").update(configString).digest("hex");
+
     await prisma.project.update({
       where: { id },
       data: {
         approvedAt: new Date(),
         signedBy: signatureName,
+        ipAddress: ip,
+        userAgent: userAgent,
+        snapshotHash: hash,
       }
     });
     revalidatePath(`/p/${id}`);

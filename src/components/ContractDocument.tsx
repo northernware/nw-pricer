@@ -19,6 +19,8 @@ interface ContractDocumentProps {
   isApproved?: boolean;
   signedBy?: string | null;
   approvedAt?: Date | null;
+  ipAddress?: string | null;
+  snapshotHash?: string | null;
 }
 
 function Section({ num, title, children }: { num: string; title: string; children: React.ReactNode }) {
@@ -46,6 +48,8 @@ export default function ContractDocument({
   isApproved,
   signedBy,
   approvedAt,
+  ipAddress,
+  snapshotHash,
 }: ContractDocumentProps) {
   const p = input.proposal;
   const fmt = (n: number) => "₱" + n.toLocaleString();
@@ -385,6 +389,8 @@ export default function ContractDocument({
                 signedBy={signedBy}
                 approvedAt={approvedAt}
                 title={p.clientSignerTitle}
+                ipAddress={ipAddress}
+                snapshotHash={snapshotHash}
               />
             </div>
 

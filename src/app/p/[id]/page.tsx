@@ -67,6 +67,8 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
           isApproved={!!project.approvedAt}
           signedBy={project.signedBy}
           approvedAt={project.approvedAt}
+          ipAddress={project.ipAddress}
+          snapshotHash={project.snapshotHash}
         />
       </main>
       

@@ -18,6 +18,8 @@ interface PublicTemplateProps {
   signedBy?: string | null;
   approvedAt?: Date | null;
   invoiceId?: string | null;
+  ipAddress?: string | null;
+  snapshotHash?: string | null;
 }
 
 export default function PublicTemplate({ 
@@ -29,7 +31,9 @@ export default function PublicTemplate({
   isApproved, 
   signedBy, 
   approvedAt,
-  invoiceId 
+  invoiceId,
+  ipAddress,
+  snapshotHash 
 }: PublicTemplateProps) {
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
   const hostingPlan = input.hostingPlan;
@@ -51,6 +55,8 @@ export default function PublicTemplate({
         isApproved={isApproved}
         signedBy={signedBy}
         approvedAt={approvedAt}
+        ipAddress={ipAddress}
+        snapshotHash={snapshotHash}
       />
     );
   }
@@ -280,6 +286,8 @@ export default function PublicTemplate({
                 isApproved={!!isApproved} 
                 signedBy={signedBy} 
                 approvedAt={approvedAt} 
+                ipAddress={ipAddress}
+                snapshotHash={snapshotHash}
               />
             </div>
             <div className="flex-1 text-left">

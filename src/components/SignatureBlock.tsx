@@ -8,13 +8,17 @@ export default function SignatureBlock({
   isApproved, 
   signedBy, 
   approvedAt,
-  title
+  title,
+  ipAddress,
+  snapshotHash
 }: { 
   projectId: string, 
   isApproved: boolean, 
   signedBy?: string | null, 
   approvedAt?: Date | null,
-  title?: string
+  title?: string,
+  ipAddress?: string | null,
+  snapshotHash?: string | null
 }) {
   const [signature, setSignature] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,9 +64,14 @@ export default function SignatureBlock({
           Digitally Signed
         </div>
         
-        <div className="mt-6 pt-4 border-t border-nw-acid/20 text-[10px] font-mono text-nw-graphite">
+        <div className="mt-6 pt-4 border-t border-nw-acid/20 text-[10px] font-mono text-nw-graphite leading-relaxed">
           Timestamp: {approvedAt ? new Date(approvedAt).toLocaleString('en-PH') : 'Unknown'}<br />
-          IP Logged & Verified
+          IP: {ipAddress || "Logged"}<br />
+          {snapshotHash && (
+            <span className="break-all opacity-60">Hash: {snapshotHash.substring(0, 16)}...</span>
+          )}
+          <br />
+          Verified Digital Record
         </div>
       </div>
     );
