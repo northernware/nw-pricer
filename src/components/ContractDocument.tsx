@@ -109,18 +109,18 @@ export default function ContractDocument({
       <section className="flex flex-col md:flex-row justify-between mb-12 bg-nw-bone/50 p-6 md:p-8 border-l-4 border-nw-acid gap-8 md:gap-0">
         <div className="w-full md:w-1/2">
           <div className="text-[10px] text-nw-graphite uppercase track-widest mb-2 font-mono">Prepared For</div>
-          <div className="text-2xl font-display font-bold mb-1 text-nw-black">
-            {p.clientCompany || clientFull}
-          </div>
-          <div className="flex flex-col gap-1">
-            {p.clientCompany && clientFull && (
-              <div className="text-[10px] uppercase tracking-wider font-bold text-nw-graphite">
-                Attn: {clientFull}
-              </div>
-            )}
-            <div className="text-sm text-nw-acid font-medium">
-              {p.projectName || "Website Development Project"}
-            </div>
+          {clientFull ? (
+            <>
+              <div className="text-2xl font-display font-bold mb-1 text-nw-black">{clientFull}</div>
+              {p.clientCompany && (
+                <div className="text-sm text-nw-graphite mb-1">{p.clientCompany}</div>
+              )}
+            </>
+          ) : (
+            <div className="text-2xl font-display font-bold mb-1 text-nw-black">{p.clientCompany || "Valued Client"}</div>
+          )}
+          <div className="text-sm text-nw-acid font-medium mt-1">
+            {p.projectName || "Website Development Project"}
           </div>
         </div>
         <div className="w-full md:w-2/5 md:text-right">
