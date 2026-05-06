@@ -7,11 +7,20 @@ import SignatureBlock from "@/components/SignatureBlock";
 import PaymentBlock from "@/components/PaymentBlock";
 import PublicTemplate from "@/components/PublicTemplate";
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(
+  { params, searchParams }: { params: { id: string }, searchParams: { mode?: string, invoiceId?: string } }
+): Promise<Metadata> {
   const { id } = await params;
+  const { mode } = await searchParams;
   const project = await prisma.project.findUnique({ where: { id } });
-  if (!project) return { title: "Proposal Not Found" };
-  return { title: `Proposal for ${project.client}` };
+  
+  if (!project) return { title: "Document Not Found" };
+  
+  const modeStr = mode === 'contract' ? 'Contract' : 
+                  mode === 'invoice' ? 'Invoice' : 
+                  mode === 'quote' ? 'Quotation' : 'Proposal';
+                  
+  return { title: `${modeStr} | ${project.client} | Northernware` };
 }
 
 export default async function MagicLinkPage({ params, searchParams }: { params: { id: string }, searchParams: { mode?: string, invoiceId?: string } }) {
