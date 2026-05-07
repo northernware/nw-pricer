@@ -108,7 +108,7 @@ export default function ContractDocument({
         <div className="text-right text-xs text-nw-graphite leading-relaxed font-mono">
           <strong>DOCUMENT ID:</strong> CTR-{id.toUpperCase()}<br />
           <strong>DATE:</strong> {dateStr}<br />
-          <strong>PROJECT:</strong> {p.projectName || "Website Development Project"}
+          <strong>PROJECT:</strong> {p.projectName || `${projectTypeLabel} Project`}
         </div>
       </header>
 
@@ -141,13 +141,13 @@ export default function ContractDocument({
         {/* Preamble */}
         <div className="mb-10 p-6 bg-nw-bone/50 border-l-4 border-nw-acid text-sm leading-relaxed space-y-3">
           <p>
-            This Website Development Services Agreement (<strong>"Agreement"</strong>) is a legally binding agreement between{" "}
+            This {projectTypeLabel} Development Services Agreement (<strong>"Agreement"</strong>) is a legally binding agreement between{" "}
             <strong>{senderFull}</strong> (<strong>"Developer"</strong>) operating as {SENDER.company}, and{" "}
             <strong>{clientFull}</strong> (<strong>"Client"</strong>)
             {p.clientCompany ? <> of <strong>{p.clientCompany}</strong></> : ""}, collectively referred to as the <strong>"Parties"</strong>.
           </p>
           <p>
-            The Client has agreed to retain the Developer to create, develop, test, and deploy a website in accordance with the scope of work described in this Agreement. The Developer is willing to undertake such work, and both Parties mutually agree to the terms and conditions set forth herein.
+            The Client has agreed to retain the Developer to create, develop, test, and deploy a {projectTypeLabel.toLowerCase()} in accordance with the scope of work described in this Agreement. The Developer is willing to undertake such work, and both Parties mutually agree to the terms and conditions set forth herein.
           </p>
           <p className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite">
             Agreement Date: {dateStr}
@@ -159,7 +159,7 @@ export default function ContractDocument({
           <Clause>
             The Developer agrees to design, develop, test, and deploy a <strong>{projectTypeLabel}</strong> consisting of{" "}
             <strong>{input.pages} pages</strong> with a <strong>{input.designLevel.replace("_", "-")} design level</strong>{" "}
-            for the Client's project: <strong>"{p.projectName || "Website Development Project"}"</strong>.
+            for the Client's project: <strong>"{p.projectName || `${projectTypeLabel} Project`}"</strong>.
           </Clause>
 
           <div className="mt-4">
@@ -187,13 +187,13 @@ export default function ContractDocument({
         {/* Section 2 — Developer Requirements */}
         <Section num={`${sectionCount.devReq}`} title="Developer Requirements">
           <Clause>
-            {clientFull} hereby retains the services of {senderFull} to design, develop, and deploy a website in accordance with the proposal submitted and agreed upon on {dateStr}.
+            {clientFull} hereby retains the services of {senderFull} to design, develop, and deploy a {projectTypeLabel.toLowerCase()} in accordance with the proposal submitted and agreed upon on {dateStr}.
           </Clause>
           <Clause>
             {senderFull} agrees to notify the Client immediately of any risks, delays, or circumstances that may affect the agreed delivery timeline.
           </Clause>
           <Clause>
-            {senderFull} agrees to personally present the completed website{p.presentationDate ? ` on ${p.presentationDate}` : " at a mutually agreed date"} for final approval and acceptance by {clientFull}.
+            {senderFull} agrees to personally present the completed {projectTypeLabel.toLowerCase()}{p.presentationDate ? ` on ${p.presentationDate}` : " at a mutually agreed date"} for final approval and acceptance by {clientFull}.
           </Clause>
           <Clause>
             {senderFull} shall provide all necessary equipment, software, and personnel to conduct the final presentation. The Client shall provide suitable space and resources for such a presentation.
@@ -207,10 +207,10 @@ export default function ContractDocument({
         {hasHosting && (
           <Section num="3" title="Web Hosting & Maintenance">
             <Clause>
-              {senderFull} shall provide managed website hosting services under the <strong>{hostingPlan!.label}</strong> (₱{hostingPlan!.price.toLocaleString()}/month) once development is complete. The hosting environment shall maintain a minimum of <strong>99.9% server uptime</strong>.
+              {senderFull} shall provide managed {projectTypeLabel.toLowerCase()} hosting services under the <strong>{hostingPlan!.label}</strong> (₱{hostingPlan!.price.toLocaleString()}/month) once development is complete. The hosting environment shall maintain a minimum of <strong>99.9% server uptime</strong>.
             </Clause>
             <Clause>
-              The Developer shall maintain an offline backup copy of the Client's website as a contingency against data loss or server failure.
+              The Developer shall maintain an offline backup copy of the Client's {projectTypeLabel.toLowerCase()} as a contingency against data loss or server failure.
             </Clause>
             <Clause>
               Maintenance requests and content modifications are expected to be completed within <strong>{p.maintenanceDays || "3"} business days</strong> of acknowledgment, subject to the complexity of the request.
@@ -237,16 +237,16 @@ export default function ContractDocument({
             {senderFull} agrees to obtain design approval from {clientFull} prior to commencing development by submitting detailed design mockups for review.
           </Clause>
           <Clause>
-            The Client's website will not include any destructive, crude, harassing, violent, sexual, or otherwise inappropriate content, unless previously agreed upon in writing by both Parties.
+            The Client's {projectTypeLabel.toLowerCase()} will not include any destructive, crude, harassing, violent, sexual, or otherwise inappropriate content, unless previously agreed upon in writing by both Parties.
           </Clause>
           <Clause>
             All materials, content, and assets to be supplied by the Client must be provided in compatible file formats and within agreed timelines to avoid project delays.
           </Clause>
           <Clause>
-            Until the final website receives formal approval from the Client, no portion of the site shall be made publicly accessible without proper access controls in place.
+            Until the final {projectTypeLabel.toLowerCase()} receives formal approval from the Client, no portion of the site shall be made publicly accessible without proper access controls in place.
           </Clause>
           <Clause>
-            {senderFull} agrees to maintain website backups and retain a copy of all final materials for a period of <strong>{p.backupTerm || "6 months"}</strong> from the project completion date.
+            {senderFull} agrees to maintain {projectTypeLabel.toLowerCase()} backups and retain a copy of all final materials for a period of <strong>{p.backupTerm || "6 months"}</strong> from the project completion date.
           </Clause>
           <Clause>
             Upon termination of this Agreement or expiry of the agreed backup term, {senderFull} will securely destroy all copies, files, and documents related to this project, unless otherwise instructed in writing by the Client.
@@ -262,7 +262,7 @@ export default function ContractDocument({
             {senderFull} shall retain ownership of any pre-existing code, libraries, frameworks, or generic tools used in the development of the website ("Developer Tools"). {clientFull} is granted a non-exclusive, perpetual, royalty-free license to use such Developer Tools as part of the website.
           </Clause>
           <Clause>
-            {senderFull} reserves the right to showcase the completed website and its components in their professional portfolio, website, or marketing materials as a demonstration of their work, unless otherwise restricted by a non-disclosure agreement.
+            {senderFull} reserves the right to showcase the completed {projectTypeLabel.toLowerCase()} and its components in their professional portfolio, website, or marketing materials as a demonstration of their work, unless otherwise restricted by a non-disclosure agreement.
           </Clause>
         </Section>
 
