@@ -205,6 +205,7 @@ export default function ProposalDocument({
             </ul>
             {hasHosting && (
               <div className="mt-8 p-6 bg-nw-bone/30 border border-nw-graphite/10">
+                <p>
                    We propose that your {projectTypeLabel.toLowerCase()} be hosted using modern, high-performance infrastructure. This will ensure that your digital solution is capable of supporting a high volume of traffic while remaining protected and optimized.
                 </p>
               </div>
