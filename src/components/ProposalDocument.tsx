@@ -159,13 +159,13 @@ export default function ProposalDocument({
           <SectionTitle num={1} title="Introduction" />
           <div className="space-y-4 text-sm leading-relaxed max-w-3xl">
             <p>
-              Thank you for your interest in partnering with <strong>{SENDER.company}</strong> for your website development project. With well over 100,000 firms offering website development services, we know how challenging it can be to find the right agency for your web development needs.
+              Thank you for your interest in partnering with <strong>{SENDER.company}</strong> for your {projectTypeLabel.toLowerCase()} project. With well over 100,000 firms offering similar services, we know how challenging it can be to find the right agency for your development needs.
             </p>
             <p>
-              At <strong>{SENDER.company}</strong>, we hold one goal above all others: 100% client satisfaction. Our in-house team of web designers and developers uphold the highest standards for project planning and execution, and we're dedicated to building the perfect website for your company on-time and on-budget.
+              At <strong>{SENDER.company}</strong>, we hold one goal above all others: 100% client satisfaction. Our in-house team of designers and developers uphold the highest standards for project planning and execution, and we're dedicated to building the perfect {projectTypeLabel.toLowerCase()} for your company on-time and on-budget.
             </p>
             <p>
-              We've built websites for several brands with great success, and are quite excited to get to work on yours. In this proposal, you'll find what we feel is the optimal solution for your website development needs, along with the associated delivery timeline, costs, and project terms.
+              We've built specialized solutions for several brands with great success, and are quite excited to get to work on yours. In this proposal, you'll find what we feel is the optimal solution for your {projectTypeLabel.toLowerCase()} needs, along with the associated delivery timeline, costs, and project terms.
             </p>
             <div className="pt-4">
               <p className="font-bold">{SENDER.fullName}</p>
@@ -182,7 +182,7 @@ export default function ProposalDocument({
               <strong>{clientCompany}</strong> {overview}
             </p>
             <p>
-              <strong>{SENDER.company}</strong> is uniquely qualified to build the website that you desire, due to our focus on high-performance architecture, our in-house team of experts, and our commitment to strategic design that actually converts visitors into customers.
+              <strong>{SENDER.company}</strong> is uniquely qualified to build the {projectTypeLabel.toLowerCase()} that you desire, due to our focus on high-performance architecture, our in-house team of experts, and our commitment to strategic design that actually converts visitors into customers.
             </p>
           </div>
         </div>
@@ -192,9 +192,9 @@ export default function ProposalDocument({
           <SectionTitle num={3} title="Solution Outline" />
           <div className="space-y-6 text-sm leading-relaxed max-w-3xl">
             <p>
-              <strong>{SENDER.company}</strong> will build your website using a <strong>{solution.tech}</strong>. This technology is known for its speed, security, and scalability—ensuring your digital presence can grow as your business does.
+              <strong>{SENDER.company}</strong> will build your {projectTypeLabel.toLowerCase()} using a <strong>{solution.tech}</strong>. This technology is known for its speed, security, and scalability—ensuring your digital presence can grow as your business does.
             </p>
-            <p>This solution will allow you to do the following once your website is launched:</p>
+            <p>This solution will allow you to do the following once your {projectTypeLabel.toLowerCase()} is launched:</p>
             <ul className="space-y-3 pl-2">
               {solution.benefits.map((benefit, i) => (
                 <li key={i} className="flex items-center gap-3">
@@ -205,8 +205,7 @@ export default function ProposalDocument({
             </ul>
             {hasHosting && (
               <div className="mt-8 p-6 bg-nw-bone/30 border border-nw-graphite/10">
-                <p>
-                  We propose that your site be hosted using modern, high-performance infrastructure. This will ensure that your website is capable of supporting a high volume of traffic while remaining protected and optimized for search engines.
+                   We propose that your {projectTypeLabel.toLowerCase()} be hosted using modern, high-performance infrastructure. This will ensure that your digital solution is capable of supporting a high volume of traffic while remaining protected and optimized.
                 </p>
               </div>
             )}
@@ -268,7 +267,7 @@ export default function ProposalDocument({
         <div>
           <SectionTitle num={5} title="Execution Timeline" />
           <p className="text-sm text-nw-graphite mb-6 leading-relaxed max-w-2xl">
-            The following table details our projected execution timeline for your website development project.
+            The following table details our projected execution timeline for your {projectTypeLabel.toLowerCase()} project.
           </p>
           <div className="overflow-hidden border border-nw-black">
             <table className="w-full border-collapse text-left text-sm">
