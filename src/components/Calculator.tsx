@@ -163,7 +163,27 @@ export default function Calculator() {
   };
 
   const updateConfig = (updates: Partial<CalculatorInput>) => {
-    setConfig(prev => ({ ...prev, ...updates }));
+    setConfig(prev => {
+      const newConfig = { ...prev, ...updates };
+      
+      // If project type changed, update presets if they are still at default
+      if (updates.projectType && updates.projectType !== prev.projectType) {
+        const presets = PROJECT_PRESETS[updates.projectType];
+        const oldPresets = PROJECT_PRESETS[prev.projectType];
+        
+        const proposalUpdates: any = {};
+        if (prev.proposal.projectOverview === oldPresets.projectOverview || prev.proposal.projectOverview === DEFAULTS.proposal.projectOverview) {
+          proposalUpdates.projectOverview = presets.projectOverview;
+        }
+        if (prev.proposal.businessGoals === oldPresets.businessGoals || prev.proposal.businessGoals === DEFAULTS.proposal.businessGoals) {
+          proposalUpdates.businessGoals = presets.businessGoals;
+        }
+        
+        newConfig.proposal = { ...newConfig.proposal, ...proposalUpdates };
+      }
+      
+      return newConfig;
+    });
   };
 
   const updateProposal = (updates: Partial<typeof DEFAULTS.proposal>) => {
@@ -183,6 +203,12 @@ export default function Calculator() {
     }
     if (!config.proposal.assumptions || config.proposal.assumptions === DEFAULTS.proposal.assumptions) {
       updates.assumptions = presets.assumptions;
+    }
+    if (!config.proposal.projectOverview || config.proposal.projectOverview === DEFAULTS.proposal.projectOverview) {
+      updates.projectOverview = presets.projectOverview;
+    }
+    if (!config.proposal.businessGoals || config.proposal.businessGoals === DEFAULTS.proposal.businessGoals) {
+      updates.businessGoals = presets.businessGoals;
     }
     
     updateProposal(updates);

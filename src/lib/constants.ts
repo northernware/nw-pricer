@@ -137,22 +137,35 @@ export const HOSTING_PLANS: {
 ];
 
 
-export const PROJECT_PRESETS: Record<ProjectType, { exclusions: string; assumptions: string }> = {
+export const PROJECT_PRESETS: Record<ProjectType, { 
+  exclusions: string; 
+  assumptions: string;
+  projectOverview: string;
+  businessGoals: string;
+}> = {
   business_website: {
     exclusions: "• Content writing/Copywriting\n• Professional photography\n• Premium stock assets\n• Domain/Hosting subscription fees",
-    assumptions: "• Client will provide all brand assets (logo, colors)\n• Content will be provided in a structured format\n• Feedback cycles completed within 48 hours"
+    assumptions: "• Client will provide all brand assets (logo, colors)\n• Content will be provided in a structured format\n• Feedback cycles completed within 48 hours",
+    projectOverview: "A high-performance digital presence designed to elevate brand authority and drive conversions.",
+    businessGoals: "1. Increase online visibility\n2. Streamline customer acquisition\n3. Establish professional digital credibility"
   },
   ecommerce: {
     exclusions: "• Product photography/Editing\n• Payment gateway transaction fees\n• Shipping/Logistics setup beyond API integration\n• Bulk data entry of products",
-    assumptions: "• Client has an active merchant account\n• Inventory data is available in CSV/Excel\n• Tax rules are provided by the client"
+    assumptions: "• Client has an active merchant account\n• Inventory data is available in CSV/Excel\n• Tax rules are provided by the client",
+    projectOverview: "A robust e-commerce platform designed to streamline sales, optimize user journeys, and maximize conversion rates.",
+    businessGoals: "1. Optimize checkout conversion\n2. Streamline inventory management\n3. Enhance customer retention through superior UX"
   },
   redesign: {
     exclusions: "• Content migration for legacy/broken links\n• Server-side fixing of old architecture\n• SEO ranking guarantees",
-    assumptions: "• Access to existing CMS/Hosting will be provided\n• Legacy database is accessible and documented\n• DNS management access is available"
+    assumptions: "• Access to existing CMS/Hosting will be provided\n• Legacy database is accessible and documented\n• DNS management access is available",
+    projectOverview: "A modern architectural overhaul of your existing digital presence, focusing on performance, accessibility, and brand modernization.",
+    businessGoals: "1. Resolve technical debt and legacy performance issues\n2. Modernize brand identity for current market standards\n3. Improve accessibility and mobile responsiveness"
   },
   custom_system: {
     exclusions: "• Third-party API usage fees\n• Hardware procurement/Setup\n• User training beyond documented scope\n• Ongoing data entry",
-    assumptions: "• Technical specifications are finalized before dev\n• Client will provide a dedicated QA contact\n• Environment variables provided by client"
+    assumptions: "• Technical specifications are finalized before dev\n• Client will provide a dedicated QA contact\n• Environment variables provided by client",
+    projectOverview: "A bespoke software solution engineered to solve specific operational challenges through custom logic, automation, and scalable architecture.",
+    businessGoals: "1. Automate complex manual workflows\n2. Ensure data integrity across specialized business units\n3. Build a scalable foundation for proprietary business logic"
   }
 };
 
