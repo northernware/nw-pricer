@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateClientStatusAction, createClientAction, updateClientAction, deleteClientAction } from "@/app/actions";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { formatDistanceToNow } from "date-fns";
 import { 
@@ -67,9 +68,11 @@ function ClientCard({ client, stageId, isDragging, onEdit, onDelete, onStatusCha
     >
       <div className="flex justify-between items-start mb-3">
         <div>
-          <h3 className="font-display font-bold text-md tracking-tight text-nw-black leading-tight">
-            {client.firstName} {client.lastName}
-          </h3>
+          <Link href={`/admin/client/${client.id}`} className="hover:text-nw-acid transition-colors">
+            <h3 className="font-display font-bold text-md tracking-tight text-nw-black leading-tight">
+              {client.firstName} {client.lastName}
+            </h3>
+          </Link>
           {client.company && (
             <div className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite mt-1">
               {client.company}
