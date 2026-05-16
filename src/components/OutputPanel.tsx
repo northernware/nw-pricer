@@ -1,20 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import type { CalculatorOutput } from "@/lib/calculator";
+import type { CalculatorOutput, CurrencyCode } from "@/lib/calculator";
+import { CURRENCIES } from "@/lib/constants";
 import { Icon } from "@iconify/react";
 
-function fmt(n: number): string {
-  return "₱" + n.toLocaleString("en-PH", { maximumFractionDigits: 0 });
+function fmt(n: number, currencyCode: CurrencyCode): string {
+  const currency = CURRENCIES.find(c => c.value === currencyCode) || CURRENCIES[0];
+  return currency.symbol + n.toLocaleString(currency.locale, { maximumFractionDigits: 0 });
 }
 
 interface OutputPanelProps {
   result: CalculatorOutput;
+  currency: CurrencyCode;
   invoices: { label: string; percentage: number; status: string }[];
 }
 
 export default function OutputPanel({ 
   result, 
+  currency,
   invoices
 }: OutputPanelProps) {
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -52,11 +56,10 @@ export default function OutputPanel({
             Base Cost
           </div>
           <div className="font-display font-bold text-2xl track-tighter text-nw-black">
-            {fmt(result.baseCost)}
+            {fmt(result.baseCost, currency)}
           </div>
         </div>
       </div>
-
       {/* FINAL PRICE — highlighted */}
       <div className="bg-nw-black text-nw-bone p-6 clip-button relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-nw-acid/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
@@ -66,7 +69,7 @@ export default function OutputPanel({
             Project Investment
           </div>
           <div className="font-display font-bold text-[clamp(2rem,4vw,3rem)] track-tightest leading-none">
-            {fmt(result.roundedPrice)}
+            {fmt(result.roundedPrice, currency)}
           </div>
           <div className="mt-2 font-mono text-[9px] text-nw-bone/50 uppercase tracking-[0.2em]">
             One-time Development Fee
@@ -81,7 +84,7 @@ export default function OutputPanel({
             Managed Hosting & Maintenance
           </div>
           <div className="font-display font-bold text-2xl track-tighter text-nw-black">
-            {fmt(result.hostingPrice)} <span className="text-nw-graphite text-lg">/ month</span>
+            {fmt(result.hostingPrice, currency)} <span className="text-nw-graphite text-lg">/ month</span>
           </div>
         </div>
       )}
@@ -107,15 +110,15 @@ export default function OutputPanel({
           <Row label="Base Hours" value={`${result.baseHours} hrs`} accent />
           <Row label="Complexity" value={`×${result.complexityMultiplier}`} />
           <Row label="Adjusted Hours" value={`${result.adjustedHours} hrs`} accent />
-          <Row label="Base Cost" value={fmt(result.baseCost)} />
-          <Row label="+ Project Buffer" value={fmt(result.finalPrice + result.discountAmount - result.baseCost)} />
+          <Row label="Base Cost" value={fmt(result.baseCost, currency)} />
+          <Row label="+ Project Buffer" value={fmt(result.finalPrice + result.discountAmount - result.baseCost, currency)} />
           {result.discountAmount > 0 && (
-            <Row label="- Discount Applied" value={`-${fmt(result.discountAmount)}`} accent />
+            <Row label="- Discount Applied" value={`-${fmt(result.discountAmount, currency)}`} accent />
           )}
-          <Row label="Final (unrounded)" value={fmt(result.finalPrice)} />
-          <Row label="Rounded Price" value={fmt(result.roundedPrice)} accent />
+          <Row label="Final (unrounded)" value={fmt(result.finalPrice, currency)} />
+          <Row label="Rounded Price" value={fmt(result.roundedPrice, currency)} accent />
           {result.hostingPrice > 0 && (
-            <Row label="Hosting / Month" value={fmt(result.hostingPrice)} accent />
+            <Row label="Hosting / Month" value={fmt(result.hostingPrice, currency)} accent />
           )}
         </div>
       )}

@@ -12,6 +12,7 @@ export type Feature =
   | 'api_integration';
 export type RoundingMode = 'none' | 'nearest_1000' | 'nearest_5000';
 export type HostingPlan = 'none' | 'basic' | 'standard' | 'advanced';
+export type CurrencyCode = 'PHP' | 'USD' | 'EUR' | 'GBP';
 
 
 export interface ProjectInvoice {
@@ -56,6 +57,7 @@ export interface CalculatorInput {
   roundingMode: RoundingMode;
   hostingPlan: HostingPlan;
   discountPercent: number;
+  currency: CurrencyCode;
   // Proposal Engine fields
   proposal: ProposalContent;
   invoices: ProjectInvoice[];

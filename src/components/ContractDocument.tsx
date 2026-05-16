@@ -1,5 +1,5 @@
-import type { CalculatorInput, CalculatorOutput } from "@/lib/calculator";
-import { FEATURES, HOSTING_PLANS, PROJECT_TYPES } from "@/lib/constants";
+import type { CalculatorInput, CalculatorOutput, CurrencyCode } from "@/lib/calculator";
+import { FEATURES, HOSTING_PLANS, PROJECT_TYPES, CURRENCIES } from "@/lib/constants";
 import SignatureBlock from "./SignatureBlock";
 import { Icon } from "@iconify/react";
 
@@ -53,8 +53,9 @@ export default function ContractDocument({
   snapshotHash,
 }: ContractDocumentProps) {
   const p = input.proposal;
-  const fmt = (n: number) => "₱" + n.toLocaleString();
-  const dateStr = new Date(createdAt).toLocaleDateString("en-PH", {
+  const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
+  const fmt = (n: number) => currency.symbol + n.toLocaleString(currency.locale);
+  const dateStr = new Date(createdAt).toLocaleDateString(currency.locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -207,7 +208,7 @@ export default function ContractDocument({
         {hasHosting && (
           <Section num="3" title="Web Hosting & Maintenance">
             <Clause>
-              {senderFull} shall provide managed {projectTypeLabel.toLowerCase()} hosting services under the <strong>{hostingPlan!.label}</strong> (₱{hostingPlan!.price.toLocaleString()}/month) once development is complete. The hosting environment shall maintain a minimum of <strong>99.9% server uptime</strong>.
+              {senderFull} shall provide managed {projectTypeLabel.toLowerCase()} hosting services under the <strong>{hostingPlan!.label}</strong> ({currency.symbol}{hostingPlan!.price.toLocaleString()}/month) once development is complete. The hosting environment shall maintain a minimum of <strong>99.9% server uptime</strong>.
             </Clause>
             <Clause>
               The Developer shall maintain an offline backup copy of the Client's {projectTypeLabel.toLowerCase()} as a contingency against data loss or server failure.
@@ -324,7 +325,7 @@ export default function ContractDocument({
                 <span className="font-mono text-xs uppercase tracking-widest font-bold">Total Investment</span>
                 <span className="text-2xl font-display font-bold text-nw-acid">{fmt(result.roundedPrice)}</span>
               </div>
-              <p className="text-[10px] text-nw-graphite text-right mt-2 italic">* All prices are in Philippine Pesos (PHP). Non-VAT.</p>
+              <p className="text-[10px] text-nw-graphite text-right mt-2 italic">* All prices are in {currency.label}. Non-VAT.</p>
             </div>
           </div>
 

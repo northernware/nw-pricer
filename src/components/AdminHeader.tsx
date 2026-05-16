@@ -10,9 +10,8 @@ export default function AdminHeader() {
       
       <div className="w-full px-8 relative z-10 flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
-          <div className="font-display font-black text-xl tracking-tighter uppercase text-nw-black flex items-center gap-2">
-            <Icon icon="solar:box-minimalistic-bold" className="text-nw-acid" />
-            Northernware Pricer
+          <div className="font-display font-black text-xl tracking-tighter text-nw-black flex items-center gap-2">
+            northernware<span className="text-nw-acid">®</span>
           </div>
           
           <nav className="hidden md:flex gap-6">

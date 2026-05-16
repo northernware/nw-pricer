@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { CalculatorOutput, CalculatorInput, ProjectInvoice } from "@/lib/calculator";
-import { PROJECT_TYPES, FEATURES, HOSTING_PLANS } from "@/lib/constants";
+import { PROJECT_TYPES, FEATURES, HOSTING_PLANS, CURRENCIES } from "@/lib/constants";
 
 interface QuoteTemplateProps {
   mode: 'quote' | 'proposal' | 'contract' | 'invoice';
@@ -21,18 +21,20 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
   useEffect(() => {
     const prefix = mode === 'invoice' ? 'INV' : mode === 'contract' ? 'CTR' : 'PRP';
     const baseId = projectId || Math.random().toString(36).substring(2, 9).toUpperCase();
+    const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
     setDocId(`${prefix}-${baseId}`);
     setDates({
-      today: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }),
-      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })
+      today: new Date().toLocaleDateString(currency.locale, { year: 'numeric', month: 'long', day: 'numeric' }),
+      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString(currency.locale, { year: 'numeric', month: 'long', day: 'numeric' })
     });
     setMounted(true);
   }, [mode, projectId]);
 
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
   const hostingPlan = HOSTING_PLANS.find(h => h.value === input.hostingPlan);
+  const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
 
-  const fmt = (n: number) => "₱" + n.toLocaleString();
+  const fmt = (n: number) => currency.symbol + n.toLocaleString(currency.locale);
   
   const calcRowCost = (hours: number) => {
     const adjusted = hours * result.complexityMultiplier;
@@ -223,7 +225,7 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
             <span style={{ fontSize: "24px", fontWeight: "bold", color: "#FF3800" }}>{fmt(invoiceAmount)}</span>
           </div>
           <p style={{ fontSize: "10px", color: "#5C5C5C", textAlign: "right", marginTop: "10px", fontStyle: "italic" }}>
-            * All prices are in Philippine Pesos (PHP).
+            * All prices are in {currency.label}.
           </p>
         </div>
       </div>

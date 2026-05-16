@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import type { CalculatorInput, ProjectInvoice } from "@/lib/calculator";
 import { generateId } from "@/lib/storage";
 import { copyToClipboard } from "@/lib/utils";
+import { CURRENCIES } from "@/lib/constants";
 import { toast } from "react-hot-toast";
 
 interface InvoiceManagerProps {
@@ -84,9 +85,11 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
                 />
               </div>
               <div className="md:col-span-3">
-                <label className="block font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Amount (₱)</label>
+                <label className="block font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+                  Amount ({CURRENCIES.find(c => c.value === config.currency)?.symbol})
+                </label>
                 <div className="font-mono text-sm text-nw-black py-1 border-b border-transparent">
-                  {((totalPrice * (inv.percentage || 0)) / 100).toLocaleString()}
+                  {((totalPrice * (inv.percentage || 0)) / 100).toLocaleString(CURRENCIES.find(c => c.value === config.currency)?.locale)}
                 </div>
               </div>
               <div className="md:col-span-3 flex justify-end gap-2 pb-1">

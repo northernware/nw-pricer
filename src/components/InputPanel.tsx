@@ -1,7 +1,7 @@
 "use client";
 
-import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput, ProposalContent } from "@/lib/calculator";
-import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES } from "@/lib/constants";
+import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput, ProposalContent, CurrencyCode } from "@/lib/calculator";
+import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES, CURRENCIES } from "@/lib/constants";
 import { Icon } from "@iconify/react";
 import RichTextEditor from "./RichTextEditor";
 import InvoiceManager from "./InvoiceManager";
@@ -257,7 +257,22 @@ export default function InputPanel({
           <Label>Advanced Settings</Label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
             <div>
-              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Hourly Rate (₱)</div>
+              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">Currency</div>
+              <select
+                value={config.currency}
+                disabled={isLocked}
+                onChange={(e) => updateConfig({ currency: e.target.value as CurrencyCode })}
+                className={`w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-2 transition-colors cursor-pointer ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
+              >
+                {CURRENCIES.map((c) => (
+                  <option key={c.value} value={c.value} className="bg-nw-bone">{c.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+                Hourly Rate ({CURRENCIES.find(c => c.value === config.currency)?.symbol})
+              </div>
               <input
                 type="number"
                 value={config.hourlyRate}
@@ -339,7 +354,7 @@ export default function InputPanel({
                 >
                   <span className="font-bold text-[10px] leading-tight">{hp.label}</span>
                   <span className={`mt-1 text-[10px] ${config.hostingPlan === hp.value ? "text-nw-acid" : "text-nw-graphite"}`}>
-                    {`${hp.price.toLocaleString()}/mo`}
+                    {`${CURRENCIES.find(c => c.value === config.currency)?.symbol}${hp.price.toLocaleString()}/mo`}
                   </span>
                   <span className="mt-1 text-[9px] opacity-60 normal-case tracking-normal leading-tight">
                     {hp.description}

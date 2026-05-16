@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { calculate, type CalculatorInput } from "@/lib/calculator";
-import { PROJECT_TYPES, FEATURES, HOSTING_PLANS } from "@/lib/constants";
+import { PROJECT_TYPES, FEATURES, HOSTING_PLANS, CURRENCIES } from "@/lib/constants";
 import { Metadata } from "next";
 import SignatureBlock from "@/components/SignatureBlock";
 import PaymentBlock from "@/components/PaymentBlock";
@@ -46,7 +46,8 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
   const hostingPlan = HOSTING_PLANS.find(h => h.value === input.hostingPlan);
 
-  const fmt = (n: number) => "₱" + n.toLocaleString();
+  const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
+  const fmt = (n: number) => currency.symbol + n.toLocaleString(currency.locale);
 
   const isProposal = mode === 'proposal' || !mode;
   const isContract = mode === 'contract';
