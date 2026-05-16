@@ -343,3 +343,38 @@ export async function unlockProjectAction(id: string) {
     return { success: false, error: error.message || String(error) };
   }
 }
+
+export async function getStats() {
+  try {
+    const [clients, projects, logs] = await Promise.all([
+      prisma.client.findMany(),
+      prisma.project.findMany(),
+      prisma.activityLog.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+        include: { client: true }
+      })
+    ]);
+
+    const stats = {
+      totalClients: clients.length,
+      activeClients: clients.filter(c => c.status === 'active' || c.status === 'retainer').length,
+      prospects: clients.filter(c => c.status === 'prospect').length,
+      cancelled: clients.filter(c => c.status === 'declined').length,
+      totalProjects: projects.length,
+      signedProjects: projects.filter(p => p.status === 'signed').length,
+      recentActivity: logs.map(l => ({
+        id: l.id,
+        type: l.type,
+        action: l.action,
+        clientName: `${l.client.firstName} ${l.client.lastName}`,
+        createdAt: l.createdAt.getTime()
+      }))
+    };
+
+    return stats;
+  } catch (error) {
+    console.error("Failed to fetch stats:", error);
+    return null;
+  }
+}

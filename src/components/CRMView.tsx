@@ -3,6 +3,7 @@
 import { useState } from "react";
 import KanbanBoard from "./KanbanBoard";
 import ClientBoard from "./ClientBoard";
+import Dashboard from "./Dashboard";
 import { Icon } from "@iconify/react";
 
 interface CRMViewProps {
@@ -11,12 +12,23 @@ interface CRMViewProps {
 }
 
 export default function CRMView({ projects, clients }: CRMViewProps) {
-  const [activeTab, setActiveTab] = useState<'projects' | 'clients'>('projects');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients'>('dashboard');
 
   return (
     <div className="flex h-[calc(100vh-140px)] gap-6">
       {/* Sidebar Tabs */}
       <div className="w-48 flex flex-col gap-2 pt-2">
+        <button
+          onClick={() => setActiveTab('dashboard')}
+          className={`flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest transition-all ${
+            activeTab === 'dashboard'
+              ? 'bg-nw-black text-nw-white shadow-md'
+              : 'text-nw-graphite hover:bg-nw-bone'
+          }`}
+        >
+          <Icon icon="solar:chart-2-linear" className="w-4 h-4" />
+          Dashboard
+        </button>
         <button
           onClick={() => setActiveTab('projects')}
           className={`flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest transition-all ${
@@ -42,8 +54,10 @@ export default function CRMView({ projects, clients }: CRMViewProps) {
       </div>
 
       {/* Pipeline View */}
-      <div className="flex-1 min-w-0">
-        {activeTab === 'projects' ? (
+      <div className="flex-1 min-w-0 overflow-y-auto custom-scrollbar">
+        {activeTab === 'dashboard' ? (
+          <Dashboard />
+        ) : activeTab === 'projects' ? (
           <KanbanBoard initialProjects={projects} />
         ) : (
           <ClientBoard initialClients={clients} />
