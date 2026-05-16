@@ -439,7 +439,7 @@ export async function sendIndividualEmailAction(clientId: string, subject: strin
       await logActivity({
         clientId,
         type: "email_sent",
-        action: \Email sent: \\,
+        action: `Email sent: ${subject}`,
         details: { subject }
       });
       return { success: true };
