@@ -378,3 +378,23 @@ export async function getStats() {
     return null;
   }
 }
+
+export async function getClientById(id: string) {
+  try {
+    const client = await prisma.client.findUnique({
+      where: { id },
+      include: {
+        projects: {
+          orderBy: { updatedAt: 'desc' }
+        },
+        logs: {
+          orderBy: { createdAt: 'desc' }
+        }
+      }
+    });
+    return client;
+  } catch (error) {
+    console.error("Failed to fetch client:", error);
+    return null;
+  }
+}
