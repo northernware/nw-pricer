@@ -639,6 +639,7 @@ export default function Calculator() {
                   <div className="bg-nw-white border-t border-l border-nw-graphite/20 p-[clamp(1.5rem,3vw,2.5rem)] shadow-2xl flex-1 overflow-y-auto custom-scrollbar">
                     <OutputPanel 
                       result={result} 
+                      currency={config.currency}
                       invoices={config.invoices}
                     />
                   </div>

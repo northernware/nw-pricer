@@ -1,6 +1,13 @@
 // ─── Labels & Display Constants ───
 
-import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput } from './calculator';
+import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput, CurrencyCode } from './calculator';
+
+export const CURRENCIES: { value: CurrencyCode; label: string; symbol: string; locale: string }[] = [
+  { value: 'PHP', label: 'Philippine Peso (PHP)', symbol: '₱', locale: 'en-PH' },
+  { value: 'USD', label: 'US Dollar (USD)', symbol: '$', locale: 'en-US' },
+  { value: 'EUR', label: 'Euro (EUR)', symbol: '€', locale: 'de-DE' },
+  { value: 'GBP', label: 'British Pound (GBP)', symbol: '£', locale: 'en-GB' },
+];
 
 export const PROJECT_TYPES: { value: ProjectType; label: string; code: string }[] = [
   { value: 'business_website', label: 'Business Website', code: 'BW' },
@@ -31,8 +38,8 @@ export const FEATURES: { value: Feature; label: string; hours: number }[] = [
 
 export const ROUNDING_MODES: { value: RoundingMode; label: string }[] = [
   { value: 'none', label: 'None (Exact Price)' },
-  { value: 'nearest_1000', label: 'Nearest ₱1,000' },
-  { value: 'nearest_5000', label: 'Nearest ₱5,000' },
+  { value: 'nearest_1000', label: 'Nearest 1,000' },
+  { value: 'nearest_5000', label: 'Nearest 5,000' },
 ];
 
 export const HOSTING_PLANS: { 
@@ -180,6 +187,7 @@ export const DEFAULTS: CalculatorInput = {
   hostingPlan: 'standard' as HostingPlan,
   features: [] as Feature[],
   discountPercent: 0,
+  currency: 'PHP' as CurrencyCode,
   proposal: {
     clientName: "",
     clientFirstName: "",

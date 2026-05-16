@@ -1,5 +1,5 @@
 import type { CalculatorInput, CalculatorOutput } from "@/lib/calculator";
-import { FEATURES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS } from "@/lib/constants";
+import { FEATURES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, CURRENCIES } from "@/lib/constants";
 
 // ─── Northernware Sender Info ───
 const SENDER = {
@@ -74,8 +74,9 @@ export default function ProposalDocument({
   createdAt,
 }: ProposalDocumentProps) {
   const p = input.proposal;
-  const fmt = (n: number) => "₱" + n.toLocaleString();
-  const dateStr = new Date(createdAt).toLocaleDateString("en-PH", {
+  const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
+  const fmt = (n: number) => currency.symbol + n.toLocaleString(currency.locale);
+  const dateStr = new Date(createdAt).toLocaleDateString(currency.locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -94,7 +95,7 @@ export default function ProposalDocument({
   const overview = PROJECT_OVERVIEWS[input.projectType] || PROJECT_OVERVIEWS.business_website;
   const solution = getSolution(input.projectType, input.features);
 
-  const validUntil = new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString("en-PH", {
+  const validUntil = new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString(currency.locale, {
     year: "numeric", month: "long", day: "numeric",
   });
 
@@ -367,8 +368,8 @@ export default function ProposalDocument({
                 </div>
               </div>
               <div className="text-xs text-nw-graphite leading-relaxed">
-                <p className="mb-2"><strong>Payment Terms:</strong> Invoices are payable via bank transfer or G-Cash. Each milestone payment is required before proceeding to the next project phase.</p>
-                <p>* All prices are in Philippine Pesos (PHP). Non-VAT.</p>
+                <p className="mb-2"><strong>Payment Terms:</strong> Invoices are payable via bank transfer or local payment gateways. Each milestone payment is required before proceeding to the next project phase.</p>
+                <p>* All prices are in {currency.label}. Non-VAT.</p>
               </div>
             </div>
           )}

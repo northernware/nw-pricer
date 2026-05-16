@@ -1,6 +1,6 @@
 "use client";
 
-import { PROJECT_TYPES, FEATURES } from "@/lib/constants";
+import { PROJECT_TYPES, FEATURES, CURRENCIES } from "@/lib/constants";
 import type { CalculatorInput, CalculatorOutput } from "@/lib/calculator";
 import { Icon } from "@iconify/react";
 import SignatureBlock from "./SignatureBlock";
@@ -37,8 +37,9 @@ export default function PublicTemplate({
 }: PublicTemplateProps) {
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
   const hostingPlan = input.hostingPlan;
+  const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
 
-  const fmt = (n: number) => "₱" + n.toLocaleString();
+  const fmt = (n: number) => currency.symbol + n.toLocaleString(currency.locale);
 
   const isProposal = mode === 'proposal' || mode === 'quote';
   const isContract = mode === 'contract';
@@ -103,9 +104,9 @@ export default function PublicTemplate({
         </div>
         <div className="text-right text-xs text-nw-graphite leading-relaxed font-mono">
           <strong>DOCUMENT ID:</strong> {docPrefix}-{id.toUpperCase()}{selectedInvoice ? `-${selectedInvoice.id.split('_')[1]}` : ''}<br />
-          <strong>DATE:</strong> {new Date(createdAt).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}<br />
+          <strong>DATE:</strong> {new Date(createdAt).toLocaleDateString(currency.locale, { year: 'numeric', month: 'long', day: 'numeric' })}<br />
           {!isInvoice && (
-            <><strong>VALID UNTIL:</strong> {new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}</>
+            <><strong>VALID UNTIL:</strong> {new Date(new Date(createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString(currency.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</>
           )}
           {isInvoice && (
             <><strong>DUE DATE:</strong> Upon Receipt</>
