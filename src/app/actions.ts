@@ -398,3 +398,89 @@ export async function getClientById(id: string) {
     return null;
   }
 }
+
+import { sendEmail, getBrandedTemplate } from "@/lib/mail";
+
+export async function getEmailTemplates() {
+  return await prisma.emailTemplate.findMany({
+    orderBy: { updatedAt: 'desc' }
+  });
+}
+
+export async function saveEmailTemplate(data: { id?: string, name: string, subject: string, body: string, category: string }) {
+  try {
+    if (data.id) {
+      await prisma.emailTemplate.update({
+        where: { id: data.id },
+        data: { name: data.name, subject: data.subject, body: data.body, category: data.category }
+      });
+    } else {
+      await prisma.emailTemplate.create({
+        data: { name: data.name, subject: data.subject, body: data.body, category: data.category }
+      });
+    }
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to save template:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function sendIndividualEmailAction(clientId: string, subject: string, body: string) {
+  try {
+    const client = await prisma.client.findUnique({ where: { id: clientId } });
+    if (!client || !client.email) throw new Error("Client has no email address");
+
+    const html = getBrandedTemplate(body);
+    const result = await sendEmail({ to: client.email, subject, html });
+
+    if (result.success) {
+      await logActivity({
+        clientId,
+        type: "email_sent",
+        action: \Email sent: \\,
+        details: { subject }
+      });
+      return { success: true };
+    }
+    return { success: false, error: "Failed to deliver email" };
+  } catch (error: any) {
+    console.error("Email error:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function sendBulkEmailAction(campaignName: string, templateId: string) {
+  try {
+    const [template, clients] = await Promise.all([
+      prisma.emailTemplate.findUnique({ where: { id: templateId } }),
+      prisma.client.findMany({ where: { email: { not: null } } })
+    ]);
+
+    if (!template) throw new Error("Template not found");
+    const emails = clients.map(c => c.email as string);
+    if (emails.length === 0) throw new Error("No clients with email addresses found");
+
+    const html = getBrandedTemplate(template.body);
+    const result = await sendEmail({ to: emails, subject: template.subject, html });
+
+    if (result.success) {
+      await prisma.emailCampaign.create({
+        data: {
+          name: campaignName,
+          subject: template.subject,
+          templateId: templateId,
+          status: "sent",
+          recipients: emails.length,
+          sentAt: new Date()
+        }
+      });
+      return { success: true, count: emails.length };
+    }
+    return { success: false, error: "Bulk email delivery failed" };
+  } catch (error: any) {
+    console.error("Bulk email error:", error);
+    return { success: false, error: error.message };
+  }
+}

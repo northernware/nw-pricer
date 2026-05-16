@@ -4,6 +4,7 @@ import { useState } from "react";
 import KanbanBoard from "./KanbanBoard";
 import ClientBoard from "./ClientBoard";
 import Dashboard from "./Dashboard";
+import EmailMarketing from "./EmailMarketing";
 import { Icon } from "@iconify/react";
 
 interface CRMViewProps {
@@ -12,7 +13,7 @@ interface CRMViewProps {
 }
 
 export default function CRMView({ projects, clients }: CRMViewProps) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients' | 'marketing'>('dashboard');
 
   return (
     <div className="flex h-[calc(100vh-140px)] gap-6">
@@ -51,6 +52,17 @@ export default function CRMView({ projects, clients }: CRMViewProps) {
           <Icon icon="solar:users-group-rounded-linear" className="w-4 h-4" />
           Clients
         </button>
+        <button
+          onClick={() => setActiveTab('marketing')}
+          className={`flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest transition-all ${
+            activeTab === 'marketing'
+              ? 'bg-nw-black text-nw-white shadow-md'
+              : 'text-nw-graphite hover:bg-nw-bone'
+          }`}
+        >
+          <Icon icon="solar:letter-bold-duotone" className="w-4 h-4" />
+          Marketing
+        </button>
       </div>
 
       {/* Pipeline View */}
@@ -59,8 +71,10 @@ export default function CRMView({ projects, clients }: CRMViewProps) {
           <Dashboard />
         ) : activeTab === 'projects' ? (
           <KanbanBoard initialProjects={projects} />
-        ) : (
+        ) : activeTab === 'clients' ? (
           <ClientBoard initialClients={clients} />
+        ) : (
+          <EmailMarketing />
         )}
       </div>
     </div>
