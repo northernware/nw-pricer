@@ -367,7 +367,7 @@ export async function getStats() {
         id: l.id,
         type: l.type,
         action: l.action,
-        clientName: \\ \\,
+        clientName: `${l.client.firstName} ${l.client.lastName}`,
         createdAt: l.createdAt.getTime()
       }))
     };
