@@ -60,7 +60,7 @@ export default function CRMView({ projects, clients }: CRMViewProps) {
               : 'text-nw-graphite hover:bg-nw-bone'
           }`}
         >
-          <Icon icon="solar:letter-bold-duotone" className="w-4 h-4" />
+          <Icon icon="solar:letter-linear" className="w-4 h-4" />
           Marketing
         </button>
       </div>
