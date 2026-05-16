@@ -5,6 +5,7 @@ import type { CalculatorInput } from "@/lib/calculator";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createHash } from "crypto";
+import { logActivity } from "@/lib/activity";
 
 export async function getSavedProjects() {
   try {
@@ -57,10 +58,19 @@ export async function getClients() {
 
 export async function updateProjectStatusAction(id: string, status: string) {
   try {
-    await prisma.project.update({
+    const project = await prisma.project.update({
       where: { id },
-      data: { status }
+      data: { status },
+      include: { client: true }
     });
+    
+    await logActivity({
+      clientId: project.clientId,
+      projectId: id,
+      type: "status_change",
+      action: `Project status updated to ${status}`
+    });
+
     revalidatePath("/admin");
     return { success: true };
   } catch (error: any) {
@@ -75,6 +85,13 @@ export async function updateClientStatusAction(id: string, status: string) {
       where: { id },
       data: { status }
     });
+
+    await logActivity({
+      clientId: id,
+      type: "status_change",
+      action: `Client status updated to ${status}`
+    });
+
     revalidatePath("/admin");
     return { success: true };
   } catch (error: any) {
@@ -95,6 +112,12 @@ export async function createClientAction(data: { firstName: string, lastName: st
         status: "prospect"
       }
     });
+    await logActivity({
+      clientId: client.id,
+      type: "creation",
+      action: "New client record created"
+    });
+
     revalidatePath("/admin");
     return { success: true, client };
   } catch (error: any) {
@@ -187,6 +210,14 @@ export async function saveProjectAction(data: { id: string, name: string, client
         config: data.config,
       }
     });
+
+    await logActivity({
+      clientId: clientId,
+      projectId: data.id,
+      type: "creation",
+      action: existingProject ? "Project configuration updated" : "New project configuration saved"
+    });
+
     revalidatePath("/");
     return { success: true };
   } catch (error: any) {
@@ -217,6 +248,14 @@ export async function approveProjectAction(id: string, signatureName: string) {
         userAgent: userAgent,
         snapshotHash: hash,
       }
+    });
+
+    await logActivity({
+      clientId: project.clientId,
+      projectId: id,
+      type: "approval",
+      action: `Project approved and signed by ${signatureName}`,
+      details: { ip, userAgent, hash }
     });
     revalidatePath(`/p/${id}`);
     revalidatePath("/");
@@ -286,6 +325,16 @@ export async function unlockProjectAction(id: string) {
         signedBy: null,
       }
     });
+
+    const project = await prisma.project.findUnique({ where: { id } });
+    if (project) {
+      await logActivity({
+        clientId: project.clientId,
+        projectId: id,
+        type: "status_change",
+        action: "Project unlocked (approval revoked)"
+      });
+    }
     revalidatePath(`/p/${id}`);
     revalidatePath("/");
     return { success: true };
