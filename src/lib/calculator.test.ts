@@ -54,4 +54,29 @@ describe("calculate", () => {
     const result = calculate(input({ bufferPercent: 0, roundingMode: "none" }));
     expect(result.roundedPrice).toBe(Math.round(result.finalPrice));
   });
+
+  it("handles zero buffer and zero discount", () => {
+    const result = calculate(input({ bufferPercent: 0, discountPercent: 0 }));
+    expect(result.finalPrice).toBe(result.baseCost);
+    expect(result.discountAmount).toBe(0);
+  });
+
+  it("handles empty features list", () => {
+    const result = calculate(input({ features: [] }));
+    expect(result.featureHours).toBe(0);
+  });
+
+  it("scales pages hours linearly", () => {
+    const onePage = calculate(input({ pages: 1 }));
+    const tenPages = calculate(input({ pages: 10 }));
+    expect(onePage.pagesHours).toBe(10 + 6);
+    expect(tenPages.pagesHours).toBe(10 + 60);
+  });
+
+  it("excludes hosting from rounded project price", () => {
+    const withHosting = calculate(input({ hostingPlan: "advanced" }));
+    const withoutHosting = calculate(input({ hostingPlan: "none" }));
+    expect(withHosting.hostingPrice).toBeGreaterThan(0);
+    expect(withHosting.roundedPrice).toBe(withoutHosting.roundedPrice);
+  });
 });
