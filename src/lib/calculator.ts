@@ -75,6 +75,7 @@ export interface CalculatorOutput {
   designHours: number;
   featureHours: number;
   complexityMultiplier: number;
+  projectTypeMultiplier: number;
   hostingPrice: number;
   discountAmount: number;
 }
@@ -109,6 +110,16 @@ function getFeatureHours(features: Feature[]): number {
   return features.reduce((sum, f) => sum + (FEATURE_HOURS[f] || 0), 0);
 }
 
+function getProjectTypeMultiplier(projectType: ProjectType): number {
+  const map: Record<ProjectType, number> = {
+    business_website: 1.0,
+    ecommerce: 1.2,
+    redesign: 0.85,
+    custom_system: 1.35,
+  };
+  return map[projectType];
+}
+
 function getComplexityMultiplier(complexity: Complexity): number {
   const map: Record<Complexity, number> = {
     simple: 1.0,
@@ -141,13 +152,15 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
   const pagesHours = getPagesHours(input.pages);
   const designHours = getDesignHours(input.designLevel);
   const featureHours = getFeatureHours(input.features);
+  const projectTypeMultiplier = getProjectTypeMultiplier(input.projectType);
   const complexityMultiplier = getComplexityMultiplier(input.complexity);
 
   // Step 1: Base Hours
   const baseHours = pagesHours + designHours + featureHours;
 
-  // Step 2: Adjusted Hours
-  const adjustedHours = Math.round(baseHours * complexityMultiplier * 10) / 10;
+  // Step 2: Adjusted Hours (project type × complexity)
+  const adjustedHours =
+    Math.round(baseHours * projectTypeMultiplier * complexityMultiplier * 10) / 10;
 
   // Step 3: Base Cost
   const baseCost = adjustedHours * input.hourlyRate;
@@ -179,6 +192,7 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
     designHours,
     featureHours,
     complexityMultiplier,
+    projectTypeMultiplier,
     hostingPrice: getHostingPrice(input.hostingPlan),
     discountAmount,
   };

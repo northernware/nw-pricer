@@ -25,7 +25,14 @@ describe("calculate", () => {
   it("applies complex complexity multiplier", () => {
     const result = calculate(input({ complexity: "complex" }));
     expect(result.complexityMultiplier).toBe(1.5);
-    expect(result.adjustedHours).toBe(87); // 58 * 1.5
+    expect(result.adjustedHours).toBe(87); // 58 * 1.0 * 1.5
+  });
+
+  it("applies project type multiplier", () => {
+    const baseline = calculate(input({ projectType: "business_website" }));
+    const ecommerce = calculate(input({ projectType: "ecommerce" }));
+    expect(ecommerce.projectTypeMultiplier).toBe(1.2);
+    expect(ecommerce.adjustedHours).toBeGreaterThan(baseline.adjustedHours);
   });
 
   it("sums feature hours", () => {

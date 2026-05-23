@@ -111,6 +111,7 @@ export default function OutputPanel({
           <Row label="Design → Hours" value={`${result.designHours} hrs`} />
           <Row label="Features → Hours" value={`${result.featureHours} hrs`} />
           <Row label="Base Hours" value={`${result.baseHours} hrs`} accent />
+          <Row label="Project Type" value={`×${result.projectTypeMultiplier}`} />
           <Row label="Complexity" value={`×${result.complexityMultiplier}`} />
           <Row label="Adjusted Hours" value={`${result.adjustedHours} hrs`} accent />
           <Row label="Base Cost" value={fmt(result.baseCost, currency)} />
