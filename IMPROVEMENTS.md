@@ -16,10 +16,10 @@ Last reviewed from codebase audit: **2026-05-24**.
 | Priority | Total | Done | Remaining |
 |----------|------:|-----:|----------:|
 | P0 — Critical | 14 | 13 | 1 |
-| P1 — High | 12 | 11 | 1 |
-| P2 — Medium | 18 | 0 | 18 |
+| P1 — High | 12 | 12 | 0 |
+| P2 — Medium | 18 | 2 | 16 |
 | P3 — Polish | 8 | 1 | 7 |
-| **All** | **52** | **25** | **27** |
+| **All** | **52** | **30** | **22** |
 
 _Update the table when checking items off._
 
@@ -84,7 +84,7 @@ _Update the table when checking items off._
 
 ### Pricing engine (`src/lib/calculator.ts`)
 
-- [ ] Decide whether `projectType` should affect hours/cost; if yes, implement multipliers or hour tables per type
+- [x] Decide whether `projectType` should affect hours/cost; if yes, implement multipliers or hour tables per type — #180
 - [x] Document whether `hostingPrice` is **MRR only** (excluded from `roundedPrice`) — update UI copy if so — #169
 - [x] Decide currency behavior: display-only vs FX conversion; implement or document “user sets hourly rate per currency” — #167 README
 - [x] Align `README.md` formulas with actual logic (pages, design hours, complexity `simple`/`complex` ×1.0/×1.5) — #167
@@ -108,10 +108,10 @@ _Update the table when checking items off._
 ### Database (Prisma)
 
 - [x] Create initial migration (or baseline) under `prisma/migrations/` — #175
-- [ ] Replace free-form `status` strings with Prisma enums where possible (`Client`, `Project`, `EmailCampaign`)
-- [ ] Add `EmailCampaign.templateId` → `EmailTemplate` relation (FK)
-- [ ] Define `onDelete` for `Client` → `Project`, `ActivityLog` (Cascade vs Restrict — pick explicitly)
-- [ ] Run migrate on staging/prod with backup plan documented in README
+- [x] Replace free-form `status` strings with Prisma enums where possible (`Client`, `Project`, `EmailCampaign`) — #179
+- [x] Add `EmailCampaign.templateId` → `EmailTemplate` relation (FK) — #179
+- [x] Define `onDelete` for `Client` → `Project`, `ActivityLog` (Cascade vs Restrict — pick explicitly) — #179 (Cascade client; SetNull project on logs)
+- [x] Run migrate on staging/prod with backup plan documented in README — #179 README
 
 ---
 
@@ -153,8 +153,8 @@ _Update the table when checking items off._
 
 ### Email marketing
 
-- [ ] Confirm-send modal before bulk send (recipient count)
-- [ ] Filter recipients by `Client.status` (e.g. exclude `declined`)
+- [x] Confirm-send modal before bulk send (recipient count) — #182
+- [x] Filter recipients by `Client.status` (e.g. exclude `declined`) — #182
 - [ ] “Send test to me” before campaign
 - [ ] Log per-campaign failures; don’t assume all-or-nothing Resend success
 - [ ] Future: opt-in flag on `Client` for marketing (schema + UI)
@@ -200,7 +200,7 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-P1 remaining: `projectType` pricing; Prisma enums/FK/onDelete
+P2: split `actions.ts`, type safety, API Zod
 
 ### Blocked on
 
@@ -208,17 +208,15 @@ None
 
 ### Completed this session
 
-- #167 README rewrite
-- #169 API defaults + hosting MRR UI
-- #170 CI + edge tests + typecheck script
-- #173 security & public links docs
-- #175 Prisma baseline migration
+- #179 Prisma enums, FK, cascade deletes
+- #180 projectType pricing multipliers
+- #182 email bulk confirm + exclude declined
 
 ### Next session should start with
 
-1. Prisma enums + `EmailCampaign` FK + `onDelete` cascade (schema migration)
-2. Email marketing: confirm-send modal + filter declined clients
-3. Split `actions.ts` into domain modules
+1. Split `actions.ts` into domain modules
+2. Zod validation on `/api/calculate`
+3. Remove localStorage dead code in `storage.ts`
 
 ---
 
@@ -259,3 +257,4 @@ Quick context if this file is opened without chat history.
 | 2026-05-24 | Initial improvement plan from codebase audit |
 | 2026-05-24 | Progress sync: #151–#163 merged (P0 auth, secrets, integrity, UUID IDs, Vitest) |
 | 2026-05-24 | #167–#177: README, API/MRR, CI, docs, Prisma baseline migration |
+| 2026-05-24 | #179–#184: Prisma enums, projectType, email guards, IMPROVEMENTS sync |
