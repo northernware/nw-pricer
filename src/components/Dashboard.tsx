@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getStats } from "@/app/actions";
 import { Icon } from "@iconify/react";
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
 import type { DashboardStats } from "@/types/crm";
 
 export default function Dashboard() {
@@ -47,10 +48,18 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity */}
         <div className="lg:col-span-2 bg-nw-white border border-nw-graphite/10 rounded-2xl p-6 shadow-sm">
-          <h3 className="font-display font-bold text-lg mb-6 flex items-center gap-2 uppercase tracking-tighter">
-            <Icon icon="solar:history-linear" className="text-nw-acid" />
-            Activity Log
-          </h3>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-display font-bold text-lg flex items-center gap-2 uppercase tracking-tighter">
+              <Icon icon="solar:history-linear" className="text-nw-acid" />
+              Activity Log
+            </h3>
+            <Link
+              href="/admin/activity"
+              className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite hover:text-nw-acid"
+            >
+              View all
+            </Link>
+          </div>
           <div className="space-y-4">
             {stats.recentActivity.map((log) => (
               <div key={log.id} className="flex items-start gap-4 p-4 rounded-xl hover:bg-nw-bone/50 transition-colors border border-transparent hover:border-nw-graphite/5">

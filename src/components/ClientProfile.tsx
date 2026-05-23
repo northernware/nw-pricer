@@ -117,10 +117,18 @@ export default function ClientProfile({ client }: ClientProfileProps) {
 
         {/* Activity Timeline */}
         <div className="space-y-6">
-          <h2 className="font-display font-bold text-xl uppercase tracking-tighter flex items-center gap-2">
-            <Icon icon="solar:history-bold" className="text-nw-acid" />
-            Activity Log
-          </h2>
+          <div className="flex justify-between items-center">
+            <h2 className="font-display font-bold text-xl uppercase tracking-tighter flex items-center gap-2">
+              <Icon icon="solar:history-bold" className="text-nw-acid" />
+              Activity Log
+            </h2>
+            <Link
+              href={`/admin/activity?clientId=${client.id}`}
+              className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite hover:text-nw-acid"
+            >
+              View all
+            </Link>
+          </div>
           <div className="relative pl-4 space-y-8 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-nw-graphite/10">
             {client.logs?.map((log: ClientProfileLog) => (
               <div key={log.id} className="relative">
