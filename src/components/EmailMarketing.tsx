@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getEmailTemplates, sendBulkEmailAction } from "@/app/actions";
+import {
+  getEmailTemplates,
+  getBulkEmailRecipientCountAction,
+  sendBulkEmailAction,
+} from "@/app/actions";
 import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
 import TemplateCreator from "./TemplateCreator";
@@ -13,6 +17,8 @@ export default function EmailMarketing() {
   const [sending, setSending] = useState(false);
   const [campaignName, setCampaignName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [recipientCount, setRecipientCount] = useState<number | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const loadTemplates = async () => {
     setLoading(true);
@@ -25,17 +31,36 @@ export default function EmailMarketing() {
     loadTemplates();
   }, []);
 
-  const handleSendBulk = async () => {
-    if (!campaignName || !selectedTemplate) return toast.error("Campaign name and template are required");
-    
+  useEffect(() => {
+    const loadCount = async () => {
+      const res = await getBulkEmailRecipientCountAction();
+      if (res.success) setRecipientCount(res.count);
+    };
+    loadCount();
+  }, []);
+
+  const handleLaunchClick = () => {
+    if (!campaignName || !selectedTemplate) {
+      return toast.error("Campaign name and template are required");
+    }
+    if (recipientCount === 0) {
+      return toast.error("No eligible recipients (need email, not declined)");
+    }
+    setShowConfirm(true);
+  };
+
+  const handleConfirmSend = async () => {
     setSending(true);
     const result = await sendBulkEmailAction(campaignName, selectedTemplate);
     setSending(false);
+    setShowConfirm(false);
 
     if (result.success) {
       toast.success(`Campaign sent to ${result.count} recipients!`);
       setCampaignName("");
       setSelectedTemplate("");
+      const res = await getBulkEmailRecipientCountAction();
+      if (res.success) setRecipientCount(res.count);
     } else {
       toast.error(result.error || "Bulk distribution failed");
     }
@@ -64,7 +89,6 @@ export default function EmailMarketing() {
           </div>
         ) : (
           <>
-            {/* Templates List */}
             <div className="bg-nw-white border border-nw-graphite/10 rounded-2xl p-6 shadow-sm">
               <h3 className="font-display font-bold text-lg mb-6 flex items-center gap-2 uppercase tracking-tighter">
                 <Icon icon="solar:document-text-linear" className="text-nw-acid" />
@@ -96,11 +120,10 @@ export default function EmailMarketing() {
               )}
             </div>
 
-            {/* Distribution Panel */}
             <div className="bg-nw-black text-nw-bone rounded-2xl p-6 shadow-xl relative overflow-hidden">
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-nw-acid/5 blur-3xl -ml-32 -mb-32 rounded-full"></div>
               <h3 className="font-display font-bold text-lg mb-6 relative z-10 uppercase tracking-tighter">Bulk Distribution</h3>
-              
+
               <div className="space-y-6 relative z-10">
                 <div>
                   <label className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite mb-2 block">Campaign Name</label>
@@ -130,25 +153,60 @@ export default function EmailMarketing() {
                 <div className="p-4 bg-nw-white/5 border border-nw-white/10 rounded-xl">
                   <div className="flex items-center gap-3 text-nw-acid mb-2">
                     <Icon icon="solar:info-circle-linear" />
-                    <span className="text-[9px] font-mono uppercase tracking-widest">Notice</span>
+                    <span className="text-[9px] font-mono uppercase tracking-widest">Recipients</span>
                   </div>
                   <p className="text-[10px] text-nw-graphite leading-relaxed">
-                    This will send the selected template to all clients with an email address. This action cannot be undone.
+                    {recipientCount === null
+                      ? "Loading eligible recipients…"
+                      : `${recipientCount} client(s) with email (excludes declined).`}
                   </p>
                 </div>
 
                 <button
-                  onClick={handleSendBulk}
-                  disabled={sending || !selectedTemplate || !campaignName}
+                  onClick={handleLaunchClick}
+                  disabled={sending || !selectedTemplate || !campaignName || recipientCount === 0}
                   className="w-full bg-nw-acid text-nw-black py-4 rounded-xl font-mono text-[10px] uppercase tracking-[0.2em] font-black hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 disabled:grayscale disabled:scale-100"
                 >
-                  {sending ? "Distributing..." : "Launch Campaign"}
+                  Launch Campaign
                 </button>
               </div>
             </div>
           </>
         )}
       </div>
+
+      {showConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-nw-black/60 backdrop-blur-sm">
+          <div className="bg-nw-white border border-nw-graphite/20 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <h3 className="font-display font-bold text-xl uppercase tracking-tighter mb-4">Confirm bulk send</h3>
+            <p className="font-body text-sm text-nw-graphite mb-2">
+              Campaign: <strong className="text-nw-black">{campaignName}</strong>
+            </p>
+            <p className="font-body text-sm text-nw-graphite mb-6">
+              This will email <strong className="text-nw-black">{recipientCount}</strong> client(s).
+              Declined clients are excluded. This cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowConfirm(false)}
+                disabled={sending}
+                className="flex-1 py-3 border border-nw-graphite/20 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-bone transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmSend}
+                disabled={sending}
+                className="flex-1 py-3 bg-nw-black text-nw-bone rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black transition-colors disabled:opacity-50"
+              >
+                {sending ? "Sending…" : "Send now"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

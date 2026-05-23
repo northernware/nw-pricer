@@ -500,12 +500,28 @@ export async function sendIndividualEmailAction(clientId: string, subject: strin
   }
 }
 
+const bulkEmailRecipientFilter = {
+  email: { not: null },
+  status: { not: ClientStatus.declined },
+} as const;
+
+export async function getBulkEmailRecipientCountAction() {
+  try {
+    await requireAdminSession();
+    const count = await prisma.client.count({ where: bulkEmailRecipientFilter });
+    return { success: true, count };
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message, count: 0 };
+    return { success: false, error: error instanceof Error ? error.message : String(error), count: 0 };
+  }
+}
+
 export async function sendBulkEmailAction(campaignName: string, templateId: string) {
   try {
     await requireAdminSession();
     const [template, clients] = await Promise.all([
       prisma.emailTemplate.findUnique({ where: { id: templateId } }),
-      prisma.client.findMany({ where: { email: { not: null } } })
+      prisma.client.findMany({ where: bulkEmailRecipientFilter }),
     ]);
 
     if (!template) throw new Error("Template not found");
