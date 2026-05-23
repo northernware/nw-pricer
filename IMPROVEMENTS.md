@@ -17,9 +17,9 @@ Last reviewed from codebase audit: **2026-05-24**.
 |----------|------:|-----:|----------:|
 | P0 — Critical | 14 | 13 | 1 |
 | P1 — High | 12 | 12 | 0 |
-| P2 — Medium | 18 | 2 | 16 |
+| P2 — Medium | 18 | 11 | 7 |
 | P3 — Polish | 8 | 1 | 7 |
-| **All** | **52** | **30** | **22** |
+| **All** | **52** | **39** | **13** |
 
 _Update the table when checking items off._
 
@@ -119,26 +119,26 @@ _Update the table when checking items off._
 
 ### Split `src/app/actions.ts`
 
-- [ ] `src/app/actions/projects.ts`
-- [ ] `src/app/actions/clients.ts`
-- [ ] `src/app/actions/email.ts`
-- [ ] `src/app/actions/billing.ts` (PayMongo)
-- [ ] `src/app/actions/stats.ts` or keep small getters in one `queries.ts`
-- [ ] Re-export or update imports in components (grep `from "@/app/actions"`)
+- [x] `src/app/actions/projects.ts` — #187
+- [x] `src/app/actions/clients.ts` — #187
+- [x] `src/app/actions/email.ts` — #187
+- [x] `src/app/actions/billing.ts` (PayMongo) — #187
+- [x] `src/app/actions/stats.ts` or keep small getters in one `queries.ts` — #187
+- [x] Re-export or update imports in components (grep `from "@/app/actions"`) — #187 (`actions/index.ts`)
 
 ### Refactor large components
 
 - [ ] `Calculator.tsx` (~636 lines): extract PDF export hook, project save hook, library modal
 - [ ] `InputPanel.tsx` (~479 lines): split calculator vs proposal/contract tabs
 - [ ] `ClientBoard.tsx`: extract column/card subcomponents
-- [ ] Shared types file: `src/types/crm.ts` (Client, Project, StoredProject — no `any`)
+- [x] Shared types file: `src/types/crm.ts` (Client, Project, StoredProject — no `any`) — #190 (StoredProject)
 
 ### Remove localStorage split-brain
 
-- [ ] Audit uses of `src/lib/storage.ts` vs DB `saveProjectAction`
-- [ ] Keep draft autosave (`nw_pricer_draft`) OR remove if DB-only — document behavior
-- [ ] Remove dead `STORAGE_KEY` project list if fully on Postgres
-- [ ] Migration note in README if old browsers had local-only projects
+- [x] Audit uses of `src/lib/storage.ts` vs DB `saveProjectAction` — #190
+- [x] Keep draft autosave (`nw_pricer_draft`) OR remove if DB-only — document behavior — #190 README
+- [x] Remove dead `STORAGE_KEY` project list if fully on Postgres — #190
+- [x] Migration note in README if old browsers had local-only projects — #190 (draft autosave note)
 
 ### Type safety
 
@@ -148,7 +148,7 @@ _Update the table when checking items off._
 ### API `/api/calculate`
 
 - [ ] Decide: internal-only (auth or remove route) vs public estimator
-- [ ] If kept: Zod schema for body; return 400 with field errors
+- [x] If kept: Zod schema for body; return 400 with field errors — #188
 - [ ] If removed: ensure calculator uses `calculate()` import only
 
 ### Email marketing
@@ -200,7 +200,7 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-P2: split `actions.ts`, type safety, API Zod
+P2/P3: component refactors, proxy `/api/calculate`, activity log UI
 
 ### Blocked on
 
@@ -208,15 +208,16 @@ None
 
 ### Completed this session
 
-- #179 Prisma enums, FK, cascade deletes
-- #180 projectType pricing multipliers
-- #182 email bulk confirm + exclude declined
+- #187 split server actions
+- #188 Zod on `/api/calculate`
+- #190 storage cleanup + `src/types/crm.ts`
+- #193 build hotfix
 
 ### Next session should start with
 
-1. Split `actions.ts` into domain modules
-2. Zod validation on `/api/calculate`
-3. Remove localStorage dead code in `storage.ts`
+1. Protect `/api/calculate` in proxy or document as internal-only
+2. Replace `any` in KanbanBoard / ClientBoard / CRMView
+3. Activity log full feed page
 
 ---
 
@@ -258,3 +259,4 @@ Quick context if this file is opened without chat history.
 | 2026-05-24 | Progress sync: #151–#163 merged (P0 auth, secrets, integrity, UUID IDs, Vitest) |
 | 2026-05-24 | #167–#177: README, API/MRR, CI, docs, Prisma baseline migration |
 | 2026-05-24 | #179–#184: Prisma enums, projectType, email guards, IMPROVEMENTS sync |
+| 2026-05-24 | #187–#194: actions split, Zod API, storage cleanup, build fix |
