@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { loginAction } from "./actions";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,13 +16,25 @@ export default function LoginPage() {
     const formData = new FormData();
     formData.append("password", password);
 
-    const result = await loginAction(formData);
-    
-    if (result.error) {
-      setError(result.error);
+    try {
+      const result = await loginAction(formData);
+
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
+
+      if (result?.success) {
+        // Full navigation so the session cookie is sent on the next request
+        window.location.href = "/admin";
+        return;
+      }
+
+      setError("Login failed. Try again.");
+    } catch {
+      setError("Login failed. Check server logs.");
+    } finally {
       setLoading(false);
-    } else {
-      router.push("/admin");
     }
   };
 

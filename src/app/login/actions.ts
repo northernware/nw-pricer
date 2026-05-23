@@ -3,11 +3,11 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { encrypt } from "@/lib/auth";
-import { requireEnv } from "@/lib/env";
+import { getCrmPassword } from "@/lib/env";
 
 export async function loginAction(formData: FormData) {
   const password = formData.get("password");
-  const correctPassword = requireEnv("CRM_PASSWORD", "northernware");
+  const correctPassword = getCrmPassword();
 
   if (password !== correctPassword) {
     return { error: "Invalid password" };

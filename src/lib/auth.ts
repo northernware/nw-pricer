@@ -1,13 +1,12 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
-import { requireEnv } from '@/lib/env';
+import { getJwtSecret } from '@/lib/env';
 
 let signingKey: Uint8Array | null = null;
 
 function getSigningKey(): Uint8Array {
   if (!signingKey) {
-    const secret = requireEnv('JWT_SECRET', 'dev-only-jwt-secret-not-for-production');
-    signingKey = new TextEncoder().encode(secret);
+    signingKey = new TextEncoder().encode(getJwtSecret());
   }
   return signingKey;
 }
