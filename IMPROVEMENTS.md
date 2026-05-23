@@ -17,9 +17,11 @@ Last reviewed from codebase audit: **2026-05-24**.
 |----------|------:|-----:|----------:|
 | P0 — Critical | 14 | 13 | 1 |
 | P1 — High | 12 | 12 | 0 |
-| P2 — Medium | 18 | 17 | 1 |
-| P3 — Polish | 8 | 3 | 5 |
-| **All** | **52** | **47** | **5** |
+| P2 — Medium | 18 | 18 | 0 |
+| P3 — Polish | 8 | 4 | 4 |
+| **All** | **52** | **52** | **0** |
+
+_Optional stretch items (component refactors, P3 product roadmap, P0 hardening, script archive) remain listed below but are outside the original audit scope._
 
 _Update the table when checking items off._
 
@@ -143,7 +145,7 @@ _Update the table when checking items off._
 ### Type safety
 
 - [x] Replace `any` in `CRMView`, `KanbanBoard`, `ClientBoard`, `actions.ts` mappers — #199
-- [ ] Type `project.config` as `CalculatorInput` (Prisma `Json` + Zod parse on read/write)
+- [x] Type `project.config` as `CalculatorInput` (Prisma `Json` + Zod parse on read/write) — #207
 
 ### API `/api/calculate`
 
@@ -155,9 +157,9 @@ _Update the table when checking items off._
 
 - [x] Confirm-send modal before bulk send (recipient count) — #182
 - [x] Filter recipients by `Client.status` (e.g. exclude `declined`) — #182
-- [ ] “Send test to me” before campaign
-- [ ] Log per-campaign failures; don’t assume all-or-nothing Resend success
-- [ ] Future: opt-in flag on `Client` for marketing (schema + UI)
+- [x] “Send test to me” before campaign — #208 (`CRM_TEST_EMAIL`, `sendTestEmailAction`)
+- [x] Log per-campaign failures; don’t assume all-or-nothing Resend success — #208
+- [x] Future: opt-in flag on `Client` for marketing (schema + UI) — #211
 
 ### Activity log UI
 
@@ -180,7 +182,7 @@ _Update the table when checking items off._
 
 - [x] `npm run typecheck` (`tsc --noEmit`) — #170
 - [x] GitHub Actions (or monorepo CI): lint + test + build — #170
-- [ ] Document one-off `scripts/*.ts` — when safe to run, idempotent or not
+- [x] Document one-off `scripts/*.ts` — when safe to run, idempotent or not — #203 README table
 
 ### Proxy / admin routes (Next.js 16)
 
@@ -200,7 +202,7 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-P2: large component refactors; P3: product roadmap items
+P2: large component refactors (optional); P3: product roadmap items
 
 ### Blocked on
 
@@ -208,16 +210,14 @@ None
 
 ### Completed this session
 
-- #197 proxy `/api/calculate` auth
-- #199 CRM component types
-- #200 activity log page
-- #203 scripts README
+- #208 email test send + per-recipient bulk failure logging
+- #211 client marketing opt-in for bulk email
 
 ### Next session should start with
 
-1. `project.config` Zod parse on read/write
-2. Email: send test + failure logging
-3. Calculator.tsx extract hooks (optional refactor)
+1. Optional: `Calculator.tsx` / `InputPanel.tsx` / `ClientBoard` subcomponent refactors
+2. P3 product backlog (SEO module, public estimator, PDF branding)
+3. Production: `npx prisma migrate deploy` for `20260524140000_client_marketing_opt_in`
 
 ---
 
@@ -261,3 +261,4 @@ Quick context if this file is opened without chat history.
 | 2026-05-24 | #179–#184: Prisma enums, projectType, email guards, IMPROVEMENTS sync |
 | 2026-05-24 | #187–#194: actions split, Zod API, storage cleanup, build fix |
 | 2026-05-24 | #197–#204: proxy API auth, CRM types, activity log, scripts docs |
+| 2026-05-24 | #207–#212: project.config Zod, email test/failure logging, marketing opt-in |
