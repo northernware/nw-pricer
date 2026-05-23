@@ -108,6 +108,40 @@ export async function getBulkEmailRecipientCountAction() {
   }
 }
 
+export async function sendTestEmailAction(templateId: string) {
+  try {
+    await requireAdminSession();
+    const testEmail = process.env.CRM_TEST_EMAIL;
+    if (!testEmail) {
+      return {
+        success: false,
+        error: "Set CRM_TEST_EMAIL in environment to receive test emails.",
+      };
+    }
+
+    const template = await prisma.emailTemplate.findUnique({ where: { id: templateId } });
+    if (!template) throw new Error("Template not found");
+
+    const html = getBrandedTemplate(
+      `<p style="font-size:11px;color:#666;margin-bottom:16px;">[TEST — not sent to clients]</p>${template.body}`
+    );
+    const result = await sendEmail({
+      to: testEmail,
+      subject: `[TEST] ${template.subject}`,
+      html,
+    });
+
+    if (result.success) {
+      return { success: true, to: testEmail };
+    }
+    return { success: false, error: "Test email delivery failed" };
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
+    console.error("Test email error:", error);
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
 export async function sendBulkEmailAction(campaignName: string, templateId: string) {
   try {
     await requireAdminSession();
@@ -117,26 +151,69 @@ export async function sendBulkEmailAction(campaignName: string, templateId: stri
     ]);
 
     if (!template) throw new Error("Template not found");
-    const emails = clients.map((c) => c.email as string);
-    if (emails.length === 0) throw new Error("No clients with email addresses found");
+    if (clients.length === 0) throw new Error("No clients with email addresses found");
 
     const html = getBrandedTemplate(template.body);
-    const result = await sendEmail({ to: emails, subject: template.subject, html });
+    const failures: { email: string; reason: string }[] = [];
+    let sent = 0;
 
-    if (result.success) {
-      await prisma.emailCampaign.create({
-        data: {
-          name: campaignName,
-          subject: template.subject,
-          templateId: templateId,
-          status: EmailCampaignStatus.sent,
-          recipients: emails.length,
-          sentAt: new Date(),
-        },
-      });
-      return { success: true, count: emails.length };
+    for (const client of clients) {
+      const email = client.email as string;
+      const result = await sendEmail({ to: email, subject: template.subject, html });
+      if (result.success) {
+        sent++;
+      } else {
+        const reason =
+          result.error instanceof Error
+            ? result.error.message
+            : typeof result.error === "string"
+              ? result.error
+              : "Delivery failed";
+        failures.push({ email, reason });
+        console.error(`Bulk email failed for ${email}:`, result.error);
+      }
     }
-    return { success: false, error: "Bulk email delivery failed" };
+
+    const status =
+      sent === 0
+        ? EmailCampaignStatus.draft
+        : EmailCampaignStatus.sent;
+
+    await prisma.emailCampaign.create({
+      data: {
+        name: campaignName,
+        subject: template.subject,
+        templateId: templateId,
+        status,
+        recipients: sent,
+        sentAt: sent > 0 ? new Date() : null,
+      },
+    });
+
+    await logActivity({
+      clientId: clients[0].id,
+      type: "email_sent",
+      action: `Bulk campaign "${campaignName}": ${sent} sent, ${failures.length} failed`,
+      details: { campaignName, sent, failed: failures.length, failures: failures.slice(0, 20) },
+    });
+
+    if (sent === 0) {
+      return {
+        success: false,
+        error: "All recipients failed",
+        sent: 0,
+        failed: failures.length,
+        failures,
+      };
+    }
+
+    return {
+      success: true,
+      count: sent,
+      sent,
+      failed: failures.length,
+      failures: failures.length > 0 ? failures : undefined,
+    };
   } catch (error: unknown) {
     if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Bulk email error:", error);
