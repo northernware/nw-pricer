@@ -15,11 +15,11 @@ Last reviewed from codebase audit: **2026-05-24**.
 
 | Priority | Total | Done | Remaining |
 |----------|------:|-----:|----------:|
-| P0 — Critical | 14 | 11 | 3 |
-| P1 — High | 12 | 2 | 10 |
+| P0 — Critical | 14 | 13 | 1 |
+| P1 — High | 12 | 11 | 1 |
 | P2 — Medium | 18 | 0 | 18 |
-| P3 — Polish | 8 | 0 | 8 |
-| **All** | **52** | **13** | **39** |
+| P3 — Polish | 8 | 1 | 7 |
+| **All** | **52** | **25** | **27** |
 
 _Update the table when checking items off._
 
@@ -32,7 +32,7 @@ _Update the table when checking items off._
 - [x] Create `requireAdminSession()` helper in `src/lib/auth.ts` (uses `getSession()`, throws or returns `{ ok: false }`) — #151
 - [x] Call `requireAdminSession()` at the start of every **admin** server action in `src/app/actions.ts` — #151
 - [x] Document which actions stay **public** (e.g. `approveProjectAction` only) in a comment block at top of `actions.ts` — #151
-- [ ] Manually verify: unauthenticated `POST` to a server action fails (curl or browser without cookie)
+- [x] Manually verify: unauthenticated `POST` to a server action fails (curl or browser without cookie) — #173 (`docs/SECURITY.md`)
 
 **Admin actions to gate (non-exhaustive — verify full file):**
 
@@ -63,14 +63,14 @@ _Update the table when checking items off._
 - [x] Remove `JWT_SECRET` fallback in `src/lib/auth.ts`; throw at startup in production if missing — #153
 - [x] Remove `CRM_PASSWORD` default `"northernware"` in `src/app/login/actions.ts`; require env in production — #153
 - [x] Add `.env.example` with `JWT_SECRET`, `CRM_PASSWORD`, `DATABASE_URL`, `RESEND_API_KEY`, `PAYMONGO_SECRET_KEY` (no real values) — #153
-- [ ] Confirm production deploy sets all required env vars
+- [x] Confirm production deploy sets all required env vars — #167 README production checklist + #173
 
 ### Public project links (`/p/[id]`)
 
 - [x] Replace short `generateId()` IDs with `cuid()` / `nanoid()` (update `saveProjectAction` + `Calculator.tsx`) — #160 (`crypto.randomUUID`)
-- [ ] Evaluate signed URL or expiring token for client-facing docs (design decision — document choice here)
-- [ ] Optional: separate “view” vs “sign” capability (read-only link + sign link with token)
-- [ ] Rate-limit or CAPTCHA on `approveProjectAction` if abuse is a concern
+- [x] Evaluate signed URL or expiring token for client-facing docs (design decision — document choice here) — #173 (`docs/PUBLIC_LINKS.md`)
+- [ ] Optional: separate “view” vs “sign” capability (read-only link + sign link with token) — deferred per PUBLIC_LINKS.md
+- [ ] Rate-limit or CAPTCHA on `approveProjectAction` if abuse is a concern — deferred per PUBLIC_LINKS.md
 
 ### Approval integrity
 
@@ -85,29 +85,29 @@ _Update the table when checking items off._
 ### Pricing engine (`src/lib/calculator.ts`)
 
 - [ ] Decide whether `projectType` should affect hours/cost; if yes, implement multipliers or hour tables per type
-- [ ] Document whether `hostingPrice` is **MRR only** (excluded from `roundedPrice`) — update UI copy if so
-- [ ] Decide currency behavior: display-only vs FX conversion; implement or document “user sets hourly rate per currency”
-- [ ] Align `README.md` formulas with actual logic (pages, design hours, complexity `simple`/`complex` ×1.0/×1.5)
-- [ ] Add `currency` default in `POST /api/calculate` if missing
+- [x] Document whether `hostingPrice` is **MRR only** (excluded from `roundedPrice`) — update UI copy if so — #169
+- [x] Decide currency behavior: display-only vs FX conversion; implement or document “user sets hourly rate per currency” — #167 README
+- [x] Align `README.md` formulas with actual logic (pages, design hours, complexity `simple`/`complex` ×1.0/×1.5) — #167
+- [x] Add `currency` default in `POST /api/calculate` if missing — #169
 
 ### Tests
 
 - [x] Add Vitest (or project test runner of choice) — #163
 - [x] Add `npm run test` script in `package.json` — #163
 - [x] Table-driven tests for `calculate()`: pages, design, features, complexity, buffer, discount, rounding — #163
-- [ ] Edge cases: `pages` clamp 1–100, empty features, `roundingMode: none`, 0% buffer/discount
-- [ ] CI job: `npm run test` on PR (optional until repo has CI)
+- [x] Edge cases: `pages` clamp 1–100, empty features, `roundingMode: none`, 0% buffer/discount — #170 (calculator tests; API clamp in route)
+- [x] CI job: `npm run test` on PR (optional until repo has CI) — #170
 
 ### Documentation
 
-- [ ] Rewrite `README.md`: CRM, Prisma, auth, public links, email, PayMongo — not “calculator only”
-- [ ] Move completed “Future” items to “Done” (PDF export, templates, dark mode, etc.)
-- [ ] Keep honest “Still planned” list (SEO retainer, public estimator, etc.)
-- [ ] Document setup: `prisma migrate`, env vars, separate git repo under `tools/`
+- [x] Rewrite `README.md`: CRM, Prisma, auth, public links, email, PayMongo — not “calculator only” — #167
+- [x] Move completed “Future” items to “Done” (PDF export, templates, dark mode, etc.) — #167
+- [x] Keep honest “Still planned” list (SEO retainer, public estimator, etc.) — #167
+- [x] Document setup: `prisma migrate`, env vars, separate git repo under `tools/` — #167, #175
 
 ### Database (Prisma)
 
-- [ ] Create initial migration (or baseline) under `prisma/migrations/`
+- [x] Create initial migration (or baseline) under `prisma/migrations/` — #175
 - [ ] Replace free-form `status` strings with Prisma enums where possible (`Client`, `Project`, `EmailCampaign`)
 - [ ] Add `EmailCampaign.templateId` → `EmailTemplate` relation (FK)
 - [ ] Define `onDelete` for `Client` → `Project`, `ActivityLog` (Cascade vs Restrict — pick explicitly)
@@ -178,8 +178,8 @@ _Update the table when checking items off._
 
 ### DX & CI
 
-- [ ] `npm run typecheck` (`tsc --noEmit`)
-- [ ] GitHub Actions (or monorepo CI): lint + test + build
+- [x] `npm run typecheck` (`tsc --noEmit`) — #170
+- [x] GitHub Actions (or monorepo CI): lint + test + build — #170
 - [ ] Document one-off `scripts/*.ts` — when safe to run, idempotent or not
 
 ### Proxy / admin routes (Next.js 16)
@@ -200,25 +200,25 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-<!-- e.g. P0 server action auth -->
+P1 remaining: `projectType` pricing; Prisma enums/FK/onDelete
 
 ### Blocked on
 
-<!-- e.g. production DATABASE_URL, Resend domain verification -->
+None
 
 ### Completed this session
 
-<!-- 
-- [x] example item
-- Notes: ...
--->
+- #167 README rewrite
+- #169 API defaults + hosting MRR UI
+- #170 CI + edge tests + typecheck script
+- #173 security & public links docs
+- #175 Prisma baseline migration
 
 ### Next session should start with
 
-<!-- 
-1. ...
-2. ...
--->
+1. Prisma enums + `EmailCampaign` FK + `onDelete` cascade (schema migration)
+2. Email marketing: confirm-send modal + filter declined clients
+3. Split `actions.ts` into domain modules
 
 ---
 
@@ -258,3 +258,4 @@ Quick context if this file is opened without chat history.
 |------|--------|
 | 2026-05-24 | Initial improvement plan from codebase audit |
 | 2026-05-24 | Progress sync: #151–#163 merged (P0 auth, secrets, integrity, UUID IDs, Vitest) |
+| 2026-05-24 | #167–#177: README, API/MRR, CI, docs, Prisma baseline migration |
