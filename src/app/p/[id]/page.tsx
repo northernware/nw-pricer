@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import SignatureBlock from "@/components/SignatureBlock";
 import PaymentBlock from "@/components/PaymentBlock";
 import PublicTemplate from "@/components/PublicTemplate";
+import { isConfigTampered } from "@/lib/project-integrity";
 
 export async function generateMetadata(
   { params, searchParams }: { params: { id: string }, searchParams: { mode?: string, invoiceId?: string } }
@@ -70,6 +71,12 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
                     isContract ? "CTR" :
                     isInvoice ? "INV" : "QUO";
 
+  const configTampered = isConfigTampered(
+    project.config,
+    project.snapshotHash,
+    !!project.approvedAt
+  );
+
   return (
     <div className="min-h-screen bg-nw-bone text-nw-black font-body selection-acid relative py-12 md:py-24 px-4 md:px-0 overflow-x-hidden">
       <div className="bg-noise"></div>
@@ -87,6 +94,7 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
           approvedAt={project.approvedAt}
           ipAddress={project.ipAddress}
           snapshotHash={project.snapshotHash}
+          configTampered={configTampered}
         />
       </main>
       
