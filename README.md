@@ -86,7 +86,9 @@ pagesHours    = 10 + (pages × 6)
 designHours   = basic 12 | custom 18 | high_end 24
 featureHours  = sum of selected features
 baseHours     = pagesHours + designHours + featureHours
-adjustedHours = baseHours × complexity (simple ×1.0 | complex ×1.5)
+adjustedHours = baseHours × projectType × complexity
+projectType   = business_website ×1.0 | ecommerce ×1.2 | redesign ×0.85 | custom_system ×1.35
+complexity    = simple ×1.0 | complex ×1.5
 baseCost      = adjustedHours × hourlyRate
 finalPrice    = baseCost × (1 + buffer%) − discount%
 roundedPrice  = round(finalPrice) — nearest 1k, 5k, or exact
@@ -95,7 +97,7 @@ priceRange    = [rounded × 0.9, rounded × 1.1] (same rounding mode)
 
 **Not included in `roundedPrice`:** managed hosting (shown separately as **monthly recurring**).  
 **Display-only today:** `currency` (set hourly rate appropriately per currency).  
-**Labels only:** `projectType` (does not change hours yet).
+**Project type** affects hours via multipliers (see formulas above).
 
 Defaults are in `src/lib/constants.ts` (`DEFAULTS`).
 
@@ -179,8 +181,6 @@ prisma/schema.prisma        # Client, Project, ActivityLog, Email*
 - [ ] Anonymous public **estimator** (vs current document-only links)
 - [ ] Signed/expiring public URLs
 - [ ] Prisma enums & checked-in migrations
-- [ ] `projectType` multipliers in calculator
-
 Track detailed tasks in [IMPROVEMENTS.md](./IMPROVEMENTS.md).
 
 ---
