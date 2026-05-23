@@ -45,6 +45,7 @@ export function deleteProject(id: string): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
 }
 
+/** Cryptographically secure ID for projects (public /p/[id] links). */
 export function generateId(): string {
-  return Math.random().toString(36).substring(2, 11).toUpperCase();
+  return crypto.randomUUID();
 }
