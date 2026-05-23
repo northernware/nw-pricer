@@ -1,75 +1,102 @@
-# 🧾 NW Pricer — Northernware Pricing Calculator
+# NW Pricer — Northernware Internal CRM & Pricing Tool
 
-Internal tool for generating project quotes and estimates.  
-Input project scope → output price, hours, and suggested range.
+Internal tool for **project pricing**, **proposals/contracts**, **client CRM**, and **client-facing document links**.
 
-> **This is an internal tool.** Not for client distribution.
+> **Internal only.** Admin UI requires login. Public `/p/[id]` links share documents with clients who have the URL.
+
+---
+
+## Features
+
+| Area | Description |
+|------|-------------|
+| **Calculator** | Hours-based pricing with buffer, discount, rounding |
+| **Documents** | Auto-generated proposal, contract, quote, invoice |
+| **CRM** | Clients, projects, Kanban pipelines, activity log |
+| **Public links** | `/p/[id]` for client view/sign (UUID project IDs) |
+| **Email** | Templates and bulk campaigns (Resend) |
+| **Payments** | PayMongo checkout links on invoices |
+| **PDF** | Export from calculator preview |
 
 ---
 
 ## Setup
 
-This repo lives inside the main Northernware project as a nested repo.  
-The `tools/` directory is git-ignored by northernware — this has its own remote.
+This repo lives under the main Northernware monorepo path but is a **separate git repository** (`tools/` is git-ignored by northernware).
 
-### 1. Clone into your local northernware repo
+### 1. Clone
 
 ```bash
 cd d:\Codes\northernware
-mkdir tools
+mkdir -p tools
 cd tools
 git clone https://github.com/northernware/nw-pricer.git
+cd nw-pricer
 ```
 
-Your structure should look like:
-
-```
-northernware/
-├── src/                  ← main website
-├── tools/                ← git-ignored by northernware
-│   └── nw-pricer/        ← this repo (separate git)
-│       ├── src/
-│       └── ...
-└── ...
-```
-
-### 2. Install & run
+### 2. Environment
 
 ```bash
-cd nw-pricer
+cp .env.example .env
+```
+
+| Variable | Required | Notes |
+|----------|----------|--------|
+| `DATABASE_URL` | Yes | PostgreSQL for Prisma |
+| `JWT_SECRET` | Production | Session signing; dev fallback if unset |
+| `CRM_PASSWORD` | Production | Admin login password |
+| `RESEND_API_KEY` | Optional | Email sending |
+| `PAYMONGO_SECRET_KEY` | Optional | Payment links on public invoices |
+
+### 3. Database
+
+```bash
 npm install
+npx prisma generate
+npx prisma db push   # or: npx prisma migrate dev (when migrations exist)
+```
+
+### 4. Run
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+- App: [http://localhost:3000](http://localhost:3000) (redirects to `/admin`)
+- Login: [http://localhost:3000/login](http://localhost:3000/login)
+
+### Scripts
+
+```bash
+npm run dev      # development
+npm run build    # prisma generate + next build
+npm run test     # Vitest (pricing calculator)
+npm run lint     # ESLint
+```
 
 ---
 
-## How It Works
+## Pricing engine
 
-### Calculation Flow
+Logic lives in `src/lib/calculator.ts`.
 
 ```
-Pages → Hours    (≤5 = 10h, ≤10 = 20h, >10 = 30h)
-Design → Hours   (basic = 5h, custom = 10h, high_end = 15h)
-Features → Hours (contact_form +2h, cms_blog +6h, auth +10h, etc.)
-
+pagesHours    = 10 + (pages × 6)
+designHours   = basic 12 | custom 18 | high_end 24
+featureHours  = sum of selected features
 baseHours     = pagesHours + designHours + featureHours
-adjustedHours = baseHours × complexityMultiplier (1.0 / 1.3 / 1.6)
+adjustedHours = baseHours × complexity (simple ×1.0 | complex ×1.5)
 baseCost      = adjustedHours × hourlyRate
-finalPrice    = baseCost × (1 + buffer%)
-roundedPrice  = round(finalPrice, nearest 1k or 5k)
-priceRange    = [roundedPrice × 0.9, roundedPrice × 1.1]
+finalPrice    = baseCost × (1 + buffer%) − discount%
+roundedPrice  = round(finalPrice) — nearest 1k, 5k, or exact
+priceRange    = [rounded × 0.9, rounded × 1.1] (same rounding mode)
 ```
 
-### Defaults
+**Not included in `roundedPrice`:** managed hosting (shown separately as **monthly recurring**).  
+**Display-only today:** `currency` (set hourly rate appropriately per currency).  
+**Labels only:** `projectType` (does not change hours yet).
 
-| Setting      | Default  |
-|-------------|----------|
-| Hourly Rate | ₱700     |
-| Buffer      | 30%      |
-| Rounding    | Nearest ₱1,000 |
-| Complexity  | Medium (×1.3) |
+Defaults are in `src/lib/constants.ts` (`DEFAULTS`).
 
 ---
 
@@ -77,74 +104,90 @@ priceRange    = [roundedPrice × 0.9, roundedPrice × 1.1]
 
 ### `POST /api/calculate`
 
-**Request:**
+Internal-style JSON API (no auth today — use only on trusted networks or add proxy auth later).
+
+**Request** (minimal):
 
 ```json
 {
   "projectType": "business_website",
   "pages": 8,
   "designLevel": "custom",
-  "complexity": "medium",
-  "features": ["contact_form", "cms_blog", "authentication"],
-  "hourlyRate": 700,
-  "bufferPercent": 30
+  "complexity": "simple",
+  "features": ["contact_form"],
+  "hourlyRate": 600,
+  "bufferPercent": 10,
+  "currency": "PHP"
 }
 ```
 
-**Response:**
+**Response:** `CalculatorOutput` (hours breakdown, costs, `hostingPrice`, etc.)
 
-```json
-{
-  "baseHours": 48,
-  "adjustedHours": 62.4,
-  "baseCost": 43680,
-  "finalPrice": 56784,
-  "roundedPrice": 57000,
-  "priceRange": [51000, 63000],
-  "pagesHours": 20,
-  "designHours": 10,
-  "featureHours": 18,
-  "complexityMultiplier": 1.3
-}
-```
+`pages` is clamped to 1–100 on the server.
 
 ---
 
-## File Structure
+## Architecture
 
 ```
 src/
 ├── app/
-│   ├── api/calculate/route.ts   ← POST endpoint
-│   ├── globals.css              ← NW design system
-│   ├── layout.tsx               ← Root layout (NW fonts)
-│   └── page.tsx                 ← Entry point
-├── components/
-│   ├── Calculator.tsx           ← State orchestrator
-│   ├── InputPanel.tsx           ← All form controls
-│   ├── OutputPanel.tsx          ← Results + breakdown
-│   ├── Header.tsx               ← Toolbar
-│   └── Footer.tsx               ← Footer
-└── lib/
-    ├── calculator.ts            ← Core pricing engine
-    └── constants.ts             ← Labels & defaults
+│   ├── actions.ts          # Server actions (admin + public signing)
+│   ├── admin/              # CRM dashboard, calculator, client pages
+│   ├── api/calculate/      # Pricing API
+│   ├── login/              # Password login
+│   └── p/[id]/             # Public proposal/contract/invoice links
+├── components/             # Calculator, CRM boards, document templates
+├── lib/
+│   ├── calculator.ts       # Pricing engine
+│   ├── auth.ts             # JWT session
+│   └── prisma.ts           # DB client
+├── proxy.ts                # Admin route guard (Next.js 16)
+prisma/schema.prisma        # Client, Project, ActivityLog, Email*
 ```
 
----
-
-## Tech Stack
-
-- **Next.js 16** (App Router + Turbopack)
-- **Tailwind CSS v4**
-- **TypeScript**
-- Same design tokens as [northernware.ph](https://northernware.ph)
+**Auth:** `proxy.ts` protects `/admin/*`. Server actions use `requireAdminSession()` except `approveProjectAction` and `createPaymongoLinkAction` (client flows on `/p/[id]`).
 
 ---
 
-## Future
+## Production checklist
 
-- [ ] Export quote as PDF
-- [ ] Save/load project templates
+- [ ] Set `JWT_SECRET`, `CRM_PASSWORD`, `DATABASE_URL` (no dev fallbacks in production)
+- [ ] Optional: `RESEND_API_KEY`, `PAYMONGO_SECRET_KEY`
+- [ ] Run database migrations before deploy
+- [ ] Use HTTPS so session cookies are `secure`
+
+---
+
+## Roadmap
+
+### Done
+
+- [x] PDF export (html2canvas + jsPDF)
+- [x] Save/load projects (Postgres)
+- [x] Proposal & contract generation
+- [x] CRM (clients, Kanban, activity log)
+- [x] Email templates & campaigns
+- [x] Dark mode toggle
+- [x] Public magic links & digital signing
+- [x] PayMongo payment links
+
+### Planned
+
 - [ ] SEO pricing module (monthly retainer)
-- [ ] Client-facing estimator mode
-- [ ] Dark mode toggle
+- [ ] Anonymous public **estimator** (vs current document-only links)
+- [ ] Signed/expiring public URLs
+- [ ] Prisma enums & checked-in migrations
+- [ ] `projectType` multipliers in calculator
+
+Track detailed tasks in [IMPROVEMENTS.md](./IMPROVEMENTS.md).
+
+---
+
+## Tech stack
+
+- **Next.js 16** (App Router, `proxy.ts` for routing guard)
+- **React 19**, **TypeScript**, **Tailwind CSS v4**
+- **Prisma 7** + PostgreSQL
+- **Vitest** for calculator tests
+- Design tokens aligned with [northernware.ph](https://northernware.ph)
