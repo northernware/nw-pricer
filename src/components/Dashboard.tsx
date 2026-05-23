@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { getStats } from "@/app/actions";
 import { Icon } from "@iconify/react";
 import { formatDistanceToNow } from "date-fns";
+import type { DashboardStats } from "@/types/crm";
 
 export default function Dashboard() {
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function Dashboard() {
             Activity Log
           </h3>
           <div className="space-y-4">
-            {stats.recentActivity.map((log: any) => (
+            {stats.recentActivity.map((log) => (
               <div key={log.id} className="flex items-start gap-4 p-4 rounded-xl hover:bg-nw-bone/50 transition-colors border border-transparent hover:border-nw-graphite/5">
                 <div className={`mt-1 p-2 rounded-lg bg-nw-bone`}>
                   <Icon icon={

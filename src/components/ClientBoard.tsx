@@ -19,8 +19,10 @@ import {
   defaultDropAnimationSideEffects
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import type { ClientStatus } from "@prisma/client";
+import type { ClientListItem, KanbanStage } from "@/types/crm";
 
-const CLIENT_STAGES = [
+const CLIENT_STAGES: KanbanStage[] = [
   { id: "prospect", label: "Prospect", dot: "bg-gray-400" },
   { id: "active", label: "Active", dot: "bg-blue-400" },
   { id: "retainer", label: "Retainer", dot: "bg-nw-emerald" },
@@ -38,11 +40,11 @@ interface ClientFormData {
 }
 
 interface ClientCardProps {
-  client: any;
+  client: ClientListItem;
   stageId: string;
   isDragging?: boolean;
-  onEdit: (client: any) => void;
-  onDelete: (client: any) => void;
+  onEdit: (client: ClientListItem) => void;
+  onDelete: (client: ClientListItem) => void;
   onStatusChange: (id: string, status: string) => void;
   isPending: boolean;
 }
@@ -135,7 +137,7 @@ function ClientCard({ client, stageId, isDragging, onEdit, onDelete, onStatusCha
   );
 }
 
-function ClientColumn({ stage, onAdd, children }: { stage: any, onAdd?: () => void, children: React.ReactNode }) {
+function ClientColumn({ stage, onAdd, children }: { stage: KanbanStage; onAdd?: () => void; children: React.ReactNode }) {
   const { setNodeRef } = useDroppable({
     id: stage.id,
   });
@@ -167,10 +169,10 @@ function ClientColumn({ stage, onAdd, children }: { stage: any, onAdd?: () => vo
   );
 }
 
-export default function ClientBoard({ initialClients }: { initialClients: any[] }) {
+export default function ClientBoard({ initialClients }: { initialClients: ClientListItem[] }) {
   const [clients, setClients] = useState(initialClients);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [activeClient, setActiveClient] = useState<any>(null);
+  const [activeClient, setActiveClient] = useState<ClientListItem | null>(null);
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -194,7 +196,7 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
 
   const handleStatusChange = (clientId: string, newStatus: string) => {
     setClients(prev => 
-      prev.map(c => c.id === clientId ? { ...c, status: newStatus } : c)
+      prev.map(c => c.id === clientId ? { ...c, status: newStatus as ClientStatus } : c)
     );
     startTransition(async () => {
       const result = await updateClientStatusAction(clientId, newStatus);
@@ -205,7 +207,7 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
     });
   };
 
-  const handleEdit = (client: any) => {
+  const handleEdit = (client: ClientListItem) => {
     setFormData({
       id: client.id,
       firstName: client.firstName,
@@ -217,7 +219,7 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
     setShowModal(true);
   };
 
-  const handleDeleteClick = (client: any) => {
+  const handleDeleteClick = (client: ClientListItem) => {
     setClientToDelete(client);
     setConfirmName("");
     setShowDeleteModal(true);
@@ -333,11 +335,11 @@ export default function ClientBoard({ initialClients }: { initialClients: any[] 
           },
         }),
       }}>
-        {activeId ? (
+        {activeId && activeClient ? (
           <div className="w-[320px] rotate-2 scale-105 pointer-events-none">
             <ClientCard 
               client={activeClient}
-              stageId={activeClient?.status || 'prospect'}
+              stageId={activeClient.status || 'prospect'}
               onEdit={() => {}}
               onDelete={() => {}}
               onStatusChange={() => {}}

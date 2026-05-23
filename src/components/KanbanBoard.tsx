@@ -19,15 +19,17 @@ import {
   defaultDropAnimationSideEffects
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import type { ProjectStatus } from "@prisma/client";
+import type { KanbanStage, StoredProject } from "@/types/crm";
 
-const STAGES = [
+const STAGES: KanbanStage[] = [
   { id: "lead", label: "Lead", dot: "bg-gray-400" },
   { id: "quoted", label: "Quoted", dot: "bg-blue-400" },
   { id: "signed", label: "Signed", dot: "bg-nw-emerald" },
 ];
 
 interface ProjectCardProps {
-  project: any;
+  project: StoredProject;
   stageId: string;
   isDragging?: boolean;
   onDelete: (id: string) => void;
@@ -121,7 +123,7 @@ function KanbanCard({ project, stageId, isDragging, onDelete, onStatusChange, ge
   );
 }
 
-function KanbanColumn({ stage, children }: { stage: any, children: React.ReactNode }) {
+function KanbanColumn({ stage, children }: { stage: KanbanStage; children: React.ReactNode }) {
   const { setNodeRef } = useDroppable({
     id: stage.id,
   });
@@ -144,10 +146,10 @@ function KanbanColumn({ stage, children }: { stage: any, children: React.ReactNo
   );
 }
 
-export default function KanbanBoard({ initialProjects }: { initialProjects: any[] }) {
+export default function KanbanBoard({ initialProjects }: { initialProjects: StoredProject[] }) {
   const [projects, setProjects] = useState(initialProjects);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [activeProject, setActiveProject] = useState<any>(null);
+  const [activeProject, setActiveProject] = useState<StoredProject | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const sensors = useSensors(
@@ -160,7 +162,7 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
 
   const handleStatusChange = (projectId: string, newStatus: string) => {
     setProjects(prev => 
-      prev.map(p => p.id === projectId ? { ...p, status: newStatus } : p)
+      prev.map(p => p.id === projectId ? { ...p, status: newStatus as ProjectStatus } : p)
     );
     startTransition(async () => {
       const result = await updateProjectStatusAction(projectId, newStatus);
@@ -253,11 +255,11 @@ export default function KanbanBoard({ initialProjects }: { initialProjects: any[
           },
         }),
       }}>
-        {activeId ? (
+        {activeId && activeProject ? (
           <div className="w-[320px] rotate-2 scale-105 pointer-events-none">
             <KanbanCard 
               project={activeProject}
-              stageId={activeProject?.status || 'lead'}
+              stageId={activeProject.status || 'lead'}
               onDelete={() => {}}
               onStatusChange={() => {}}
               getUrl={() => ""}
