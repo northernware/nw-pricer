@@ -2,7 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import type { CalculatorInput, ProjectInvoice } from "@/lib/calculator";
-import { generateId } from "@/lib/storage";
+import { generateId } from "@/lib/id";
 import { copyToClipboard } from "@/lib/utils";
 import { CURRENCIES } from "@/lib/constants";
 import { toast } from "react-hot-toast";
