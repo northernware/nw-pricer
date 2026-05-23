@@ -130,8 +130,8 @@ _Update the table when checking items off._
 
 ### Refactor large components
 
-- [ ] `Calculator.tsx` (~636 lines): extract PDF export hook, project save hook, library modal
-- [ ] `InputPanel.tsx` (~479 lines): split calculator vs proposal/contract tabs
+- [x] `Calculator.tsx` (~636 lines): extract PDF export hook, project save hook, library modal — #220 (`usePdfExport`, `useCalculatorProject`, modals)
+- [x] `InputPanel.tsx` (~479 lines): split calculator vs proposal/contract tabs — #220 (`input-panel/CalculatorTab`, `ProposalContractTab`)
 - [x] `ClientBoard.tsx`: extract column/card subcomponents — #218 (`client-board/`)
 - [x] Shared types file: `src/types/crm.ts` (Client, Project, StoredProject — no `any`) — #190 (StoredProject)
 
@@ -202,7 +202,7 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-P2: `Calculator.tsx` / `InputPanel.tsx` refactors (optional); P3: product roadmap
+P3: product roadmap (SEO, estimator, PDF branding); P0 hardening (optional)
 
 ### Blocked on
 
@@ -213,12 +213,12 @@ None
 - #214 login env aliases, force-dynamic admin, server-side stats, hydration fix
 - #216 archive one-off scripts, remove legacy `/api/auth/*`
 - #218 ClientBoard subcomponent extraction
+- #220 Calculator hooks/modals, InputPanel tab split
 
 ### Next session should start with
 
-1. Optional: `Calculator.tsx` hooks / `InputPanel.tsx` tab split
-2. P3 product backlog (SEO module, public estimator, PDF branding)
-3. P0 hardening: view vs sign URLs, rate-limit on `approveProjectAction` (if needed)
+1. P3 product backlog (SEO module, public estimator, PDF branding)
+2. P0 hardening: view vs sign URLs, rate-limit on `approveProjectAction` (if needed)
 
 ---
 
@@ -264,3 +264,4 @@ Quick context if this file is opened without chat history.
 | 2026-05-24 | #197–#204: proxy API auth, CRM types, activity log, scripts docs |
 | 2026-05-24 | #207–#212: project.config Zod, email test/failure logging, marketing opt-in |
 | 2026-05-24 | #214–#218: login/admin fixes, script archive, ClientBoard refactor |
+| 2026-05-24 | #220: Calculator hooks/modals, InputPanel tab components |
