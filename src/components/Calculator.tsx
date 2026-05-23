@@ -480,7 +480,7 @@ export default function Calculator() {
                               <Icon icon="solar:trash-bin-trash-linear" width="18" />
                             </button>
                           </div>
-                          <div className="text-xs text-nw-graphite mb-8 line-clamp-1 font-mono uppercase tracking-wider">{p.clientName || p.client || 'Unknown Client'}</div>
+                          <div className="text-xs text-nw-graphite mb-8 line-clamp-1 font-mono uppercase tracking-wider">{p.clientName || "Unknown Client"}</div>
                         </div>
                         <div className="flex justify-between items-center text-[10px] text-nw-graphite uppercase font-mono track-widest border-t border-nw-graphite/5 pt-5">
                           <span>{new Date(p.lastModified).toLocaleDateString()}</span>
