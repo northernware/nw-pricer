@@ -1,19 +1,27 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
+import { requireEnv } from '@/lib/env';
 
-const secretKey = process.env.JWT_SECRET || 'northernware-super-secret-key-for-crm-123!';
-const key = new TextEncoder().encode(secretKey);
+let signingKey: Uint8Array | null = null;
+
+function getSigningKey(): Uint8Array {
+  if (!signingKey) {
+    const secret = requireEnv('JWT_SECRET', 'dev-only-jwt-secret-not-for-production');
+    signingKey = new TextEncoder().encode(secret);
+  }
+  return signingKey;
+}
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
-    .sign(key);
+    .sign(getSigningKey());
 }
 
 export async function decrypt(input: string): Promise<any> {
-  const { payload } = await jwtVerify(input, key, {
+  const { payload } = await jwtVerify(input, getSigningKey(), {
     algorithms: ['HS256'],
   });
   return payload;
