@@ -15,11 +15,11 @@ Last reviewed from codebase audit: **2026-05-24**.
 
 | Priority | Total | Done | Remaining |
 |----------|------:|-----:|----------:|
-| P0 — Critical | 14 | 10 | 4 |
-| P1 — High | 12 | 0 | 12 |
+| P0 — Critical | 14 | 11 | 3 |
+| P1 — High | 12 | 2 | 10 |
 | P2 — Medium | 18 | 0 | 18 |
 | P3 — Polish | 8 | 0 | 8 |
-| **All** | **52** | **0** | **52** |
+| **All** | **52** | **13** | **39** |
 
 _Update the table when checking items off._
 
@@ -67,7 +67,7 @@ _Update the table when checking items off._
 
 ### Public project links (`/p/[id]`)
 
-- [ ] Replace short `generateId()` IDs with `cuid()` / `nanoid()` (update `saveProjectAction` + `Calculator.tsx`)
+- [x] Replace short `generateId()` IDs with `cuid()` / `nanoid()` (update `saveProjectAction` + `Calculator.tsx`) — #160 (`crypto.randomUUID`)
 - [ ] Evaluate signed URL or expiring token for client-facing docs (design decision — document choice here)
 - [ ] Optional: separate “view” vs “sign” capability (read-only link + sign link with token)
 - [ ] Rate-limit or CAPTCHA on `approveProjectAction` if abuse is a concern
@@ -92,9 +92,9 @@ _Update the table when checking items off._
 
 ### Tests
 
-- [ ] Add Vitest (or project test runner of choice)
-- [ ] Add `npm run test` script in `package.json`
-- [ ] Table-driven tests for `calculate()`: pages, design, features, complexity, buffer, discount, rounding
+- [x] Add Vitest (or project test runner of choice) — #163
+- [x] Add `npm run test` script in `package.json` — #163
+- [x] Table-driven tests for `calculate()`: pages, design, features, complexity, buffer, discount, rounding — #163
 - [ ] Edge cases: `pages` clamp 1–100, empty features, `roundingMode: none`, 0% buffer/discount
 - [ ] CI job: `npm run test` on PR (optional until repo has CI)
 
@@ -257,3 +257,4 @@ Quick context if this file is opened without chat history.
 | Date | Change |
 |------|--------|
 | 2026-05-24 | Initial improvement plan from codebase audit |
+| 2026-05-24 | Progress sync: #151–#163 merged (P0 auth, secrets, integrity, UUID IDs, Vitest) |
