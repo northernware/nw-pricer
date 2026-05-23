@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     bufferPercent: data.bufferPercent ?? DEFAULTS.bufferPercent,
     roundingMode: data.roundingMode ?? DEFAULTS.roundingMode,
     hostingPlan: data.hostingPlan ?? DEFAULTS.hostingPlan,
+    seoPlan: data.seoPlan ?? DEFAULTS.seoPlan,
     discountPercent: data.discountPercent ?? DEFAULTS.discountPercent,
     currency: data.currency ?? DEFAULTS.currency,
   };

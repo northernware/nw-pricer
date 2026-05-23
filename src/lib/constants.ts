@@ -1,6 +1,6 @@
 // ─── Labels & Display Constants ───
 
-import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, CalculatorInput, CurrencyCode } from './calculator';
+import type { ProjectType, DesignLevel, Complexity, Feature, RoundingMode, HostingPlan, SeoPlan, CalculatorInput, CurrencyCode } from './calculator';
 
 export const CURRENCIES: { value: CurrencyCode; label: string; symbol: string; locale: string }[] = [
   { value: 'PHP', label: 'Philippine Peso (PHP)', symbol: '₱', locale: 'en-PH' },
@@ -143,6 +143,56 @@ export const HOSTING_PLANS: {
   }
 ];
 
+export const SEO_PLANS: {
+  value: SeoPlan;
+  label: string;
+  price: number;
+  description: string;
+  includes: string[];
+}[] = [
+  {
+    value: "none",
+    label: "No SEO Retainer",
+    price: 0,
+    description: "One-time project only; no ongoing SEO services.",
+    includes: [],
+  },
+  {
+    value: "essential",
+    label: "Essential SEO",
+    price: 8000,
+    description: "Local visibility and on-page fundamentals.",
+    includes: [
+      "Google Business Profile optimization",
+      "On-page SEO (titles, meta, headings)",
+      "Monthly performance snapshot",
+    ],
+  },
+  {
+    value: "growth",
+    label: "Growth SEO",
+    price: 15000,
+    description: "Ongoing technical SEO and content support.",
+    includes: [
+      "Everything in Essential",
+      "Technical SEO audits & fixes",
+      "Keyword tracking & reporting",
+      "2 optimized content pieces / month",
+    ],
+  },
+  {
+    value: "premium",
+    label: "Premium SEO",
+    price: 25000,
+    description: "Full monthly retainer for competitive markets.",
+    includes: [
+      "Everything in Growth",
+      "Link-building outreach",
+      "Conversion-focused landing pages",
+      "Priority strategy calls",
+    ],
+  },
+];
 
 export const PROJECT_PRESETS: Record<ProjectType, { 
   exclusions: string; 
@@ -185,6 +235,7 @@ export const DEFAULTS: CalculatorInput = {
   projectType: 'business_website' as ProjectType,
   pages: 5,
   hostingPlan: 'standard' as HostingPlan,
+  seoPlan: 'none' as SeoPlan,
   features: [] as Feature[],
   discountPercent: 0,
   currency: 'PHP' as CurrencyCode,

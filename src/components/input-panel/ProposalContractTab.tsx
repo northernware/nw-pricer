@@ -59,7 +59,7 @@ export default function ProposalContractTab({
               <div className="flex items-start gap-3">
                 <Icon icon="solar:magic-stick-linear" className="text-nw-acid mt-0.5 text-lg shrink-0" />
                 <div className="text-[11px] text-nw-graphite leading-relaxed">
-                  The proposal document is <strong>auto-generated</strong> from your Calculator selections G�� project type, design level, features, hosting plan, and pricing are all populated automatically.
+                  The proposal document is <strong>auto-generated</strong> from your Calculator selections — project type, design level, features, hosting, SEO, and pricing are all populated automatically.
                 </div>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function ProposalContractTab({
               <div className="flex items-start gap-3">
                 <Icon icon="solar:magic-stick-linear" className="text-nw-acid mt-0.5 text-lg shrink-0" />
                 <div className="text-[11px] text-nw-graphite leading-relaxed">
-                  All legal clauses G�� Scope, Developer Requirements, Web Hosting, Design, Pricing, Termination, and Conflict Resolution G�� are <strong>auto-generated</strong> from your Calculator selections. Just fill in the variables above.
+                  All legal clauses — Scope, Developer Requirements, Web Hosting, Design, Pricing, Termination, and Conflict Resolution — are <strong>auto-generated</strong> from your Calculator selections. Just fill in the variables above.
                 </div>
               </div>
             </div>

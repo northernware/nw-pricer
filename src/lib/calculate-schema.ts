@@ -18,6 +18,7 @@ const feature = z.enum([
 ]);
 const roundingMode = z.enum(["none", "nearest_1000", "nearest_5000"]);
 const hostingPlan = z.enum(["none", "basic", "standard", "advanced"]);
+const seoPlan = z.enum(["none", "essential", "growth", "premium"]);
 const currency = z.enum(["PHP", "USD", "EUR", "GBP"]);
 
 export const calculateRequestSchema = z.object({
@@ -30,6 +31,7 @@ export const calculateRequestSchema = z.object({
   bufferPercent: z.number().min(0).max(100).optional(),
   roundingMode: roundingMode.optional(),
   hostingPlan: hostingPlan.optional(),
+  seoPlan: seoPlan.optional(),
   discountPercent: z.number().min(0).max(100).optional(),
   currency: currency.optional(),
 });

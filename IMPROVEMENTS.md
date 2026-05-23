@@ -173,8 +173,8 @@ _Update the table when checking items off._
 
 ### README / product roadmap (honest backlog)
 
-- [ ] SEO pricing module (monthly retainer) — not started
-- [ ] Client-facing **estimator** (anonymous quote) vs current **document** magic links — clarify product
+- [x] SEO pricing module (monthly retainer) — #222 (`seoPlan`, SEO_PLANS, proposal/quote output)
+- [x] Client-facing **estimator** (anonymous quote) vs current **document** magic links — clarify product — #222 (`docs/PRODUCT_ROADMAP.md`)
 - [ ] Vector/branded PDF export (vs html2canvas raster)
 - [ ] Invoice PDF consistency with quote/proposal branding
 
@@ -202,7 +202,7 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-P3: product roadmap (SEO, estimator, PDF branding); P0 hardening (optional)
+P3: PDF branding; P0 hardening (optional)
 
 ### Blocked on
 
@@ -214,10 +214,11 @@ None
 - #216 archive one-off scripts, remove legacy `/api/auth/*`
 - #218 ClientBoard subcomponent extraction
 - #220 Calculator hooks/modals, InputPanel tab split
+- #222 SEO retainer module, product roadmap doc
 
 ### Next session should start with
 
-1. P3 product backlog (SEO module, public estimator, PDF branding)
+1. P3: vector PDF or invoice branding alignment
 2. P0 hardening: view vs sign URLs, rate-limit on `approveProjectAction` (if needed)
 
 ---
@@ -265,3 +266,4 @@ Quick context if this file is opened without chat history.
 | 2026-05-24 | #207–#212: project.config Zod, email test/failure logging, marketing opt-in |
 | 2026-05-24 | #214–#218: login/admin fixes, script archive, ClientBoard refactor |
 | 2026-05-24 | #220: Calculator hooks/modals, InputPanel tab components |
+| 2026-05-24 | #222: SEO retainer module, PRODUCT_ROADMAP.md |

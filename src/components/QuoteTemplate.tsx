@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { CalculatorOutput, CalculatorInput, ProjectInvoice } from "@/lib/calculator";
-import { PROJECT_TYPES, FEATURES, HOSTING_PLANS, CURRENCIES } from "@/lib/constants";
+import { PROJECT_TYPES, FEATURES, HOSTING_PLANS, SEO_PLANS, CURRENCIES } from "@/lib/constants";
 
 interface QuoteTemplateProps {
   mode: 'quote' | 'proposal' | 'contract' | 'invoice';
@@ -32,6 +32,7 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
 
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
   const hostingPlan = HOSTING_PLANS.find(h => h.value === input.hostingPlan);
+  const seoPlan = SEO_PLANS.find((s) => s.value === input.seoPlan);
   const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
 
   const fmt = (n: number) => currency.symbol + n.toLocaleString(currency.locale);
@@ -201,6 +202,15 @@ export default function QuoteTemplate({ mode, input, result, projectId, invoiceI
                   <div style={{ fontSize: "11px", color: "#5C5C5C" }}>{hostingPlan.description}</div>
                 </td>
                 <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(hostingPlan.price)} /mo</td>
+              </tr>
+            )}
+            {seoPlan && seoPlan.value !== "none" && !isInvoice && (
+              <tr style={{ borderBottom: "1px solid #EEEEEE" }}>
+                <td style={{ padding: "12px 0", fontSize: "13px" }}>
+                  <div style={{ fontWeight: "bold" }}>{seoPlan.label} (Monthly Recurring)</div>
+                  <div style={{ fontSize: "11px", color: "#5C5C5C" }}>{seoPlan.description}</div>
+                </td>
+                <td style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold" }}>{fmt(seoPlan.price)} /mo</td>
               </tr>
             )}
           </tbody>

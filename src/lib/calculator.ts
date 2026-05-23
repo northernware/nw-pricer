@@ -12,6 +12,7 @@ export type Feature =
   | 'api_integration';
 export type RoundingMode = 'none' | 'nearest_1000' | 'nearest_5000';
 export type HostingPlan = 'none' | 'basic' | 'standard' | 'advanced';
+export type SeoPlan = 'none' | 'essential' | 'growth' | 'premium';
 export type CurrencyCode = 'PHP' | 'USD' | 'EUR' | 'GBP';
 
 
@@ -56,6 +57,7 @@ export interface CalculatorInput {
   bufferPercent: number;
   roundingMode: RoundingMode;
   hostingPlan: HostingPlan;
+  seoPlan: SeoPlan;
   discountPercent: number;
   currency: CurrencyCode;
   // Proposal Engine fields
@@ -77,6 +79,7 @@ export interface CalculatorOutput {
   complexityMultiplier: number;
   projectTypeMultiplier: number;
   hostingPrice: number;
+  seoPrice: number;
   discountAmount: number;
 }
 
@@ -138,6 +141,16 @@ function getHostingPrice(plan: HostingPlan): number {
   return map[plan];
 }
 
+function getSeoPrice(plan: SeoPlan): number {
+  const map: Record<SeoPlan, number> = {
+    none: 0,
+    essential: 8000,
+    growth: 15000,
+    premium: 25000,
+  };
+  return map[plan];
+}
+
 // ─── Rounding ───
 
 function roundToNearest(value: number, mode: RoundingMode): number {
@@ -194,6 +207,7 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
     complexityMultiplier,
     projectTypeMultiplier,
     hostingPrice: getHostingPrice(input.hostingPlan),
+    seoPrice: getSeoPrice(input.seoPlan ?? "none"),
     discountAmount,
   };
 }

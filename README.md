@@ -192,10 +192,12 @@ Completed one-offs are in `scripts/archive/` (see `scripts/archive/README.md`). 
 
 ### Planned
 
-- [ ] SEO pricing module (monthly retainer)
-- [ ] Anonymous public **estimator** (vs current document-only links)
-- [ ] Signed/expiring public URLs
-- [ ] Prisma enums & checked-in migrations
+- [x] SEO pricing module (monthly retainer) — calculator `seoPlan` + proposal output
+- [ ] Anonymous public **estimator** (vs current document-only links) — see [docs/PRODUCT_ROADMAP.md](./docs/PRODUCT_ROADMAP.md)
+- [ ] Vector/branded PDF export
+- [ ] Invoice PDF consistency with quote branding
+- [ ] Signed/expiring public URLs — see [docs/PUBLIC_LINKS.md](./docs/PUBLIC_LINKS.md)
+
 Track detailed tasks in [IMPROVEMENTS.md](./IMPROVEMENTS.md).
 
 ---
