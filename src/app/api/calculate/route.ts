@@ -2,43 +2,46 @@ import { NextRequest, NextResponse } from "next/server";
 import { calculate } from "@/lib/calculator";
 import type { CalculatorInput } from "@/lib/calculator";
 import { DEFAULTS } from "@/lib/constants";
+import {
+  calculateRequestSchema,
+  formatZodErrors,
+} from "@/lib/calculate-schema";
 
 export async function POST(request: NextRequest) {
+  let body: unknown;
   try {
-    const body = (await request.json()) as Partial<CalculatorInput>;
-
-    if (!body.projectType || body.pages == null || !body.designLevel || !body.complexity) {
-      return NextResponse.json(
-        { error: "Missing required fields: projectType, pages, designLevel, complexity" },
-        { status: 400 }
-      );
-    }
-
-    const input: CalculatorInput = {
-      ...DEFAULTS,
-      ...body,
-      projectType: body.projectType,
-      pages: Math.max(1, Math.min(100, body.pages)),
-      designLevel: body.designLevel,
-      complexity: body.complexity,
-      features: body.features ?? DEFAULTS.features,
-      hourlyRate: body.hourlyRate ?? DEFAULTS.hourlyRate,
-      bufferPercent: body.bufferPercent ?? DEFAULTS.bufferPercent,
-      roundingMode: body.roundingMode ?? DEFAULTS.roundingMode,
-      hostingPlan: body.hostingPlan ?? DEFAULTS.hostingPlan,
-      discountPercent: body.discountPercent ?? DEFAULTS.discountPercent,
-      currency: body.currency ?? DEFAULTS.currency,
-      proposal: body.proposal ?? DEFAULTS.proposal,
-      invoices: body.invoices ?? DEFAULTS.invoices,
-    };
-
-    const result = calculate(input);
-
-    return NextResponse.json(result);
+    body = await request.json();
   } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const parsed = calculateRequestSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "Invalid request body" },
+      {
+        error: "Validation failed",
+        fields: formatZodErrors(parsed.error),
+      },
       { status: 400 }
     );
   }
+
+  const data = parsed.data;
+  const input: CalculatorInput = {
+    ...DEFAULTS,
+    projectType: data.projectType,
+    pages: data.pages,
+    designLevel: data.designLevel,
+    complexity: data.complexity,
+    features: data.features ?? DEFAULTS.features,
+    hourlyRate: data.hourlyRate ?? DEFAULTS.hourlyRate,
+    bufferPercent: data.bufferPercent ?? DEFAULTS.bufferPercent,
+    roundingMode: data.roundingMode ?? DEFAULTS.roundingMode,
+    hostingPlan: data.hostingPlan ?? DEFAULTS.hostingPlan,
+    discountPercent: data.discountPercent ?? DEFAULTS.discountPercent,
+    currency: data.currency ?? DEFAULTS.currency,
+  };
+
+  const result = calculate(input);
+  return NextResponse.json(result);
 }
