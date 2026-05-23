@@ -6,10 +6,11 @@ import ClientBoard from "./ClientBoard";
 import Dashboard from "./Dashboard";
 import EmailMarketing from "./EmailMarketing";
 import { Icon } from "@iconify/react";
+import type { ClientListItem, StoredProject } from "@/types/crm";
 
 interface CRMViewProps {
-  projects: any[];
-  clients: any[];
+  projects: StoredProject[];
+  clients: ClientListItem[];
 }
 
 export default function CRMView({ projects, clients }: CRMViewProps) {

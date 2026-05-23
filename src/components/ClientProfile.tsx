@@ -3,9 +3,10 @@
 import { Icon } from "@iconify/react";
 import { formatDistanceToNow, format } from "date-fns";
 import Link from "next/link";
+import type { ClientDetail, ClientProfileLog, ClientProfileProject } from "@/types/crm";
 
 interface ClientProfileProps {
-  client: any;
+  client: ClientDetail;
 }
 
 export default function ClientProfile({ client }: ClientProfileProps) {
@@ -84,7 +85,7 @@ export default function ClientProfile({ client }: ClientProfileProps) {
             Projects
           </h2>
           <div className="space-y-4">
-            {client.projects?.map((project: any) => (
+            {client.projects?.map((project: ClientProfileProject) => (
               <Link 
                 key={project.id}
                 href={`/admin/calculator?project=${project.id}`}
@@ -121,7 +122,7 @@ export default function ClientProfile({ client }: ClientProfileProps) {
             Activity Log
           </h2>
           <div className="relative pl-4 space-y-8 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-nw-graphite/10">
-            {client.logs?.map((log: any) => (
+            {client.logs?.map((log: ClientProfileLog) => (
               <div key={log.id} className="relative">
                 <div className="absolute -left-4 top-1.5 w-2 h-2 rounded-full bg-nw-acid border-4 border-nw-bone outline outline-1 outline-nw-graphite/10"></div>
                 <div className="pl-4">
@@ -137,7 +138,7 @@ export default function ClientProfile({ client }: ClientProfileProps) {
                     </span>
                   </div>
                   <p className="text-xs text-nw-black font-medium leading-relaxed">{log.action}</p>
-                  {log.details && (
+                  {log.details != null && (
                     <div className="mt-2 p-3 bg-nw-bone rounded-lg font-mono text-[9px] text-nw-graphite overflow-x-auto">
                       <pre>{JSON.stringify(log.details, null, 2)}</pre>
                     </div>

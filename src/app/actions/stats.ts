@@ -3,8 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { ClientStatus, ProjectStatus } from "@prisma/client";
 import { requireAdminSession, UnauthorizedError } from "@/lib/auth";
+import type { DashboardStats } from "@/types/crm";
 
-export async function getStats() {
+export async function getStats(): Promise<DashboardStats | null> {
   try {
     await requireAdminSession();
     const [clients, projects, logs] = await Promise.all([
