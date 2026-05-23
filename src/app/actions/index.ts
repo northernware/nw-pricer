@@ -27,6 +27,8 @@ export { createPaymongoLinkAction } from "./billing";
 
 export { getStats } from "./stats";
 
+export { getActivityLogsAction } from "./activity";
+
 export {
   getEmailTemplates,
   saveEmailTemplate,
