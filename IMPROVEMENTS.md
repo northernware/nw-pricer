@@ -17,9 +17,9 @@ Last reviewed from codebase audit: **2026-05-24**.
 |----------|------:|-----:|----------:|
 | P0 — Critical | 14 | 13 | 1 |
 | P1 — High | 12 | 12 | 0 |
-| P2 — Medium | 18 | 11 | 7 |
-| P3 — Polish | 8 | 1 | 7 |
-| **All** | **52** | **39** | **13** |
+| P2 — Medium | 18 | 17 | 1 |
+| P3 — Polish | 8 | 3 | 5 |
+| **All** | **52** | **47** | **5** |
 
 _Update the table when checking items off._
 
@@ -142,14 +142,14 @@ _Update the table when checking items off._
 
 ### Type safety
 
-- [ ] Replace `any` in `CRMView`, `KanbanBoard`, `ClientBoard`, `actions.ts` mappers
+- [x] Replace `any` in `CRMView`, `KanbanBoard`, `ClientBoard`, `actions.ts` mappers — #199
 - [ ] Type `project.config` as `CalculatorInput` (Prisma `Json` + Zod parse on read/write)
 
 ### API `/api/calculate`
 
-- [ ] Decide: internal-only (auth or remove route) vs public estimator
+- [x] Decide: internal-only (auth or remove route) vs public estimator — #197 (session required; not public estimator)
 - [x] If kept: Zod schema for body; return 400 with field errors — #188
-- [ ] If removed: ensure calculator uses `calculate()` import only
+- [x] If removed: ensure calculator uses `calculate()` import only — N/A (route kept, protected)
 
 ### Email marketing
 
@@ -161,9 +161,9 @@ _Update the table when checking items off._
 
 ### Activity log UI
 
-- [ ] Full activity feed page (not only dashboard recent 10)
-- [ ] Filter by client / project / type
-- [ ] Link from `ClientProfile` to filtered log
+- [x] Full activity feed page (not only dashboard recent 10) — #200 `/admin/activity`
+- [x] Filter by client / project / type — #200
+- [x] Link from `ClientProfile` to filtered log — #200
 
 ---
 
@@ -184,12 +184,12 @@ _Update the table when checking items off._
 
 ### Proxy / admin routes (Next.js 16)
 
-- [ ] Confirm `src/proxy.ts` matcher covers all admin paths needed
-- [ ] Optional: protect `/api/calculate` in proxy if route stays
+- [x] Confirm `src/proxy.ts` matcher covers all admin paths needed — #197 (`/admin/*`, `/`, `/api/calculate`)
+- [x] Optional: protect `/api/calculate` in proxy if route stays — #197
 
 ### Scripts cleanup
 
-- [ ] List `scripts/migrate-crm.ts`, `fix-*.ts`, `check-projects.ts` in README with purpose
+- [x] List `scripts/migrate-crm.ts`, `fix-*.ts`, `check-projects.ts` in README with purpose — #203
 - [ ] Archive or delete scripts that are one-time and already run in prod
 
 ---
@@ -200,7 +200,7 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-P2/P3: component refactors, proxy `/api/calculate`, activity log UI
+P2: large component refactors; P3: product roadmap items
 
 ### Blocked on
 
@@ -208,16 +208,16 @@ None
 
 ### Completed this session
 
-- #187 split server actions
-- #188 Zod on `/api/calculate`
-- #190 storage cleanup + `src/types/crm.ts`
-- #193 build hotfix
+- #197 proxy `/api/calculate` auth
+- #199 CRM component types
+- #200 activity log page
+- #203 scripts README
 
 ### Next session should start with
 
-1. Protect `/api/calculate` in proxy or document as internal-only
-2. Replace `any` in KanbanBoard / ClientBoard / CRMView
-3. Activity log full feed page
+1. `project.config` Zod parse on read/write
+2. Email: send test + failure logging
+3. Calculator.tsx extract hooks (optional refactor)
 
 ---
 
@@ -260,3 +260,4 @@ Quick context if this file is opened without chat history.
 | 2026-05-24 | #167–#177: README, API/MRR, CI, docs, Prisma baseline migration |
 | 2026-05-24 | #179–#184: Prisma enums, projectType, email guards, IMPROVEMENTS sync |
 | 2026-05-24 | #187–#194: actions split, Zod API, storage cleanup, build fix |
+| 2026-05-24 | #197–#204: proxy API auth, CRM types, activity log, scripts docs |
