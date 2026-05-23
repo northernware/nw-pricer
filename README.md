@@ -155,7 +155,7 @@ prisma/schema.prisma        # Client, Project, ActivityLog, Email*
 
 - [ ] Set `JWT_SECRET`, `CRM_PASSWORD`, `DATABASE_URL` (no dev fallbacks in production)
 - [ ] Optional: `RESEND_API_KEY`, `PAYMONGO_SECRET_KEY`
-- [ ] Run database migrations before deploy
+- [ ] **Back up the database**, then run `npx prisma migrate deploy` before deploy
 - [ ] Use HTTPS so session cookies are `secure`
 
 ---

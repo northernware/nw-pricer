@@ -8,6 +8,11 @@
  */
 
 import { prisma } from "@/lib/prisma";
+import {
+  ClientStatus,
+  ProjectStatus,
+  EmailCampaignStatus,
+} from "@prisma/client";
 import type { CalculatorInput } from "@/lib/calculator";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -74,7 +79,7 @@ export async function updateProjectStatusAction(id: string, status: string) {
     await requireAdminSession();
     const project = await prisma.project.update({
       where: { id },
-      data: { status },
+      data: { status: status as ProjectStatus },
       include: { client: true }
     });
     
@@ -99,7 +104,7 @@ export async function updateClientStatusAction(id: string, status: string) {
     await requireAdminSession();
     await prisma.client.update({
       where: { id },
-      data: { status }
+      data: { status: status as ClientStatus },
     });
 
     await logActivity({
@@ -127,7 +132,7 @@ export async function createClientAction(data: { firstName: string, lastName: st
         company: data.company,
         email: data.email,
         phone: data.phone,
-        status: "prospect"
+        status: ClientStatus.prospect,
       }
     });
     await logActivity({
@@ -391,11 +396,11 @@ export async function getStats() {
 
     const stats = {
       totalClients: clients.length,
-      activeClients: clients.filter(c => c.status === 'active' || c.status === 'retainer').length,
-      prospects: clients.filter(c => c.status === 'prospect').length,
-      cancelled: clients.filter(c => c.status === 'declined').length,
+      activeClients: clients.filter(c => c.status === ClientStatus.active || c.status === ClientStatus.retainer).length,
+      prospects: clients.filter(c => c.status === ClientStatus.prospect).length,
+      cancelled: clients.filter(c => c.status === ClientStatus.declined).length,
       totalProjects: projects.length,
-      signedProjects: projects.filter(p => p.status === 'signed').length,
+      signedProjects: projects.filter(p => p.status === ProjectStatus.signed).length,
       recentActivity: logs.map(l => ({
         id: l.id,
         type: l.type,
@@ -516,7 +521,7 @@ export async function sendBulkEmailAction(campaignName: string, templateId: stri
           name: campaignName,
           subject: template.subject,
           templateId: templateId,
-          status: "sent",
+          status: EmailCampaignStatus.sent,
           recipients: emails.length,
           sentAt: new Date()
         }
