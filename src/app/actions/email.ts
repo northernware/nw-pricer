@@ -10,6 +10,7 @@ import { sendEmail, getBrandedTemplate } from "@/lib/mail";
 const bulkEmailRecipientFilter = {
   email: { not: null },
   status: { not: ClientStatus.declined },
+  marketingOptIn: true,
 } as const;
 
 export async function getEmailTemplates() {

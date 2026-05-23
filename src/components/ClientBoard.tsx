@@ -37,6 +37,7 @@ interface ClientFormData {
   company: string;
   email: string;
   phone: string;
+  marketingOptIn: boolean;
 }
 
 interface ClientCardProps {
@@ -184,6 +185,7 @@ export default function ClientBoard({ initialClients }: { initialClients: Client
     company: "",
     email: "",
     phone: "",
+    marketingOptIn: false,
   });
 
   const sensors = useSensors(
@@ -215,6 +217,7 @@ export default function ClientBoard({ initialClients }: { initialClients: Client
       company: client.company || "",
       email: client.email || "",
       phone: client.phone || "",
+      marketingOptIn: client.marketingOptIn,
     });
     setShowModal(true);
   };
@@ -259,7 +262,14 @@ export default function ClientBoard({ initialClients }: { initialClients: Client
       if (result.success) {
         toast.success(formData.id ? "Client updated" : "Client created");
         setShowModal(false);
-        setFormData({ firstName: "", lastName: "", company: "", email: "", phone: "" });
+        setFormData({
+          firstName: "",
+          lastName: "",
+          company: "",
+          email: "",
+          phone: "",
+          marketingOptIn: false,
+        });
         window.location.reload();
       } else {
         toast.error(result.error || "Failed to save client");
@@ -300,7 +310,14 @@ export default function ClientBoard({ initialClients }: { initialClients: Client
               key={stage.id} 
               stage={stage}
               onAdd={() => {
-                setFormData({ firstName: "", lastName: "", company: "", email: "", phone: "" });
+                setFormData({
+                  firstName: "",
+                  lastName: "",
+                  company: "",
+                  email: "",
+                  phone: "",
+                  marketingOptIn: false,
+                });
                 setShowModal(true);
               }}
             >
@@ -412,6 +429,20 @@ export default function ClientBoard({ initialClients }: { initialClients: Client
                   className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-sm py-2"
                 />
               </div>
+
+              <label className="flex items-start gap-3 cursor-pointer pt-2">
+                <input
+                  type="checkbox"
+                  checked={formData.marketingOptIn}
+                  onChange={(e) =>
+                    setFormData({ ...formData, marketingOptIn: e.target.checked })
+                  }
+                  className="mt-0.5 accent-nw-acid"
+                />
+                <span className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite leading-relaxed">
+                  Opt in to marketing emails (included in bulk campaigns)
+                </span>
+              </label>
 
               <div className="flex gap-4 pt-4">
                 <button

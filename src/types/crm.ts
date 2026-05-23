@@ -22,6 +22,7 @@ export interface ClientListItem {
   email: string | null;
   phone: string | null;
   status: ClientStatus;
+  marketingOptIn: boolean;
   projectCount: number;
   lastModified: number;
 }
@@ -78,6 +79,7 @@ export interface ClientDetail {
   phone: string | null;
   address: string | null;
   status: ClientStatus;
+  marketingOptIn: boolean;
   createdAt: Date;
   updatedAt: Date;
   projects?: ClientProfileProject[];

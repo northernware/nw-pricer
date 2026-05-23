@@ -48,6 +48,10 @@ export default function ClientProfile({ client }: ClientProfileProps) {
                 <Icon icon="solar:phone-linear" className="text-nw-acid" />
                 {client.phone || "No Phone"}
               </div>
+              <div className="flex items-center gap-2 text-xs text-nw-graphite">
+                <Icon icon="solar:letter-opened-linear" className="text-nw-acid" />
+                {client.marketingOptIn ? "Marketing opt-in" : "No marketing opt-in"}
+              </div>
             </div>
           </div>
 

@@ -46,7 +46,7 @@ export default function EmailMarketing() {
       return toast.error("Campaign name and template are required");
     }
     if (recipientCount === 0) {
-      return toast.error("No eligible recipients (need email, not declined)");
+      return toast.error("No eligible recipients (email, marketing opt-in, not declined)");
     }
     setShowConfirm(true);
   };
@@ -176,7 +176,7 @@ export default function EmailMarketing() {
                   <p className="text-[10px] text-nw-graphite leading-relaxed">
                     {recipientCount === null
                       ? "Loading eligible recipients…"
-                      : `${recipientCount} client(s) with email (excludes declined).`}
+                      : `${recipientCount} client(s) with email, marketing opt-in (excludes declined).`}
                   </p>
                 </div>
 
@@ -213,7 +213,7 @@ export default function EmailMarketing() {
             </p>
             <p className="font-body text-sm text-nw-graphite mb-6">
               This will email <strong className="text-nw-black">{recipientCount}</strong> client(s).
-              Declined clients are excluded. This cannot be undone.
+              Only clients with marketing opt-in are included; declined clients are excluded. This cannot be undone.
             </p>
             <div className="flex gap-3">
               <button

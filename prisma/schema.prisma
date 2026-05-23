@@ -33,8 +33,9 @@ model Client {
   email     String?
   phone     String?
   address   String?
-  status    ClientStatus @default(prospect)
-  projects  Project[]
+  status          ClientStatus @default(prospect)
+  marketingOptIn  Boolean      @default(false)
+  projects        Project[]
   logs      ActivityLog[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt

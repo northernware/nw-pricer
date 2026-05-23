@@ -21,6 +21,7 @@ export async function getClients() {
       email: c.email,
       phone: c.phone,
       status: c.status,
+      marketingOptIn: c.marketingOptIn,
       projectCount: c._count.projects,
       lastModified: c.updatedAt.getTime(),
     }));
@@ -60,6 +61,7 @@ export async function createClientAction(data: {
   company?: string;
   email?: string;
   phone?: string;
+  marketingOptIn?: boolean;
 }) {
   try {
     await requireAdminSession();
@@ -70,6 +72,7 @@ export async function createClientAction(data: {
         company: data.company,
         email: data.email,
         phone: data.phone,
+        marketingOptIn: data.marketingOptIn ?? false,
         status: ClientStatus.prospect,
       },
     });
@@ -96,6 +99,7 @@ export async function updateClientAction(
     company?: string;
     email?: string;
     phone?: string;
+    marketingOptIn?: boolean;
   }
 ) {
   try {
@@ -108,6 +112,7 @@ export async function updateClientAction(
         company: data.company,
         email: data.email,
         phone: data.phone,
+        marketingOptIn: data.marketingOptIn ?? false,
       },
     });
     revalidatePath("/admin");
