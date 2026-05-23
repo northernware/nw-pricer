@@ -137,8 +137,8 @@ Internal JSON API — requires admin session cookie (`nw_session`). Unauthentica
 ```
 src/
 ├── app/
-│   ├── actions.ts          # Server actions (admin + public signing)
-│   ├── admin/              # CRM dashboard, calculator, client pages
+│   ├── actions/            # Server actions (clients, projects, email, …)
+│   ├── admin/              # CRM dashboard, calculator, activity, clients
 │   ├── api/calculate/      # Pricing API
 │   ├── login/              # Password login
 │   └── p/[id]/             # Public proposal/contract/invoice links
@@ -151,7 +151,22 @@ src/
 prisma/schema.prisma        # Client, Project, ActivityLog, Email*
 ```
 
-**Auth:** `proxy.ts` protects `/admin/*`. Server actions use `requireAdminSession()` except `approveProjectAction` and `createPaymongoLinkAction` (client flows on `/p/[id]`).
+**Auth:** `proxy.ts` protects `/admin/*` and `POST /api/calculate`. Server actions use `requireAdminSession()` except `approveProjectAction` and `createPaymongoLinkAction` (client flows on `/p/[id]`).
+
+---
+
+## Maintenance scripts (`scripts/`)
+
+One-off Node scripts — run manually with `npx tsx scripts/<name>.ts` after setting `DATABASE_URL` in `.env`. **Not** part of `npm run dev` or CI.
+
+| Script | Purpose | Safe to re-run? |
+|--------|---------|-----------------|
+| `migrate-crm.ts` | Backfill `clientId` on legacy projects | Skips already-migrated rows |
+| `check-projects.ts` | Print project ↔ client names (read-only) | Yes |
+| `fix-names.ts` | Repair client name fields from project config | Idempotent with care |
+| `fix-client-data.ts` | Data cleanup for client records | Review before prod |
+| `fix-companies.ts` | Normalize company fields | Review before prod |
+| `update-bga.ts` | One-off project/config update | **Do not** re-run unless intended |
 
 ---
 
