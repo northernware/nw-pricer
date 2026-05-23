@@ -109,7 +109,7 @@ Defaults are in `src/lib/constants.ts` (`DEFAULTS`).
 
 ### `POST /api/calculate`
 
-Internal-style JSON API (no auth today — use only on trusted networks or add proxy auth later).
+Internal JSON API — requires admin session cookie (`nw_session`). Unauthenticated requests receive `401`.
 
 **Request** (minimal):
 
