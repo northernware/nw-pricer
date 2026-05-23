@@ -1,13 +1,13 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { encrypt } from "@/lib/auth";
+import { requireEnv } from "@/lib/env";
 
 export async function loginAction(formData: FormData) {
   const password = formData.get("password");
-  
-  // Hardcoded simple CRM password from environment, or default if missing
-  const correctPassword = process.env.CRM_PASSWORD || "northernware";
+  const correctPassword = requireEnv("CRM_PASSWORD", "northernware");
 
   if (password !== correctPassword) {
     return { error: "Invalid password" };
@@ -27,8 +27,6 @@ export async function loginAction(formData: FormData) {
 
   return { success: true };
 }
-
-import { redirect } from "next/navigation";
 
 export async function logoutAction() {
   const cookieStore = await cookies();
