@@ -7,6 +7,7 @@ import SignatureBlock from "./SignatureBlock";
 import PaymentBlock from "./PaymentBlock";
 import ContractDocument from "./ContractDocument";
 import ProposalDocument from "./ProposalDocument";
+import ConfigTamperBanner from "./ConfigTamperBanner";
 
 interface PublicTemplateProps {
   id: string;
@@ -20,6 +21,7 @@ interface PublicTemplateProps {
   invoiceId?: string | null;
   ipAddress?: string | null;
   snapshotHash?: string | null;
+  configTampered?: boolean;
 }
 
 export default function PublicTemplate({ 
@@ -33,7 +35,8 @@ export default function PublicTemplate({
   approvedAt,
   invoiceId,
   ipAddress,
-  snapshotHash 
+  snapshotHash,
+  configTampered = false,
 }: PublicTemplateProps) {
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;
   const hostingPlan = input.hostingPlan;
@@ -48,6 +51,8 @@ export default function PublicTemplate({
   // Contract mode: use the fully auto-generated legal document
   if (isContract) {
     return (
+      <>
+        {configTampered && <ConfigTamperBanner />}
       <ContractDocument
         id={id}
         input={input}
@@ -59,18 +64,22 @@ export default function PublicTemplate({
         ipAddress={ipAddress}
         snapshotHash={snapshotHash}
       />
+      </>
     );
   }
 
   // Proposal/quote mode: auto-generated narrative from calculator
   if (isProposal) {
     return (
+      <>
+        {configTampered && <ConfigTamperBanner />}
       <ProposalDocument
         id={id}
         input={input}
         result={result}
         createdAt={createdAt}
       />
+      </>
     );
   }
 
@@ -92,6 +101,7 @@ export default function PublicTemplate({
 
   return (
     <div className="bg-nw-white p-8 md:p-16 border-t-4 border-nw-acid shadow-xl relative z-10 w-full">
+      {configTampered && <ConfigTamperBanner />}
       {/* Header */}
       <header className="flex flex-col md:flex-row justify-between items-start mb-12 border-b-2 border-nw-black pb-8 gap-6 md:gap-0">
         <div>

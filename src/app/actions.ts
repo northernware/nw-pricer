@@ -11,8 +11,8 @@ import { prisma } from "@/lib/prisma";
 import type { CalculatorInput } from "@/lib/calculator";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { createHash } from "crypto";
 import { logActivity } from "@/lib/activity";
+import { hashProjectConfig } from "@/lib/project-integrity";
 import { requireAdminSession, UnauthorizedError } from "@/lib/auth";
 import { sendEmail, getBrandedTemplate } from "@/lib/mail";
 
@@ -261,9 +261,7 @@ export async function approveProjectAction(id: string, signatureName: string) {
     const ip = headerList.get("x-forwarded-for") || "unknown";
     const userAgent = headerList.get("user-agent") || "unknown";
 
-    // Create a deterministic hash of the current config to ensure document integrity
-    const configString = JSON.stringify(project.config);
-    const hash = createHash("sha256").update(configString).digest("hex");
+    const hash = hashProjectConfig(project.config);
 
     await prisma.project.update({
       where: { id },
