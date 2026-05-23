@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { calculate, type CalculatorInput } from "@/lib/calculator";
+import { calculate } from "@/lib/calculator";
+import { parseProjectConfig } from "@/lib/project-config-schema";
 import { PROJECT_TYPES, FEATURES, HOSTING_PLANS, CURRENCIES } from "@/lib/constants";
 import { Metadata } from "next";
 import SignatureBlock from "@/components/SignatureBlock";
@@ -41,7 +42,7 @@ export default async function MagicLinkPage({ params, searchParams }: { params: 
     notFound();
   }
 
-  const input = project.config as unknown as CalculatorInput;
+  const input = parseProjectConfig(project.config);
   const result = calculate(input);
 
   const projectTypeLabel = PROJECT_TYPES.find(p => p.value === input.projectType)?.label || input.projectType;

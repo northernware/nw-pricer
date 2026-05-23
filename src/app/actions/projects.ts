@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@prisma/client";
 import type { CalculatorInput } from "@/lib/calculator";
+import { parseProjectConfig, assertProjectConfig } from "@/lib/project-config-schema";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { logActivity } from "@/lib/activity";
@@ -17,7 +18,7 @@ export async function getSavedProjects() {
       include: { client: true },
     });
     return projects.map((p) => {
-      const config = p.config as unknown as CalculatorInput;
+      const config = parseProjectConfig(p.config);
       return {
         id: p.id,
         name: p.name,
@@ -74,9 +75,10 @@ export async function saveProjectAction(data: {
 }) {
   try {
     await requireAdminSession();
-    const fullClientName = data.config.proposal?.clientName || "Unknown Client";
-    let firstName = data.config.proposal?.clientFirstName;
-    let lastName = data.config.proposal?.clientLastName;
+    const config = assertProjectConfig(data.config);
+    const fullClientName = config.proposal?.clientName || "Unknown Client";
+    let firstName = config.proposal?.clientFirstName;
+    let lastName = config.proposal?.clientLastName;
 
     if (!firstName || !lastName) {
       const parts = fullClientName.trim().split(/\s+/);
@@ -89,7 +91,7 @@ export async function saveProjectAction(data: {
       }
     }
 
-    const company = data.config.proposal?.clientCompany || null;
+    const company = config.proposal?.clientCompany || null;
 
     const existingProject = await prisma.project.findUnique({ where: { id: data.id } });
     let clientId = existingProject?.clientId;
@@ -115,13 +117,13 @@ export async function saveProjectAction(data: {
       update: {
         name: data.name,
         clientId: clientId,
-        config: data.config as object,
+        config: config as object,
       },
       create: {
         id: data.id,
         name: data.name,
         clientId: clientId,
-        config: data.config as object,
+        config: config as object,
       },
     });
 
