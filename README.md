@@ -53,7 +53,8 @@ cp .env.example .env
 ```bash
 npm install
 npx prisma generate
-npx prisma db push   # or: npx prisma migrate dev (when migrations exist)
+npx prisma migrate deploy   # production / fresh DB
+# npx prisma migrate dev    # local development (creates DB + applies migrations)
 ```
 
 ### 4. Run
