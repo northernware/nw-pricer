@@ -1,5 +1,5 @@
 import type { CalculatorInput, CalculatorOutput } from "@/lib/calculator";
-import { FEATURES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, CURRENCIES } from "@/lib/constants";
+import { FEATURES, HOSTING_PLANS, SEO_PLANS, PROJECT_TYPES, DESIGN_LEVELS, CURRENCIES } from "@/lib/constants";
 
 // ─── Northernware Sender Info ───
 const SENDER = {
@@ -90,6 +90,8 @@ export default function ProposalDocument({
   const designLevel = DESIGN_LEVELS.find(dl => dl.value === input.designLevel);
   const hostingPlan = HOSTING_PLANS.find(h => h.value === input.hostingPlan);
   const hasHosting = input.hostingPlan !== "none" && !!hostingPlan;
+  const seoPlan = SEO_PLANS.find((s) => s.value === input.seoPlan);
+  const hasSeo = input.seoPlan !== "none" && !!seoPlan;
   const selectedFeatures = FEATURES.filter(f => input.features.includes(f.value));
 
   const overview = PROJECT_OVERVIEWS[input.projectType] || PROJECT_OVERVIEWS.business_website;
@@ -398,6 +400,42 @@ export default function ProposalDocument({
               </div>
               <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
                 {(hostingPlan.fullIncludes || hostingPlan.includes).map((item, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[10px] text-nw-graphite">
+                    <span className="text-nw-acid font-bold">✓</span> {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasSeo && seoPlan && (
+            <div>
+              <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-nw-graphite mb-4">
+                SEO Retainer (Monthly)
+              </div>
+              <div className="overflow-hidden border border-nw-graphite/20">
+                <table className="w-full border-collapse text-sm">
+                  <thead className="bg-nw-bone/50 font-mono text-[10px] uppercase tracking-widest text-nw-graphite border-b border-nw-graphite/20">
+                    <tr>
+                      <th className="p-4 text-left font-bold">SEO Plan</th>
+                      <th className="p-4 text-right font-bold">Monthly Fee</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-4">
+                        <div className="font-bold">{seoPlan.label}</div>
+                        <div className="text-[10px] text-nw-graphite">{seoPlan.description}</div>
+                      </td>
+                      <td className="p-4 text-right font-mono font-bold text-nw-black">
+                        {fmt(seoPlan.price)}/mo
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                {seoPlan.includes.map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-[10px] text-nw-graphite">
                     <span className="text-nw-acid font-bold">✓</span> {item}
                   </div>

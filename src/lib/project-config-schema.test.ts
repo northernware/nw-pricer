@@ -16,6 +16,11 @@ describe("parseProjectConfig", () => {
     expect(config.proposal.clientName).toBe(DEFAULTS.proposal.clientName);
   });
 
+  it("defaults seoPlan when missing from legacy config", () => {
+    const config = parseProjectConfig({ pages: 5 });
+    expect(config.seoPlan).toBe("none");
+  });
+
   it("clamps invalid pages via schema", () => {
     expect(() => assertProjectConfig({ ...DEFAULTS, pages: 0 })).toThrow();
   });

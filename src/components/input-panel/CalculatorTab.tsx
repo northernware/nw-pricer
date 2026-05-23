@@ -2,7 +2,7 @@
 
 import type { InputPanelProps } from "./types";
 import type { RoundingMode, CurrencyCode } from "@/lib/calculator";
-import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES, CURRENCIES } from "@/lib/constants";
+import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, SEO_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES, CURRENCIES } from "@/lib/constants";
 import { Icon } from "@iconify/react";
 import { Label, LockedBanner, ProjectInfoFields } from "./shared";
 
@@ -262,7 +262,52 @@ export default function CalculatorTab({
             </div>
           </div>
         </div>
+
+        <div className="pt-2">
+          <Label>SEO Retainer (monthly)</Label>
+          <p className="font-mono text-[9px] text-nw-graphite uppercase tracking-wide mb-3">
+            Ongoing SEO services — billed monthly, separate from project investment
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {SEO_PLANS.filter((sp) => sp.value !== "none").map((sp) => (
+              <button
+                key={sp.value}
+                type="button"
+                disabled={isLocked}
+                onClick={() => updateConfig({ seoPlan: sp.value })}
+                className={`flex flex-col font-mono text-xs uppercase track-widest px-3 py-3 border transition-all duration-200 text-left ${
+                  config.seoPlan === sp.value
+                    ? "bg-nw-black text-nw-bone border-nw-black"
+                    : "bg-transparent text-nw-graphite border-nw-graphite/20 hover:border-nw-acid hover:text-nw-black"
+                } ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
+              >
+                <span className="font-bold text-[10px] leading-tight">{sp.label}</span>
+                <span
+                  className={`mt-1 text-[10px] ${config.seoPlan === sp.value ? "text-nw-acid" : "text-nw-graphite"}`}
+                >
+                  {`${CURRENCIES.find((c) => c.value === config.currency)?.symbol}${sp.price.toLocaleString()}/mo`}
+                </span>
+                <ul className="mt-2 space-y-1">
+                  {sp.includes.slice(0, 3).map((item, i) => (
+                    <li key={i} className="text-[8px] normal-case opacity-75 leading-tight">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </button>
+            ))}
+          </div>
+          {config.seoPlan !== "none" && (
+            <button
+              type="button"
+              disabled={isLocked}
+              onClick={() => updateConfig({ seoPlan: "none" })}
+              className="mt-2 font-mono text-[9px] uppercase tracking-widest text-nw-graphite hover:text-nw-acid"
+            >
+              Clear SEO retainer
+            </button>
+          )}
+        </div>
       </div>
-    
-);
+    );
 }

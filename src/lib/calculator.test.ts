@@ -86,4 +86,11 @@ describe("calculate", () => {
     expect(withHosting.hostingPrice).toBeGreaterThan(0);
     expect(withHosting.roundedPrice).toBe(withoutHosting.roundedPrice);
   });
+
+  it("excludes SEO retainer from rounded project price", () => {
+    const withSeo = calculate(input({ seoPlan: "growth" }));
+    const withoutSeo = calculate(input({ seoPlan: "none" }));
+    expect(withSeo.seoPrice).toBe(15000);
+    expect(withSeo.roundedPrice).toBe(withoutSeo.roundedPrice);
+  });
 });

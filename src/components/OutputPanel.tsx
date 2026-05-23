@@ -72,21 +72,37 @@ export default function OutputPanel({
             {fmt(result.roundedPrice, currency)}
           </div>
           <div className="mt-2 font-mono text-[9px] text-nw-bone/50 uppercase tracking-[0.2em]">
-            One-time development fee (hosting billed separately)
+            One-time development fee (hosting &amp; SEO billed separately)
           </div>
         </div>
       </div>
 
       {/* Managed Hosting (Monthly) */}
-      {result.hostingPrice > 0 && (
-        <div className="border border-nw-graphite/20 p-5 bg-nw-bone">
-          <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
-            Managed Hosting & Maintenance
-          </div>
-          <div className="font-display font-bold text-2xl track-tighter text-nw-black">
-            {fmt(result.hostingPrice, currency)} <span className="text-nw-graphite text-lg">/ month</span>
-          </div>
-          <p className="mt-2 font-mono text-[9px] text-nw-graphite uppercase tracking-wide">
+      {(result.hostingPrice > 0 || result.seoPrice > 0) && (
+        <div className="space-y-3">
+          {result.hostingPrice > 0 && (
+            <div className="border border-nw-graphite/20 p-5 bg-nw-bone">
+              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+                Managed Hosting &amp; Maintenance
+              </div>
+              <div className="font-display font-bold text-2xl track-tighter text-nw-black">
+                {fmt(result.hostingPrice, currency)}{" "}
+                <span className="text-nw-graphite text-lg">/ month</span>
+              </div>
+            </div>
+          )}
+          {result.seoPrice > 0 && (
+            <div className="border border-nw-graphite/20 p-5 bg-nw-bone">
+              <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
+                SEO Retainer
+              </div>
+              <div className="font-display font-bold text-2xl track-tighter text-nw-black">
+                {fmt(result.seoPrice, currency)}{" "}
+                <span className="text-nw-graphite text-lg">/ month</span>
+              </div>
+            </div>
+          )}
+          <p className="font-mono text-[9px] text-nw-graphite uppercase tracking-wide">
             Monthly recurring — not included in project investment above
           </p>
         </div>
@@ -123,6 +139,9 @@ export default function OutputPanel({
           <Row label="Rounded Price" value={fmt(result.roundedPrice, currency)} accent />
           {result.hostingPrice > 0 && (
             <Row label="Hosting / Month" value={fmt(result.hostingPrice, currency)} accent />
+          )}
+          {result.seoPrice > 0 && (
+            <Row label="SEO / Month" value={fmt(result.seoPrice, currency)} accent />
           )}
         </div>
       )}
