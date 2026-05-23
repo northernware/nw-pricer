@@ -5,6 +5,7 @@ import {
   getEmailTemplates,
   getBulkEmailRecipientCountAction,
   sendBulkEmailAction,
+  sendTestEmailAction,
 } from "@/app/actions";
 import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
@@ -15,6 +16,7 @@ export default function EmailMarketing() {
   const [loading, setLoading] = useState(true);
   const [showCreator, setShowCreator] = useState(false);
   const [sending, setSending] = useState(false);
+  const [testing, setTesting] = useState(false);
   const [campaignName, setCampaignName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [recipientCount, setRecipientCount] = useState<number | null>(null);
@@ -49,6 +51,18 @@ export default function EmailMarketing() {
     setShowConfirm(true);
   };
 
+  const handleTestSend = async () => {
+    if (!selectedTemplate) return toast.error("Select a template first");
+    setTesting(true);
+    const result = await sendTestEmailAction(selectedTemplate);
+    setTesting(false);
+    if (result.success) {
+      toast.success(`Test email sent to ${result.to}`);
+    } else {
+      toast.error(result.error || "Test send failed");
+    }
+  };
+
   const handleConfirmSend = async () => {
     setSending(true);
     const result = await sendBulkEmailAction(campaignName, selectedTemplate);
@@ -56,7 +70,11 @@ export default function EmailMarketing() {
     setShowConfirm(false);
 
     if (result.success) {
-      toast.success(`Campaign sent to ${result.count} recipients!`);
+      const msg =
+        result.failed && result.failed > 0
+          ? `Sent to ${result.sent} recipients (${result.failed} failed)`
+          : `Campaign sent to ${result.sent} recipients!`;
+      toast.success(msg);
       setCampaignName("");
       setSelectedTemplate("");
       const res = await getBulkEmailRecipientCountAction();
@@ -162,13 +180,24 @@ export default function EmailMarketing() {
                   </p>
                 </div>
 
-                <button
-                  onClick={handleLaunchClick}
-                  disabled={sending || !selectedTemplate || !campaignName || recipientCount === 0}
-                  className="w-full bg-nw-acid text-nw-black py-4 rounded-xl font-mono text-[10px] uppercase tracking-[0.2em] font-black hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 disabled:grayscale disabled:scale-100"
-                >
-                  Launch Campaign
-                </button>
+                <div className="flex flex-col gap-3">
+                  <button
+                    type="button"
+                    onClick={handleTestSend}
+                    disabled={testing || sending || !selectedTemplate}
+                    className="w-full border border-nw-white/20 py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-white/10 transition-colors disabled:opacity-30"
+                  >
+                    {testing ? "Sending test…" : "Send test to me"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleLaunchClick}
+                    disabled={sending || testing || !selectedTemplate || !campaignName || recipientCount === 0}
+                    className="w-full bg-nw-acid text-nw-black py-4 rounded-xl font-mono text-[10px] uppercase tracking-[0.2em] font-black hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 disabled:grayscale disabled:scale-100"
+                  >
+                    Launch Campaign
+                  </button>
+                </div>
               </div>
             </div>
           </>

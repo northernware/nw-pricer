@@ -35,4 +35,5 @@ export {
   sendIndividualEmailAction,
   getBulkEmailRecipientCountAction,
   sendBulkEmailAction,
+  sendTestEmailAction,
 } from "./email";
