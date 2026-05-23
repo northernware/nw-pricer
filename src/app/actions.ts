@@ -1,14 +1,24 @@
 "use server";
 
+/**
+ * Server action access:
+ * - ADMIN (requireAdminSession): CRM, projects, email, stats, unlock/delete
+ * - PUBLIC: approveProjectAction (client signing on /p/[id])
+ * - PUBLIC: createPaymongoLinkAction (client checkout on /p/[id])
+ */
+
 import { prisma } from "@/lib/prisma";
 import type { CalculatorInput } from "@/lib/calculator";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createHash } from "crypto";
 import { logActivity } from "@/lib/activity";
+import { requireAdminSession, UnauthorizedError } from "@/lib/auth";
+import { sendEmail, getBrandedTemplate } from "@/lib/mail";
 
 export async function getSavedProjects() {
   try {
+    await requireAdminSession();
     const projects = await prisma.project.findMany({
       orderBy: { updatedAt: 'desc' },
       include: { client: true }
@@ -28,6 +38,7 @@ export async function getSavedProjects() {
       approvedAt: p.approvedAt,
     }));
   } catch (error) {
+    if (error instanceof UnauthorizedError) return [];
     console.error("Failed to fetch projects:", error);
     return [];
   }
@@ -35,6 +46,7 @@ export async function getSavedProjects() {
 
 export async function getClients() {
   try {
+    await requireAdminSession();
     const clients = await prisma.client.findMany({
       orderBy: { updatedAt: 'desc' },
       include: { _count: { select: { projects: true } } }
@@ -51,6 +63,7 @@ export async function getClients() {
       lastModified: c.updatedAt.getTime(),
     }));
   } catch (error) {
+    if (error instanceof UnauthorizedError) return [];
     console.error("Failed to fetch clients:", error);
     return [];
   }
@@ -58,6 +71,7 @@ export async function getClients() {
 
 export async function updateProjectStatusAction(id: string, status: string) {
   try {
+    await requireAdminSession();
     const project = await prisma.project.update({
       where: { id },
       data: { status },
@@ -73,14 +87,16 @@ export async function updateProjectStatusAction(id: string, status: string) {
 
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to update status:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function updateClientStatusAction(id: string, status: string) {
   try {
+    await requireAdminSession();
     await prisma.client.update({
       where: { id },
       data: { status }
@@ -94,14 +110,16 @@ export async function updateClientStatusAction(id: string, status: string) {
 
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to update client status:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function createClientAction(data: { firstName: string, lastName: string, company?: string, email?: string, phone?: string }) {
   try {
+    await requireAdminSession();
     const client = await prisma.client.create({
       data: {
         firstName: data.firstName,
@@ -120,14 +138,16 @@ export async function createClientAction(data: { firstName: string, lastName: st
 
     revalidatePath("/admin");
     return { success: true, client };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to create client:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function updateClientAction(id: string, data: { firstName: string, lastName: string, company?: string, email?: string, phone?: string }) {
   try {
+    await requireAdminSession();
     await prisma.client.update({
       where: { id },
       data: {
@@ -140,25 +160,29 @@ export async function updateClientAction(id: string, data: { firstName: string, 
     });
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to update client:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function deleteClientAction(id: string) {
   try {
+    await requireAdminSession();
     await prisma.client.delete({ where: { id } });
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to delete client:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function saveProjectAction(data: { id: string, name: string, client: string, config: any }) {
   try {
+    await requireAdminSession();
     const fullClientName = data.config.proposal?.clientName || "Unknown Client";
     let firstName = data.config.proposal?.clientFirstName;
     let lastName = data.config.proposal?.clientLastName;
@@ -220,12 +244,14 @@ export async function saveProjectAction(data: { id: string, name: string, client
 
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to save project:", error);
-    return { success: false, error: error.message || String(error) };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
+/** PUBLIC — client signing on /p/[id] */
 export async function approveProjectAction(id: string, signatureName: string) {
   try {
     const project = await prisma.project.findUnique({ where: { id } });
@@ -266,6 +292,7 @@ export async function approveProjectAction(id: string, signatureName: string) {
   }
 }
 
+/** PUBLIC — client checkout on /p/[id] */
 export async function createPaymongoLinkAction(projectId: string, amountPHP: number, description: string) {
   try {
     const secretKey = process.env.PAYMONGO_SECRET_KEY;
@@ -307,17 +334,20 @@ export async function createPaymongoLinkAction(projectId: string, amountPHP: num
 
 export async function deleteProjectAction(id: string) {
   try {
+    await requireAdminSession();
     await prisma.project.delete({ where: { id } });
     revalidatePath("/");
     return { success: true };
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to delete project:", error);
-    return { success: false, error };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function unlockProjectAction(id: string) {
   try {
+    await requireAdminSession();
     await prisma.project.update({
       where: { id },
       data: {
@@ -338,14 +368,16 @@ export async function unlockProjectAction(id: string) {
     revalidatePath(`/p/${id}`);
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to unlock project:", error);
-    return { success: false, error: error.message || String(error) };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function getStats() {
   try {
+    await requireAdminSession();
     const [clients, projects, logs] = await Promise.all([
       prisma.client.findMany(),
       prisma.project.findMany(),
@@ -374,6 +406,7 @@ export async function getStats() {
 
     return stats;
   } catch (error) {
+    if (error instanceof UnauthorizedError) return null;
     console.error("Failed to fetch stats:", error);
     return null;
   }
@@ -381,6 +414,7 @@ export async function getStats() {
 
 export async function getClientById(id: string) {
   try {
+    await requireAdminSession();
     const client = await prisma.client.findUnique({
       where: { id },
       include: {
@@ -394,21 +428,27 @@ export async function getClientById(id: string) {
     });
     return client;
   } catch (error) {
+    if (error instanceof UnauthorizedError) return null;
     console.error("Failed to fetch client:", error);
     return null;
   }
 }
 
-import { sendEmail, getBrandedTemplate } from "@/lib/mail";
-
 export async function getEmailTemplates() {
-  return await prisma.emailTemplate.findMany({
-    orderBy: { updatedAt: 'desc' }
-  });
+  try {
+    await requireAdminSession();
+    return await prisma.emailTemplate.findMany({
+      orderBy: { updatedAt: 'desc' }
+    });
+  } catch (error) {
+    if (error instanceof UnauthorizedError) return [];
+    throw error;
+  }
 }
 
 export async function saveEmailTemplate(data: { id?: string, name: string, subject: string, body: string, category: string }) {
   try {
+    await requireAdminSession();
     if (data.id) {
       await prisma.emailTemplate.update({
         where: { id: data.id },
@@ -421,14 +461,16 @@ export async function saveEmailTemplate(data: { id?: string, name: string, subje
     }
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Failed to save template:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function sendIndividualEmailAction(clientId: string, subject: string, body: string) {
   try {
+    await requireAdminSession();
     const client = await prisma.client.findUnique({ where: { id: clientId } });
     if (!client || !client.email) throw new Error("Client has no email address");
 
@@ -445,14 +487,16 @@ export async function sendIndividualEmailAction(clientId: string, subject: strin
       return { success: true };
     }
     return { success: false, error: "Failed to deliver email" };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Email error:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 export async function sendBulkEmailAction(campaignName: string, templateId: string) {
   try {
+    await requireAdminSession();
     const [template, clients] = await Promise.all([
       prisma.emailTemplate.findUnique({ where: { id: templateId } }),
       prisma.client.findMany({ where: { email: { not: null } } })
@@ -479,8 +523,9 @@ export async function sendBulkEmailAction(campaignName: string, templateId: stri
       return { success: true, count: emails.length };
     }
     return { success: false, error: "Bulk email delivery failed" };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
     console.error("Bulk email error:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }

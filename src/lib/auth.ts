@@ -29,3 +29,19 @@ export async function getSession() {
     return null;
   }
 }
+
+export class UnauthorizedError extends Error {
+  constructor(message = 'Unauthorized') {
+    super(message);
+    this.name = 'UnauthorizedError';
+  }
+}
+
+/** Requires a valid admin session cookie. Throws UnauthorizedError if missing. */
+export async function requireAdminSession() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new UnauthorizedError();
+  }
+  return session;
+}
