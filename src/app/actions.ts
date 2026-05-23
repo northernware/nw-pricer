@@ -353,6 +353,9 @@ export async function unlockProjectAction(id: string) {
       data: {
         approvedAt: null,
         signedBy: null,
+        snapshotHash: null,
+        ipAddress: null,
+        userAgent: null,
       }
     });
 
