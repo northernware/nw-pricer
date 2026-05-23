@@ -63,6 +63,8 @@ npx prisma migrate deploy   # production / fresh DB
 npm run dev
 ```
 
+**Draft autosave:** The calculator stores an in-progress config in browser `localStorage` (`nw_pricer_draft`) for crash recovery. Saved projects live in PostgreSQL via the admin UI.
+
 - App: [http://localhost:3000](http://localhost:3000) (redirects to `/admin`)
 - Login: [http://localhost:3000/login](http://localhost:3000/login)
 
