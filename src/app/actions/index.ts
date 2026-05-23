@@ -25,7 +25,7 @@ export {
 
 export { createPaymongoLinkAction } from "./billing";
 
-export { getStats } from "./stats";
+export { getStats, type StatsResult } from "./stats";
 
 export { getActivityLogsAction } from "./activity";
 

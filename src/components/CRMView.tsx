@@ -6,14 +6,16 @@ import ClientBoard from "./ClientBoard";
 import Dashboard from "./Dashboard";
 import EmailMarketing from "./EmailMarketing";
 import { Icon } from "@iconify/react";
-import type { ClientListItem, StoredProject } from "@/types/crm";
+import type { ClientListItem, DashboardStats, StoredProject } from "@/types/crm";
 
 interface CRMViewProps {
   projects: StoredProject[];
   clients: ClientListItem[];
+  stats?: DashboardStats | null;
+  statsError?: string;
 }
 
-export default function CRMView({ projects, clients }: CRMViewProps) {
+export default function CRMView({ projects, clients, stats, statsError }: CRMViewProps) {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients' | 'marketing'>('dashboard');
 
   return (
@@ -69,7 +71,7 @@ export default function CRMView({ projects, clients }: CRMViewProps) {
       {/* Pipeline View */}
       <div className="flex-1 min-w-0 overflow-y-auto custom-scrollbar">
         {activeTab === 'dashboard' ? (
-          <Dashboard />
+          <Dashboard initialStats={stats ?? null} statsError={statsError} />
         ) : activeTab === 'projects' ? (
           <KanbanBoard initialProjects={projects} />
         ) : activeTab === 'clients' ? (
