@@ -72,7 +72,7 @@ export default function OutputPanel({
             {fmt(result.roundedPrice, currency)}
           </div>
           <div className="mt-2 font-mono text-[9px] text-nw-bone/50 uppercase tracking-[0.2em]">
-            One-time Development Fee
+            One-time development fee (hosting billed separately)
           </div>
         </div>
       </div>
@@ -86,6 +86,9 @@ export default function OutputPanel({
           <div className="font-display font-bold text-2xl track-tighter text-nw-black">
             {fmt(result.hostingPrice, currency)} <span className="text-nw-graphite text-lg">/ month</span>
           </div>
+          <p className="mt-2 font-mono text-[9px] text-nw-graphite uppercase tracking-wide">
+            Monthly recurring — not included in project investment above
+          </p>
         </div>
       )}
 
