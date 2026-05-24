@@ -3,6 +3,7 @@
 import type { InputPanelProps } from "./types";
 import type { RoundingMode, CurrencyCode } from "@/lib/calculator";
 import { FEATURES, ROUNDING_MODES, HOSTING_PLANS, SEO_PLANS, PROJECT_TYPES, DESIGN_LEVELS, COMPLEXITIES, CURRENCIES } from "@/lib/constants";
+import { convertAmount, formatFxHint, roundHourlyRate } from "@/lib/fx";
 import { Icon } from "@iconify/react";
 import { Label, LockedBanner, ProjectInfoFields } from "./shared";
 
@@ -14,6 +15,26 @@ export default function CalculatorTab({
   isLocked,
   onUnlock,
 }: InputPanelProps) {
+  const handleCurrencyChange = (next: CurrencyCode) => {
+    if (next === config.currency || isLocked) return;
+
+    const converted = roundHourlyRate(
+      convertAmount(config.hourlyRate, config.currency, next),
+      next
+    );
+    const fromSym = CURRENCIES.find((c) => c.value === config.currency)?.symbol ?? "";
+    const toSym = CURRENCIES.find((c) => c.value === next)?.symbol ?? "";
+
+    const applyFx = window.confirm(
+      `Convert hourly rate using reference FX?\n\n${fromSym}${config.hourlyRate} (${config.currency}) → ${toSym}${converted} (${next})\n\n${formatFxHint(config.currency, next)}\n\nCancel to keep the same numeric rate in ${next}.`
+    );
+
+    updateConfig({
+      currency: next,
+      hourlyRate: applyFx ? converted : config.hourlyRate,
+    });
+  };
+
   return (
   
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -149,13 +170,16 @@ export default function CalculatorTab({
               <select
                 value={config.currency}
                 disabled={isLocked}
-                onChange={(e) => updateConfig({ currency: e.target.value as CurrencyCode })}
+                onChange={(e) => handleCurrencyChange(e.target.value as CurrencyCode)}
                 className={`w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-2 transition-colors cursor-pointer ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 {CURRENCIES.map((c) => (
                   <option key={c.value} value={c.value} className="bg-nw-bone">{c.label}</option>
                 ))}
               </select>
+              <p className="text-[10px] text-nw-graphite mt-2 font-mono leading-relaxed">
+                Reference FX (PHP base). Changing currency can convert your hourly rate; hosting/SEO list prices stay as entered in constants—adjust manually if needed.
+              </p>
             </div>
             <div>
               <div className="font-mono text-[10px] uppercase track-widest text-nw-graphite mb-2">
