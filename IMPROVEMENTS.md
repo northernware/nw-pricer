@@ -15,13 +15,13 @@ Last reviewed from codebase audit: **2026-05-24**.
 
 | Priority | Total | Done | Remaining |
 |----------|------:|-----:|----------:|
-| P0 — Critical | 14 | 13 | 1 |
+| P0 — Critical | 14 | 14 | 0 |
 | P1 — High | 12 | 12 | 0 |
 | P2 — Medium | 18 | 18 | 0 |
-| P3 — Polish | 8 | 4 | 4 |
+| P3 — Polish | 8 | 8 | 0 |
 | **All** | **52** | **52** | **0** |
 
-_Optional stretch items (component refactors, P3 product roadmap, P0 hardening, script archive) remain listed below but are outside the original audit scope._
+_Optional stretch items below are complete as of 2026-05-24._
 
 _Update the table when checking items off._
 
@@ -71,8 +71,8 @@ _Update the table when checking items off._
 
 - [x] Replace short `generateId()` IDs with `cuid()` / `nanoid()` (update `saveProjectAction` + `Calculator.tsx`) — #160 (`crypto.randomUUID`)
 - [x] Evaluate signed URL or expiring token for client-facing docs (design decision — document choice here) — #173 (`docs/PUBLIC_LINKS.md`)
-- [ ] Optional: separate “view” vs “sign” capability (read-only link + sign link with token) — deferred per PUBLIC_LINKS.md
-- [ ] Rate-limit or CAPTCHA on `approveProjectAction` if abuse is a concern — deferred per PUBLIC_LINKS.md
+- [x] Optional: separate “view” vs “sign” capability (read-only link + sign link with token) — #224
+- [x] Rate-limit on `approveProjectAction` — #224 (10 / 15 min per IP + project)
 
 ### Approval integrity
 
@@ -175,8 +175,8 @@ _Update the table when checking items off._
 
 - [x] SEO pricing module (monthly retainer) — #222 (`seoPlan`, SEO_PLANS, proposal/quote output)
 - [x] Client-facing **estimator** (anonymous quote) vs current **document** magic links — clarify product — #222 (`docs/PRODUCT_ROADMAP.md`)
-- [ ] Vector/branded PDF export (vs html2canvas raster)
-- [ ] Invoice PDF consistency with quote/proposal branding
+- [x] Vector/branded PDF export (vs html2canvas raster) — #224 (`@react-pdf/renderer`, raster fallback)
+- [x] Invoice PDF consistency with quote/proposal branding — #224 (`InvoiceDocument`)
 
 ### DX & CI
 
@@ -202,7 +202,7 @@ _Use this section when stopping mid-work._
 
 ### Current focus
 
-P3: PDF branding; P0 hardening (optional)
+All audit + stretch items complete.
 
 ### Blocked on
 
@@ -210,16 +210,12 @@ None
 
 ### Completed this session
 
-- #214 login env aliases, force-dynamic admin, server-side stats, hydration fix
-- #216 archive one-off scripts, remove legacy `/api/auth/*`
-- #218 ClientBoard subcomponent extraction
-- #220 Calculator hooks/modals, InputPanel tab split
-- #222 SEO retainer module, product roadmap doc
+- #224: view/sign public links, approve rate limit, vector PDF export, branded `InvoiceDocument`
 
 ### Next session should start with
 
-1. P3: vector PDF or invoice branding alignment
-2. P0 hardening: view vs sign URLs, rate-limit on `approveProjectAction` (if needed)
+1. Deploy with `PUBLIC_LINK_SIGNING` (default on in prod) and verify contract sign flow
+2. Optional: link expiry field on `Project`, CAPTCHA on sign
 
 ---
 
@@ -267,3 +263,4 @@ Quick context if this file is opened without chat history.
 | 2026-05-24 | #214–#218: login/admin fixes, script archive, ClientBoard refactor |
 | 2026-05-24 | #220: Calculator hooks/modals, InputPanel tab components |
 | 2026-05-24 | #222: SEO retainer module, PRODUCT_ROADMAP.md |
+| 2026-05-24 | #224: view/sign links, rate limit, vector PDF, InvoiceDocument |

@@ -5,6 +5,7 @@ import type { CalculatorInput, ProjectInvoice } from "@/lib/calculator";
 import { generateId } from "@/lib/id";
 import { copyToClipboard } from "@/lib/utils";
 import { CURRENCIES } from "@/lib/constants";
+import { createPublicLinksAction } from "@/app/actions";
 import { toast } from "react-hot-toast";
 
 interface InvoiceManagerProps {
@@ -97,12 +98,20 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
                   <button
                     onClick={async (e) => {
                       e.stopPropagation();
-                      const url = `${window.location.origin}/p/${projectId}?mode=invoice&invoiceId=${inv.id}`;
-                      const success = await copyToClipboard(url);
+                      const res = await createPublicLinksAction(
+                        projectId,
+                        "invoice",
+                        inv.id
+                      );
+                      if (!res.success) {
+                        toast.error(res.error || "Failed to create link");
+                        return;
+                      }
+                      const success = await copyToClipboard(res.viewUrl);
                       if (success) {
                         toast.success(`Link for "${inv.label}" copied`);
                       } else {
-                        toast.error(`Failed to copy link`);
+                        toast.error("Failed to copy link");
                       }
                     }}
                     className="p-2 text-nw-graphite hover:text-nw-acid transition-colors"

@@ -15,7 +15,6 @@ import { usePdfExport } from "@/hooks/usePdfExport";
 
 export default function Calculator() {
   const [activeTab, setActiveTab] = useState<"calculator" | "proposal" | "contract">("calculator");
-  const { exportToPdf } = usePdfExport();
   const project = useCalculatorProject();
 
   const {
@@ -37,6 +36,7 @@ export default function Calculator() {
     toggleFeature,
     handleSave,
     handleCopyMagicLink,
+    handleCopySignLink,
     handleLoad,
     handleDelete,
     handleNew,
@@ -47,6 +47,7 @@ export default function Calculator() {
   } = project;
 
   const result = useMemo(() => calculate(config), [config]);
+  const { exportToPdf } = usePdfExport(config, result, currentProjectId);
 
   const onPromoteToContract = () => {
     if (handlePromoteToContract()) setActiveTab("contract");
@@ -128,7 +129,18 @@ export default function Calculator() {
                 className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-bone text-nw-acid border border-nw-acid hover:bg-nw-acid hover:text-nw-bone transition-all group"
               >
                 <Icon icon="solar:link-linear" className="group-hover:scale-110 transition-transform" />
-                Magic Link
+                {activeTab === "contract" ? "View Link" : "Magic Link"}
+              </button>
+            )}
+
+            {currentProjectId && activeTab === "contract" && (
+              <button
+                type="button"
+                onClick={handleCopySignLink}
+                className="flex items-center gap-2 font-mono text-[10px] uppercase track-widest px-4 py-2 bg-nw-black text-nw-bone border border-nw-black hover:bg-nw-acid hover:text-nw-black transition-all group"
+              >
+                <Icon icon="solar:pen-new-square-linear" className="group-hover:scale-110 transition-transform" />
+                Sign Link
               </button>
             )}
 

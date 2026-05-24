@@ -25,8 +25,8 @@ Today, `/api/calculate` is **admin-only** (session cookie). A public estimator w
 
 | Item | Status |
 |------|--------|
-| Raster PDF via html2canvas + jsPDF | **Shipped** |
-| Vector / print-perfect branded PDF | Backlog — consider `@react-pdf/renderer` or server-side Puppeteer |
+| Raster PDF via html2canvas + jsPDF | Fallback when vector export fails |
+| Vector / print-perfect branded PDF | **Shipped** (`@react-pdf/renderer` in admin export) |
 | Invoice PDF matching quote/proposal letterhead | Backlog — align `QuoteTemplate` and invoice layout tokens |
 
 ## Public link hardening
