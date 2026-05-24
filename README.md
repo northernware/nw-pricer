@@ -98,7 +98,8 @@ priceRange    = [rounded × 0.9, rounded × 1.1] (same rounding mode)
 ```
 
 **Not included in `roundedPrice`:** managed hosting (shown separately as **monthly recurring**).  
-**Display-only today:** `currency` (set hourly rate appropriately per currency).  
+
+**Currency & FX:** `currency` controls symbol/locale formatting only. All math uses your **hourly rate** in the selected currency. When you change currency in the calculator, you can **convert the hourly rate** using indicative reference rates (PHP base, configurable via `FX_RATES_JSON`). Hosting and SEO plan prices in `constants.ts` are fixed amounts—change currency and tune rates manually for foreign quotes.  
 **Project type** affects hours via multipliers (see formulas above).
 
 Defaults are in `src/lib/constants.ts` (`DEFAULTS`).
