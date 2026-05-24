@@ -19,6 +19,7 @@ export {
   updateProjectStatusAction,
   saveProjectAction,
   approveProjectAction,
+  createPublicLinksAction,
   deleteProjectAction,
   unlockProjectAction,
 } from "./projects";

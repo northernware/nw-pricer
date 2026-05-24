@@ -11,7 +11,9 @@ import {
   saveProjectAction,
   deleteProjectAction,
   unlockProjectAction,
+  createPublicLinksAction,
 } from "@/app/actions";
+import type { PublicDocumentMode } from "@/lib/public-link";
 import { copyToClipboard } from "@/lib/utils";
 import { toast } from "react-hot-toast";
 
@@ -162,13 +164,42 @@ export function useCalculatorProject() {
   const handleCopyMagicLink = useCallback(
     async (activeTab: string) => {
       if (!currentProjectId) return;
-      const url = `${window.location.origin}/p/${currentProjectId}?mode=${activeTab}`;
-      const success = await copyToClipboard(url);
-      if (success) toast.success("Magic Link copied to clipboard");
-      else toast.error("Failed to copy link");
+      const mode: PublicDocumentMode =
+        activeTab === "calculator"
+          ? "quote"
+          : activeTab === "proposal"
+            ? "proposal"
+            : "contract";
+      const res = await createPublicLinksAction(currentProjectId, mode);
+      if (!res.success) {
+        toast.error(res.error || "Failed to create link");
+        return;
+      }
+      const success = await copyToClipboard(res.viewUrl);
+      if (success) {
+        toast.success(
+          mode === "contract" && res.signUrl && res.signUrl !== res.viewUrl
+            ? "View link copied (use Sign Link for signing)"
+            : "Magic link copied to clipboard"
+        );
+      } else {
+        toast.error("Failed to copy link");
+      }
     },
     [currentProjectId]
   );
+
+  const handleCopySignLink = useCallback(async () => {
+    if (!currentProjectId) return;
+    const res = await createPublicLinksAction(currentProjectId, "contract");
+    if (!res.success || !res.signUrl) {
+      toast.error(res.error || "Failed to create sign link");
+      return;
+    }
+    const success = await copyToClipboard(res.signUrl);
+    if (success) toast.success("Sign link copied to clipboard");
+    else toast.error("Failed to copy link");
+  }, [currentProjectId]);
 
   const handleLoad = useCallback((project: StoredProject) => {
     setConfig(project.config);
@@ -292,6 +323,7 @@ export function useCalculatorProject() {
     toggleFeature,
     handleSave,
     handleCopyMagicLink,
+    handleCopySignLink,
     handleLoad,
     handleDelete,
     handleNew,

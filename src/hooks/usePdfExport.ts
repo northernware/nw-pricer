@@ -4,11 +4,24 @@ import { useCallback } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { toast } from "react-hot-toast";
+import type { CalculatorInput, CalculatorOutput } from "@/lib/calculator";
+import type { PdfDocKind } from "@/lib/pdf/QuotePdfDocument";
+import { downloadVectorQuotePdf } from "@/lib/pdf/export-quote-pdf";
 
 export type PdfExportTab = "calculator" | "proposal" | "contract";
 
-export function usePdfExport() {
-  const exportToPdf = useCallback(async (activeTab: PdfExportTab) => {
+function tabToKind(tab: PdfExportTab): PdfDocKind {
+  if (tab === "proposal") return "Proposal";
+  if (tab === "contract") return "Contract";
+  return "Quotation";
+}
+
+export function usePdfExport(
+  input?: CalculatorInput,
+  result?: CalculatorOutput,
+  projectId?: string | null
+) {
+  const exportRasterPdf = useCallback(async (activeTab: PdfExportTab) => {
     const element = document.getElementById("quote-template");
     if (!element) return;
 
@@ -66,23 +79,38 @@ export function usePdfExport() {
         isFirstPage = false;
       }
 
-      const prefix =
-        activeTab === "calculator"
-          ? "Quotation"
-          : activeTab === "proposal"
-            ? "Proposal"
-            : "Contract";
+      const prefix = tabToKind(activeTab);
       pdf.save(`NW-${prefix}-${new Date().toISOString().split("T")[0]}.pdf`);
-    } catch (error) {
-      console.error("PDF Export failed:", error);
-      toast.error("PDF generation failed. Use browser print.");
-      window.print();
     } finally {
       element.style.position = "fixed";
       element.style.top = "-9999px";
       element.style.left = "-9999px";
     }
   }, []);
+
+  const exportToPdf = useCallback(
+    async (activeTab: PdfExportTab) => {
+      if (input && result) {
+        try {
+          await downloadVectorQuotePdf(tabToKind(activeTab), input, result, projectId);
+          toast.success("Vector PDF downloaded");
+          return;
+        } catch (error) {
+          console.warn("Vector PDF failed, falling back to raster:", error);
+        }
+      }
+
+      try {
+        await exportRasterPdf(activeTab);
+        toast.success("PDF downloaded");
+      } catch (error) {
+        console.error("PDF Export failed:", error);
+        toast.error("PDF generation failed. Use browser print.");
+        window.print();
+      }
+    },
+    [input, result, projectId, exportRasterPdf]
+  );
 
   return { exportToPdf };
 }

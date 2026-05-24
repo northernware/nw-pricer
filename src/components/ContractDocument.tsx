@@ -22,6 +22,7 @@ interface ContractDocumentProps {
   approvedAt?: Date | null;
   ipAddress?: string | null;
   snapshotHash?: string | null;
+  canSign?: boolean;
 }
 
 function Section({ num, title, children }: { num: string; title: string; children: React.ReactNode }) {
@@ -51,6 +52,7 @@ export default function ContractDocument({
   approvedAt,
   ipAddress,
   snapshotHash,
+  canSign = true,
 }: ContractDocumentProps) {
   const p = input.proposal;
   const currency = CURRENCIES.find(c => c.value === input.currency) || CURRENCIES[0];
@@ -394,6 +396,7 @@ export default function ContractDocument({
                 title={p.clientSignerTitle}
                 ipAddress={ipAddress}
                 snapshotHash={snapshotHash}
+                canSign={canSign}
               />
             </div>
 

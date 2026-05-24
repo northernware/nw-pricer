@@ -9,6 +9,14 @@ import { headers } from "next/headers";
 import { logActivity } from "@/lib/activity";
 import { hashProjectConfig } from "@/lib/project-integrity";
 import { requireAdminSession, UnauthorizedError } from "@/lib/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
+import {
+  buildPublicDocumentPath,
+  createPublicLinkToken,
+  isPublicLinkSigningEnabled,
+  verifyPublicLinkToken,
+  type PublicDocumentMode,
+} from "@/lib/public-link";
 
 export async function getSavedProjects() {
   try {
@@ -146,14 +154,40 @@ export async function saveProjectAction(data: {
 }
 
 /** PUBLIC — client signing on /p/[id] */
-export async function approveProjectAction(id: string, signatureName: string) {
+export async function approveProjectAction(
+  id: string,
+  signatureName: string,
+  signToken?: string
+) {
   try {
     const project = await prisma.project.findUnique({ where: { id } });
     if (!project) throw new Error("Project not found");
+    if (project.approvedAt) throw new Error("Project is already signed");
 
     const headerList = await headers();
-    const ip = headerList.get("x-forwarded-for") || "unknown";
+    const ip = headerList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     const userAgent = headerList.get("user-agent") || "unknown";
+
+    const rate = checkRateLimit(`approve:${ip}:${id}`, 10, 15 * 60 * 1000);
+    if (!rate.allowed) {
+      return {
+        success: false,
+        error: "Too many signing attempts. Please wait and try again.",
+      };
+    }
+
+    if (isPublicLinkSigningEnabled()) {
+      if (!signToken) {
+        return {
+          success: false,
+          error: "A signing link is required. Request one from your account manager.",
+        };
+      }
+      const claims = await verifyPublicLinkToken(signToken);
+      if (!claims || claims.pid !== id || claims.scope !== "sign") {
+        return { success: false, error: "Invalid or expired signing link." };
+      }
+    }
 
     const hash = hashProjectConfig(project.config);
 
@@ -182,6 +216,73 @@ export async function approveProjectAction(id: string, signatureName: string) {
     console.error("Failed to approve project:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+function publicLinkOrigin(headerList: Headers): string {
+  const host = headerList.get("x-forwarded-host") || headerList.get("host") || "localhost:3000";
+  const proto = headerList.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  return `${proto}://${host}`;
+}
+
+export async function createPublicLinksAction(
+  projectId: string,
+  mode: PublicDocumentMode,
+  invoiceId?: string
+) {
+  try {
+    await requireAdminSession();
+    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    if (!project) return { success: false as const, error: "Project not found" };
+
+    const headerList = await headers();
+    const base = publicLinkOrigin(headerList);
+
+    if (!isPublicLinkSigningEnabled()) {
+      const viewPath = buildPublicDocumentPath(projectId, mode, { invoiceId });
+      const viewUrl = `${base}${viewPath}`;
+      return {
+        success: true as const,
+        viewUrl,
+        signUrl: mode === "contract" ? viewUrl : undefined,
+      };
+    }
+
+    const viewToken = await createPublicLinkToken({
+      pid: projectId,
+      scope: "view",
+      mode,
+      inv: invoiceId,
+    });
+    const viewPath = buildPublicDocumentPath(projectId, mode, {
+      viewToken,
+      invoiceId,
+    });
+    const viewUrl = `${base}${viewPath}`;
+
+    let signUrl: string | undefined;
+    if (mode === "contract") {
+      const signToken = await createPublicLinkToken({
+        pid: projectId,
+        scope: "sign",
+        mode: "contract",
+      });
+      signUrl = `${base}${buildPublicDocumentPath(projectId, "contract", {
+        viewToken,
+        signToken,
+      })}`;
+    }
+
+    return { success: true as const, viewUrl, signUrl };
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) {
+      return { success: false as const, error: error.message };
+    }
+    console.error("Failed to create public links:", error);
+    return {
+      success: false as const,
       error: error instanceof Error ? error.message : String(error),
     };
   }
