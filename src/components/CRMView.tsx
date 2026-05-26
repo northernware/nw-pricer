@@ -5,6 +5,7 @@ import KanbanBoard from "./KanbanBoard";
 import ClientBoard from "./ClientBoard";
 import Dashboard from "./Dashboard";
 import EmailMarketing from "./EmailMarketing";
+import WebsiteRedesign from "./WebsiteRedesign";
 import { Icon } from "@iconify/react";
 import type { ClientListItem, DashboardStats, StoredProject } from "@/types/crm";
 
@@ -16,7 +17,7 @@ interface CRMViewProps {
 }
 
 export default function CRMView({ projects, clients, stats, statsError }: CRMViewProps) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients' | 'marketing'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients' | 'marketing' | 'redesign'>('dashboard');
 
   return (
     <div className="flex h-[calc(100vh-140px)] gap-6">
@@ -66,6 +67,17 @@ export default function CRMView({ projects, clients, stats, statsError }: CRMVie
           <Icon icon="solar:letter-linear" className="w-4 h-4" />
           Marketing
         </button>
+        <button
+          onClick={() => setActiveTab('redesign')}
+          className={`flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest transition-all ${
+            activeTab === 'redesign'
+              ? 'bg-nw-black text-nw-white shadow-md'
+              : 'text-nw-graphite hover:bg-nw-bone'
+          }`}
+        >
+          <Icon icon="solar:refresh-circle-linear" className="w-4 h-4" />
+          Redesign
+        </button>
       </div>
 
       {/* Pipeline View */}
@@ -76,8 +88,10 @@ export default function CRMView({ projects, clients, stats, statsError }: CRMVie
           <KanbanBoard initialProjects={projects} />
         ) : activeTab === 'clients' ? (
           <ClientBoard initialClients={clients} />
-        ) : (
+        ) : activeTab === 'marketing' ? (
           <EmailMarketing />
+        ) : (
+          <WebsiteRedesign />
         )}
       </div>
     </div>
