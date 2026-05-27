@@ -6,6 +6,7 @@ import ClientBoard from "./ClientBoard";
 import Dashboard from "./Dashboard";
 import EmailMarketing from "./EmailMarketing";
 import WebsiteRedesign from "./WebsiteRedesign";
+import SocialMedia from "./SocialMedia";
 import { Icon } from "@iconify/react";
 import type { ClientListItem, DashboardStats, StoredProject } from "@/types/crm";
 
@@ -17,7 +18,7 @@ interface CRMViewProps {
 }
 
 export default function CRMView({ projects, clients, stats, statsError }: CRMViewProps) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients' | 'marketing' | 'redesign'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'clients' | 'marketing' | 'redesign' | 'social'>('dashboard');
 
   return (
     <div className="flex h-[calc(100vh-140px)] gap-6">
@@ -78,6 +79,17 @@ export default function CRMView({ projects, clients, stats, statsError }: CRMVie
           <Icon icon="solar:refresh-circle-linear" className="w-4 h-4" />
           Redesign
         </button>
+        <button
+          onClick={() => setActiveTab('social')}
+          className={`flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest transition-all ${
+            activeTab === 'social'
+              ? 'bg-nw-black text-nw-white shadow-md'
+              : 'text-nw-graphite hover:bg-nw-bone'
+          }`}
+        >
+          <Icon icon="solar:hashtag-linear" className="w-4 h-4" />
+          Social
+        </button>
       </div>
 
       {/* Pipeline View */}
@@ -90,8 +102,10 @@ export default function CRMView({ projects, clients, stats, statsError }: CRMVie
           <ClientBoard initialClients={clients} />
         ) : activeTab === 'marketing' ? (
           <EmailMarketing />
-        ) : (
+        ) : activeTab === 'redesign' ? (
           <WebsiteRedesign />
+        ) : (
+          <SocialMedia />
         )}
       </div>
     </div>

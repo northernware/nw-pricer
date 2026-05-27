@@ -25,6 +25,18 @@ enum EmailCampaignStatus {
   sent
 }
 
+enum SocialPostStatus {
+  draft
+  scheduled
+  published
+}
+
+enum SocialPlatform {
+  facebook
+  instagram
+  linkedin
+}
+
 model Client {
   id        String       @id @default(cuid())
   firstName String
@@ -92,4 +104,17 @@ model EmailCampaign {
   recipients  Int                 @default(0)
   sentAt      DateTime?
   createdAt   DateTime            @default(now())
+}
+
+model SocialPost {
+  id          String            @id @default(cuid())
+  caption     String
+  platforms   SocialPlatform[]
+  overrides   Json?
+  status      SocialPostStatus  @default(draft)
+  scheduledAt DateTime?
+  publishedAt DateTime?
+  mediaUrls   String[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 }

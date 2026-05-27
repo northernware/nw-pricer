@@ -38,3 +38,11 @@ export {
   sendBulkEmailAction,
   sendTestEmailAction,
 } from "./email";
+
+export {
+  getSocialPosts,
+  createSocialPostAction,
+  updateSocialPostAction,
+  deleteSocialPostAction,
+  getSocialPostById,
+} from "./social";
