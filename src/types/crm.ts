@@ -21,6 +21,7 @@ export interface ClientListItem {
   company: string | null;
   email: string | null;
   phone: string | null;
+  address: string | null;
   status: ClientStatus;
   marketingOptIn: boolean;
   projectCount: number;

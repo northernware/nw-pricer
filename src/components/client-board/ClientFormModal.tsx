@@ -93,6 +93,18 @@ export default function ClientFormModal({
             />
           </div>
 
+          <div>
+            <label className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mb-2 block">
+              Address / Location
+            </label>
+            <input
+              type="text"
+              value={formData.address}
+              onChange={(e) => onChange({ ...formData, address: e.target.value })}
+              className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-sm py-2"
+            />
+          </div>
+
           <label className="flex items-start gap-3 cursor-pointer pt-2">
             <input
               type="checkbox"

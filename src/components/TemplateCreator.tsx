@@ -6,9 +6,25 @@ import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
 import RichTextEditor from "./RichTextEditor";
 
-export default function TemplateCreator({ onSaved }: { onSaved: () => void }) {
+export interface EmailTemplateFormData {
+  id?: string;
+  name: string;
+  subject: string;
+  body: string;
+  category: string;
+}
+
+export default function TemplateCreator({
+  onSaved,
+  initialTemplate,
+  onCancel,
+}: {
+  onSaved: () => void;
+  initialTemplate?: EmailTemplateFormData | null;
+  onCancel?: () => void;
+}) {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<EmailTemplateFormData>(initialTemplate ?? {
     name: "",
     subject: "",
     body: "",
@@ -27,6 +43,7 @@ export default function TemplateCreator({ onSaved }: { onSaved: () => void }) {
       toast.success("Template saved successfully");
       setFormData({ name: "", subject: "", body: "", category: "marketing" });
       onSaved();
+      onCancel?.();
     } else {
       toast.error(result.error || "Failed to save template");
     }
@@ -36,7 +53,7 @@ export default function TemplateCreator({ onSaved }: { onSaved: () => void }) {
     <div className="bg-nw-bone/50 border border-nw-graphite/10 p-6 rounded-2xl">
       <h3 className="font-display font-bold text-lg mb-6 flex items-center gap-2 uppercase tracking-tighter">
         <Icon icon="solar:pen-new-square-linear" className="text-nw-acid" />
-        Create Template
+        {formData.id ? "Edit Template" : "Create Template"}
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,13 +104,25 @@ export default function TemplateCreator({ onSaved }: { onSaved: () => void }) {
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-nw-black text-nw-bone py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black transition-all disabled:opacity-50"
-        >
-          {loading ? "Saving..." : "Save Template"}
-        </button>
+        <div className="flex gap-3">
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              disabled={loading}
+              className="flex-1 border border-nw-graphite/20 py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-graphite/5 transition-all disabled:opacity-50"
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex-1 bg-nw-black text-nw-bone py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black transition-all disabled:opacity-50"
+          >
+            {loading ? "Saving..." : formData.id ? "Update Template" : "Save Template"}
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -35,6 +35,7 @@ export {
   saveEmailTemplate,
   sendIndividualEmailAction,
   getBulkEmailRecipientCountAction,
+  getBulkEmailRecipientsAction,
   sendBulkEmailAction,
   sendTestEmailAction,
 } from "./email";

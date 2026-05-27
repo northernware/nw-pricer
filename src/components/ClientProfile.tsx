@@ -1,20 +1,78 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { formatDistanceToNow, format } from "date-fns";
 import Link from "next/link";
 import type { ClientDetail, ClientProfileLog, ClientProfileProject } from "@/types/crm";
+import { getEmailTemplates, sendIndividualEmailAction } from "@/app/actions";
+import RichTextEditor from "./RichTextEditor";
+import toast from "react-hot-toast";
 
 interface ClientProfileProps {
   client: ClientDetail;
 }
 
+type EmailTemplate = {
+  id: string;
+  name: string;
+  subject: string;
+  body: string;
+  category: string;
+};
+
 export default function ClientProfile({ client }: ClientProfileProps) {
+  const [showEmailSender, setShowEmailSender] = useState(false);
+  const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [sending, setSending] = useState(false);
+
   const stats = [
     { label: "Total Projects", value: client.projects?.length || 0, icon: "solar:folder-2-linear" },
     { label: "Client Since", value: format(new Date(client.createdAt), "MMM yyyy"), icon: "solar:calendar-minimalistic-linear" },
     { label: "Current Status", value: client.status, icon: "solar:tag-linear", capitalize: true },
   ];
+
+  const selectedTemplateData = useMemo(
+    () => templates.find((template) => template.id === selectedTemplate) ?? null,
+    [templates, selectedTemplate]
+  );
+
+  useEffect(() => {
+    if (!showEmailSender) return;
+    void getEmailTemplates().then((data) => {
+      setTemplates(data as EmailTemplate[]);
+    });
+  }, [showEmailSender]);
+
+  const handleTemplateSelect = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    const template = templates.find((item) => item.id === templateId);
+    if (!template) return;
+    setSubject(template.subject);
+    setBody(template.body);
+  };
+
+  const handleSendEmail = async () => {
+    if (!client.email) return toast.error("Client has no email address");
+    if (!subject.trim() || !body.trim()) return toast.error("Subject and body are required");
+
+    setSending(true);
+    const result = await sendIndividualEmailAction(client.id, subject, body);
+    setSending(false);
+
+    if (result.success) {
+      toast.success(`Email sent to ${client.email}`);
+      setShowEmailSender(false);
+      setSelectedTemplate("");
+      setSubject("");
+      setBody("");
+    } else {
+      toast.error(result.error || "Failed to send email");
+    }
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -55,13 +113,33 @@ export default function ClientProfile({ client }: ClientProfileProps) {
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <button className="bg-nw-black text-nw-bone px-6 py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black transition-all flex items-center gap-2 group">
+          <div className="flex flex-wrap gap-3">
+            {client.email && (
+              <a
+                href={`mailto:${client.email}`}
+                className="border border-nw-graphite/10 px-4 py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-bone transition-all flex items-center gap-2"
+              >
+                <Icon icon="solar:letter-linear" className="w-4 h-4" />
+                Mail
+              </a>
+            )}
+            {client.phone && (
+              <a
+                href={`tel:${client.phone}`}
+                className="border border-nw-graphite/10 px-4 py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-bone transition-all flex items-center gap-2"
+              >
+                <Icon icon="solar:phone-linear" className="w-4 h-4" />
+                Call
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={() => setShowEmailSender((value) => !value)}
+              className="bg-nw-black text-nw-bone px-6 py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black transition-all flex items-center gap-2 group disabled:opacity-40"
+              disabled={!client.email}
+            >
               <Icon icon="solar:letter-send-linear" className="w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
               Send Email
-            </button>
-            <button className="border border-nw-graphite/10 px-6 py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-bone transition-all">
-              Edit Profile
             </button>
           </div>
         </div>
@@ -81,7 +159,136 @@ export default function ClientProfile({ client }: ClientProfileProps) {
         </div>
       </div>
 
+      {showEmailSender && (
+        <div className="bg-nw-white border border-nw-graphite/10 rounded-2xl p-6 shadow-sm">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div>
+              <h2 className="font-display font-bold text-xl uppercase tracking-tighter flex items-center gap-2">
+                <Icon icon="solar:letter-send-linear" className="text-nw-acid" />
+                Email Sender
+              </h2>
+              <p className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite/50 mt-1">
+                Sending to {client.email}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowEmailSender(false)}
+              className="rounded-lg p-2 text-nw-graphite/40 hover:bg-nw-bone hover:text-nw-black transition-colors"
+              aria-label="Close email sender"
+            >
+              <Icon icon="solar:close-circle-linear" className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-6">
+            <div className="space-y-3">
+              <label className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite block">
+                Template
+              </label>
+              <select
+                value={selectedTemplate}
+                onChange={(event) => handleTemplateSelect(event.target.value)}
+                className="w-full bg-nw-bone border border-nw-graphite/10 rounded-xl px-3 py-3 font-body text-xs outline-none focus:border-nw-acid"
+              >
+                <option value="">Blank email</option>
+                {templates.map((template) => (
+                  <option key={template.id} value={template.id}>
+                    {template.name}
+                  </option>
+                ))}
+              </select>
+              {selectedTemplateData && (
+                <div className="rounded-xl bg-nw-bone p-3">
+                  <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40 mb-1">
+                    Selected
+                  </div>
+                  <div className="font-body text-xs font-bold text-nw-black">{selectedTemplateData.name}</div>
+                  <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40 mt-1">
+                    {selectedTemplateData.category}
+                  </div>
+                </div>
+              )}
+              <div className="rounded-xl bg-nw-bone p-3 space-y-2">
+                <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40">
+                  Call Notes
+                </div>
+                <p className="font-body text-xs text-nw-graphite leading-relaxed">
+                  Use the latest activity and project cards below before calling or sending follow-up.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite mb-2 block">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={(event) => setSubject(event.target.value)}
+                  className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-sm py-2"
+                />
+              </div>
+              <div>
+                <label className="font-mono text-[9px] uppercase tracking-widest text-nw-graphite mb-2 block">
+                  Message
+                </label>
+                <RichTextEditor value={body} onChange={setBody} />
+              </div>
+              <button
+                type="button"
+                onClick={handleSendEmail}
+                disabled={sending || !client.email}
+                className="w-full bg-nw-black text-nw-bone py-3 rounded-xl font-mono text-[10px] uppercase tracking-widest hover:bg-nw-acid hover:text-nw-black transition-all disabled:opacity-50"
+              >
+                {sending ? "Sending..." : "Send Email"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-6">
+          <h2 className="font-display font-bold text-xl uppercase tracking-tighter flex items-center gap-2">
+            <Icon icon="solar:user-id-linear" className="text-nw-acid" />
+            Client Center
+          </h2>
+          <div className="bg-nw-white border border-nw-graphite/10 rounded-2xl p-6 shadow-sm space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40 mb-1">Email</div>
+                <div className="font-body text-sm text-nw-black break-all">{client.email || "No email"}</div>
+              </div>
+              <div>
+                <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40 mb-1">Phone</div>
+                <div className="font-body text-sm text-nw-black">{client.phone || "No phone"}</div>
+              </div>
+              <div>
+                <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40 mb-1">Company</div>
+                <div className="font-body text-sm text-nw-black">{client.company || "No company"}</div>
+              </div>
+              <div>
+                <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40 mb-1">Address / Location</div>
+                <div className="font-body text-sm text-nw-black">{client.address || "No address"}</div>
+              </div>
+            </div>
+            <div className="rounded-xl bg-nw-bone p-4">
+              <div className="font-mono text-[8px] uppercase tracking-widest text-nw-graphite/40 mb-2">
+                Cold calling context
+              </div>
+              <p className="font-body text-xs text-nw-graphite leading-relaxed">
+                Status is <strong className="capitalize text-nw-black">{client.status}</strong>.
+                {client.marketingOptIn
+                  ? " This client can receive marketing campaigns."
+                  : " This client is not opted in for bulk marketing emails."}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Projects History */}
         <div className="space-y-6">
           <h2 className="font-display font-bold text-xl uppercase tracking-tighter flex items-center gap-2">

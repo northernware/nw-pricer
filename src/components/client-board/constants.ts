@@ -15,6 +15,7 @@ export interface ClientFormData {
   company: string;
   email: string;
   phone: string;
+  address: string;
   marketingOptIn: boolean;
 }
 
@@ -24,5 +25,6 @@ export const emptyClientForm = (): ClientFormData => ({
   company: "",
   email: "",
   phone: "",
+  address: "",
   marketingOptIn: false,
 });

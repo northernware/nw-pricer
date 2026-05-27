@@ -7,11 +7,13 @@ import { logActivity } from "@/lib/activity";
 import { requireAdminSession, UnauthorizedError } from "@/lib/auth";
 import { sendEmail, getBrandedTemplate } from "@/lib/mail";
 
-const bulkEmailRecipientFilter = {
-  email: { not: null },
-  status: { not: ClientStatus.declined },
-  marketingOptIn: true,
-} as const;
+function getBulkEmailRecipientFilter(statuses?: ClientStatus[]) {
+  return {
+    email: { not: null },
+    status: statuses && statuses.length > 0 ? { in: statuses } : { not: ClientStatus.declined },
+    marketingOptIn: true,
+  } as const;
+}
 
 export async function getEmailTemplates() {
   try {
@@ -96,7 +98,7 @@ export async function sendIndividualEmailAction(
 export async function getBulkEmailRecipientCountAction() {
   try {
     await requireAdminSession();
-    const count = await prisma.client.count({ where: bulkEmailRecipientFilter });
+    const count = await prisma.client.count({ where: getBulkEmailRecipientFilter() });
     return { success: true, count };
   } catch (error: unknown) {
     if (error instanceof UnauthorizedError)
@@ -105,6 +107,35 @@ export async function getBulkEmailRecipientCountAction() {
       success: false,
       error: error instanceof Error ? error.message : String(error),
       count: 0,
+    };
+  }
+}
+
+export async function getBulkEmailRecipientsAction(statuses?: ClientStatus[]) {
+  try {
+    await requireAdminSession();
+    const clients = await prisma.client.findMany({
+      where: getBulkEmailRecipientFilter(statuses),
+      orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        company: true,
+        email: true,
+        phone: true,
+        status: true,
+        marketingOptIn: true,
+      },
+    });
+    return { success: true, clients };
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError)
+      return { success: false, error: error.message, clients: [] };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+      clients: [],
     };
   }
 }
@@ -143,12 +174,16 @@ export async function sendTestEmailAction(templateId: string) {
   }
 }
 
-export async function sendBulkEmailAction(campaignName: string, templateId: string) {
+export async function sendBulkEmailAction(
+  campaignName: string,
+  templateId: string,
+  statuses?: ClientStatus[]
+) {
   try {
     await requireAdminSession();
     const [template, clients] = await Promise.all([
       prisma.emailTemplate.findUnique({ where: { id: templateId } }),
-      prisma.client.findMany({ where: bulkEmailRecipientFilter }),
+      prisma.client.findMany({ where: getBulkEmailRecipientFilter(statuses) }),
     ]);
 
     if (!template) throw new Error("Template not found");

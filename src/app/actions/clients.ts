@@ -20,6 +20,7 @@ export async function getClients() {
       company: c.company,
       email: c.email,
       phone: c.phone,
+      address: c.address,
       status: c.status,
       marketingOptIn: c.marketingOptIn,
       projectCount: c._count.projects,
@@ -61,6 +62,7 @@ export async function createClientAction(data: {
   company?: string;
   email?: string;
   phone?: string;
+  address?: string;
   marketingOptIn?: boolean;
 }) {
   try {
@@ -72,6 +74,7 @@ export async function createClientAction(data: {
         company: data.company,
         email: data.email,
         phone: data.phone,
+        address: data.address,
         marketingOptIn: data.marketingOptIn ?? false,
         status: ClientStatus.prospect,
       },
@@ -99,6 +102,7 @@ export async function updateClientAction(
     company?: string;
     email?: string;
     phone?: string;
+    address?: string;
     marketingOptIn?: boolean;
   }
 ) {
@@ -112,6 +116,7 @@ export async function updateClientAction(
         company: data.company,
         email: data.email,
         phone: data.phone,
+        address: data.address,
         marketingOptIn: data.marketingOptIn ?? false,
       },
     });
