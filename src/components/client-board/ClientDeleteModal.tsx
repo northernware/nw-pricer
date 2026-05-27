@@ -62,7 +62,7 @@ export default function ClientDeleteModal({
             <button
               type="button"
               onClick={onConfirm}
-              disabled={isPending || confirmName !== fullName}
+              disabled={isPending || confirmName.trim().toLowerCase() !== fullName.toLowerCase()}
               className="flex-1 bg-red-500 text-white py-3 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-red-600 transition-all disabled:opacity-50 disabled:grayscale"
             >
               {isPending ? "Deleting..." : "Delete Client"}

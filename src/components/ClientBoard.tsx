@@ -78,7 +78,7 @@ export default function ClientBoard({ initialClients }: { initialClients: Client
   const handleDeleteConfirm = async () => {
     if (!clientToDelete) return;
     const fullName = `${clientToDelete.firstName} ${clientToDelete.lastName}`;
-    if (confirmName !== fullName) {
+    if (confirmName.trim().toLowerCase() !== fullName.toLowerCase()) {
       toast.error("Name does not match");
       return;
     }
@@ -89,7 +89,7 @@ export default function ClientBoard({ initialClients }: { initialClients: Client
         toast.success("Client deleted");
         setShowDeleteModal(false);
         setClientToDelete(null);
-        window.location.reload();
+        setClients(prev => prev.filter(c => c.id !== clientToDelete.id));
       } else {
         toast.error(result.error || "Failed to delete client");
       }
