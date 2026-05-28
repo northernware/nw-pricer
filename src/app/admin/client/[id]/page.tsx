@@ -1,11 +1,11 @@
 import { getClientById } from "@/app/actions";
 import ClientProfile from "@/components/ClientProfile";
-import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function ClientPage({ params }: { params: { id: string } }) {
-  const client = await getClientById(params.id);
+export default async function ClientPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const client = await getClientById(id);
 
   if (!client) {
     notFound();
