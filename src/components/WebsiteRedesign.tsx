@@ -24,6 +24,7 @@ interface RedesignProject {
   contactNo: string;
   devStatus: string;
   emailStatus: string;
+  callStatus: string;
   replyStatus: string;
   pitchUrl: string;
   notes: string;
@@ -53,6 +54,7 @@ const emptyForm = (): RedesignFormData => ({
   contactNo: "",
   devStatus: "prospect",
   emailStatus: "Not Sent",
+  callStatus: "Not Called",
   replyStatus: "No Reply",
   pitchUrl: "",
   notes: "",
@@ -141,6 +143,7 @@ function project(
     contactNo: "",
     devStatus,
     emailStatus,
+    callStatus: "Not Called",
     replyStatus,
     pitchUrl,
     notes,
@@ -175,6 +178,7 @@ function normalizeProject(item: Partial<RedesignProject>): RedesignProject {
     contactNo: item.contactNo || "",
     devStatus: item.devStatus || "prospect",
     emailStatus: item.emailStatus || "Not Sent",
+    callStatus: item.callStatus || "Not Called",
     replyStatus: item.replyStatus || "No Reply",
     pitchUrl: item.pitchUrl || "",
     notes: item.notes || "",
@@ -276,6 +280,7 @@ function RedesignCard({
 
       <div className="space-y-2 mb-4">
         <StatusRow label="Email" value={project.emailStatus} highlight={project.emailStatus === "Sent"} />
+        <StatusRow label="Called" value={project.callStatus} highlight={project.callStatus === "Called"} />
         {project.replyStatus && <StatusRow label="Reply" value={project.replyStatus} />}
         {project.notes && <StatusRow label="Notes" value={project.notes} />}
       </div>
@@ -382,6 +387,7 @@ function RedesignFormModal({
           <TextField label="Contact No." value={formData.contactNo} onChange={(contactNo) => onChange({ ...formData, contactNo })} />
           <SelectField label="Dev Status" value={formData.devStatus} onChange={(devStatus) => onChange({ ...formData, devStatus })} options={STAGES.map((stage) => ({ value: stage.id, label: stage.label }))} />
           <SelectField label="Email Status" value={formData.emailStatus} onChange={(emailStatus) => onChange({ ...formData, emailStatus })} options={["Not Sent", "Sent", "Drafted"].map((value) => ({ value, label: value }))} />
+          <SelectField label="Called Status" value={formData.callStatus} onChange={(callStatus) => onChange({ ...formData, callStatus })} options={["Not Called", "Called", "Left VM", "No Answer", "Wrong Number"].map((value) => ({ value, label: value }))} />
           <TextField label="Reply Status" value={formData.replyStatus} onChange={(replyStatus) => onChange({ ...formData, replyStatus })} />
           <TextField label="Pitch URL" value={formData.pitchUrl} onChange={(pitchUrl) => onChange({ ...formData, pitchUrl })} />
           <div className="md:col-span-2">
