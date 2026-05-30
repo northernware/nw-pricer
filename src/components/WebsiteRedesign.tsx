@@ -222,7 +222,7 @@ function RedesignCard({
     >
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="font-display font-bold text-md tracking-tight text-nw-black leading-tight line-clamp-2 pr-4">
+          <h3 className="font-display font-bold text-lg tracking-tight text-nw-black leading-tight line-clamp-2 pr-4">
             {project.company}
           </h3>
           {project.website && (
@@ -230,7 +230,7 @@ function RedesignCard({
               href={project.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[9px] font-mono text-nw-acid hover:underline mt-1 block break-all"
+              className="text-[11px] font-mono text-nw-acid hover:underline mt-1 block break-all"
               onClick={(event) => event.stopPropagation()}
             >
               {project.website}
@@ -266,12 +266,12 @@ function RedesignCard({
       {(project.contactEmail || project.contactNo) && (
         <div className="mb-4 space-y-1">
           {project.contactEmail && (
-            <div className="font-mono text-[8px] uppercase tracking-[0.15em] text-nw-graphite break-all">
+            <div className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite break-all">
               {project.contactEmail}
             </div>
           )}
           {project.contactNo && (
-            <div className="font-mono text-[8px] uppercase tracking-[0.15em] text-nw-graphite">
+            <div className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite">
               {project.contactNo}
             </div>
           )}
@@ -326,8 +326,8 @@ function RedesignCard({
 function StatusRow({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="text-[8px] font-mono text-nw-graphite/40 uppercase w-16 shrink-0">{label}:</span>
-      <span className={`text-[9px] font-mono uppercase leading-relaxed ${highlight ? "text-nw-emerald" : "text-nw-graphite"}`}>
+      <span className="text-[10px] font-mono text-nw-graphite/50 uppercase w-20 shrink-0">{label}:</span>
+      <span className={`text-[11px] font-mono uppercase leading-relaxed ${highlight ? "text-nw-emerald" : "text-nw-graphite"}`}>
         {value}
       </span>
     </div>
@@ -342,11 +342,11 @@ function KanbanColumn({ stage, children, count }: { stage: KanbanStage; children
   return (
     <div className="flex-1 min-w-[320px] flex flex-col bg-nw-white rounded-xl border border-nw-graphite/10">
       <div className="p-5 flex justify-between items-center border-b border-nw-graphite/10">
-        <div className="font-mono text-[10px] text-nw-black uppercase tracking-[0.2em] flex items-center gap-2">
+        <div className="font-mono text-[11px] text-nw-black uppercase tracking-widest flex items-center gap-2">
           <div className={`w-1.5 h-1.5 rounded-full ${stage.dot}`} />
           {stage.label}
         </div>
-        <span className="font-mono text-[9px] text-nw-graphite/40">{count}</span>
+          <span className="font-mono text-[10px] text-nw-graphite/50">{count}</span>
       </div>
 
       <div ref={setNodeRef} className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[150px]">
@@ -429,13 +429,13 @@ function TextField({
 }) {
   return (
     <label className="block">
-      <span className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mb-2 block">{label}</span>
+      <span className="font-mono text-[11px] uppercase tracking-widest text-nw-graphite mb-2 block">{label}</span>
       <input
         type="text"
         required={required}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-sm py-2"
+        className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-base py-2"
       />
     </label>
   );
@@ -454,11 +454,11 @@ function SelectField({
 }) {
   return (
     <label className="block">
-      <span className="font-mono text-[10px] uppercase tracking-widest text-nw-graphite mb-2 block">{label}</span>
+      <span className="font-mono text-[11px] uppercase tracking-widest text-nw-graphite mb-2 block">{label}</span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-sm py-2"
+        className="w-full bg-transparent border-b border-nw-graphite/20 focus:border-nw-acid outline-none font-body text-base py-2"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -575,7 +575,7 @@ export default function WebsiteRedesign() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search redesign leads..."
-              className="w-full sm:w-72 rounded-xl border border-nw-graphite/10 bg-nw-white py-3 pl-10 pr-4 font-body text-sm outline-none focus:border-nw-acid"
+              className="w-full sm:w-72 rounded-xl border border-nw-graphite/10 bg-nw-white py-3 pl-10 pr-4 font-body text-base outline-none focus:border-nw-acid"
             />
           </div>
           <button
