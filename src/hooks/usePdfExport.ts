@@ -24,14 +24,30 @@ export function usePdfExport(
   const exportRasterPdf = useCallback(async (activeTab: PdfExportTab) => {
     const elementId = activeTab === "contract" ? "contract-export-template" : "quote-template";
     const element = document.getElementById(elementId);
-    if (!element) return;
+    if (!element) throw new Error(`Missing PDF export target: ${elementId}`);
 
-    element.style.position = "static";
-    element.style.top = "0";
-    element.style.left = "0";
+    const wrapper = document.createElement("div");
+    const clone = element.cloneNode(true) as HTMLElement;
+
+    wrapper.style.position = "fixed";
+    wrapper.style.inset = "0 auto auto 0";
+    wrapper.style.width = activeTab === "contract" ? "900px" : "800px";
+    wrapper.style.background = "#FFFFFF";
+    wrapper.style.zIndex = "2147483647";
+    wrapper.style.pointerEvents = "none";
+    wrapper.style.opacity = "1";
+
+    clone.style.position = "static";
+    clone.style.top = "auto";
+    clone.style.left = "auto";
+    clone.style.zIndex = "auto";
+    clone.style.width = "100%";
+
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
 
     try {
-      const canvas = await html2canvas(element, {
+      const canvas = await html2canvas(clone, {
         scale: 2,
         useCORS: true,
         backgroundColor: "#FFFFFF",
@@ -83,9 +99,7 @@ export function usePdfExport(
       const prefix = tabToKind(activeTab);
       pdf.save(`NW-${prefix}-${new Date().toISOString().split("T")[0]}.pdf`);
     } finally {
-      element.style.position = "fixed";
-      element.style.top = "-9999px";
-      element.style.left = "-9999px";
+      wrapper.remove();
     }
   }, []);
 
@@ -106,8 +120,7 @@ export function usePdfExport(
         toast.success("PDF downloaded");
       } catch (error) {
         console.error("PDF Export failed:", error);
-        toast.error("PDF generation failed. Use browser print.");
-        window.print();
+        toast.error("PDF generation failed. Please try again.");
       }
     },
     [input, result, projectId, exportRasterPdf]
