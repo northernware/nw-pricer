@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@prisma/client";
-import type { CalculatorInput } from "@/lib/calculator";
+import type { CalculatorInput, ProjectInvoice } from "@/lib/calculator";
 import { parseProjectConfig, assertProjectConfig } from "@/lib/project-config-schema";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -285,6 +285,33 @@ export async function createPublicLinksAction(
       success: false as const,
       error: error instanceof Error ? error.message : String(error),
     };
+  }
+}
+
+export async function updateProjectInvoicesAction(
+  projectId: string,
+  invoices: ProjectInvoice[]
+) {
+  try {
+    await requireAdminSession();
+    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    if (!project) return { success: false, error: "Project not found" };
+
+    const config = parseProjectConfig(project.config);
+    const nextConfig = assertProjectConfig({ ...config, invoices });
+
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { config: nextConfig as object },
+    });
+
+    revalidatePath(`/p/${projectId}`);
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: unknown) {
+    if (error instanceof UnauthorizedError) return { success: false, error: error.message };
+    console.error("Failed to update project invoices:", error);
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 

@@ -339,6 +339,7 @@ export default function ContractDocument({
                   <tr className="border-b border-nw-graphite/20">
                     <th className="text-left py-2 text-[10px] uppercase tracking-widest text-nw-graphite">Milestone</th>
                     <th className="text-right py-2 text-[10px] uppercase tracking-widest text-nw-graphite">%</th>
+                    <th className="text-right py-2 text-[10px] uppercase tracking-widest text-nw-graphite">Status</th>
                     <th className="text-right py-2 text-[10px] uppercase tracking-widest text-nw-graphite">Amount</th>
                   </tr>
                 </thead>
@@ -347,6 +348,9 @@ export default function ContractDocument({
                     <tr key={inv.id} className="border-b border-nw-graphite/10">
                       <td className="py-2 text-nw-graphite">{inv.label}</td>
                       <td className="py-2 text-right text-nw-graphite">{inv.percentage}%</td>
+                      <td className={`py-2 text-right uppercase ${inv.status === "paid" ? "text-nw-emerald" : "text-nw-graphite"}`}>
+                        {inv.status}
+                      </td>
                       <td className="py-2 text-right font-bold">{fmt((result.roundedPrice * inv.percentage) / 100)}</td>
                     </tr>
                   ))}

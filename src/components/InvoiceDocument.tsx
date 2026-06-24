@@ -38,6 +38,7 @@ export default function InvoiceDocument({
   const invoiceAmount = selectedInvoice
     ? (result.roundedPrice * selectedInvoice.percentage) / 100
     : result.roundedPrice;
+  const isSelectedInvoicePaid = selectedInvoice?.status === "paid";
 
   const clientNameRaw =
     `${p.clientFirstName || ""} ${p.clientLastName || ""}`.trim() || p.clientName || "";
@@ -64,6 +65,12 @@ export default function InvoiceDocument({
           <strong>DATE:</strong> {dateStr}
           <br />
           <strong>DUE:</strong> Upon Receipt
+          {selectedInvoice && (
+            <>
+              <br />
+              <strong>STATUS:</strong> {isSelectedInvoicePaid ? "PAID" : "UNPAID"}
+            </>
+          )}
         </div>
       </header>
 
@@ -111,6 +118,9 @@ export default function InvoiceDocument({
                     <div className="text-xs text-nw-graphite">
                       Milestone payment — {p.projectName || "Project"}
                     </div>
+                    <div className={`text-xs font-mono uppercase mt-1 ${isSelectedInvoicePaid ? "text-nw-emerald" : "text-nw-graphite"}`}>
+                      {selectedInvoice.status}
+                    </div>
                   </td>
                   <td className="py-4 text-right text-sm font-mono">{selectedInvoice.percentage}%</td>
                   <td className="py-4 text-right text-sm font-mono font-bold">{fmt(invoiceAmount)}</td>
@@ -134,7 +144,7 @@ export default function InvoiceDocument({
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 md:gap-0">
-        {selectedInvoice && (
+        {selectedInvoice && !isSelectedInvoicePaid && (
           <PaymentBlock
             projectId={id}
             amount={invoiceAmount}
@@ -143,7 +153,9 @@ export default function InvoiceDocument({
         )}
         <div className={`w-full ${selectedInvoice ? "md:w-[400px]" : "md:max-w-md md:ml-auto"}`}>
           <div className="flex justify-between items-center p-6 bg-nw-black text-nw-bone mt-4">
-            <span className="text-sm font-bold uppercase track-widest font-mono">Amount Due</span>
+            <span className="text-sm font-bold uppercase track-widest font-mono">
+              {isSelectedInvoicePaid ? "Paid" : "Amount Due"}
+            </span>
             <span className="text-3xl font-display font-bold text-nw-acid">{fmt(invoiceAmount)}</span>
           </div>
           <p className="text-[10px] text-nw-graphite text-right mt-2 font-mono italic">

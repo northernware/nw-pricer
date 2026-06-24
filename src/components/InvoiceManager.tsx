@@ -5,7 +5,7 @@ import type { CalculatorInput, ProjectInvoice } from "@/lib/calculator";
 import { generateId } from "@/lib/id";
 import { copyToClipboard } from "@/lib/utils";
 import { CURRENCIES } from "@/lib/constants";
-import { createPublicLinksAction } from "@/app/actions";
+import { createPublicLinksAction, updateProjectInvoicesAction } from "@/app/actions";
 import { toast } from "react-hot-toast";
 
 interface InvoiceManagerProps {
@@ -18,6 +18,19 @@ interface InvoiceManagerProps {
 export default function InvoiceManager({ config, updateConfig, totalPrice, projectId }: InvoiceManagerProps) {
   const invoices = config.invoices || [];
 
+  const persistInvoices = async (nextInvoices: ProjectInvoice[]) => {
+    if (!projectId) return;
+    const result = await updateProjectInvoicesAction(projectId, nextInvoices);
+    if (!result.success) {
+      toast.error(result.error || "Failed to save payment schedule");
+    }
+  };
+
+  const setInvoices = (nextInvoices: ProjectInvoice[], persist = false) => {
+    updateConfig({ invoices: nextInvoices });
+    if (persist) void persistInvoices(nextInvoices);
+  };
+
   const addInvoice = () => {
     const newInvoices: ProjectInvoice[] = [
       ...invoices,
@@ -28,17 +41,16 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
         status: 'unpaid'
       }
     ];
-    updateConfig({ invoices: newInvoices });
+    setInvoices(newInvoices, true);
   };
 
   const removeInvoice = (id: string) => {
-    updateConfig({ invoices: invoices.filter(inv => inv.id !== id) });
+    setInvoices(invoices.filter(inv => inv.id !== id), true);
   };
 
-  const updateInvoice = (id: string, updates: Partial<ProjectInvoice>) => {
-    updateConfig({
-      invoices: invoices.map(inv => inv.id === id ? { ...inv, ...updates } : inv)
-    });
+  const updateInvoice = (id: string, updates: Partial<ProjectInvoice>, persist = false) => {
+    const nextInvoices = invoices.map(inv => inv.id === id ? { ...inv, ...updates } : inv);
+    setInvoices(nextInvoices, persist);
   };
 
   const totalPercentage = invoices.reduce((sum, inv) => sum + (inv.percentage || 0), 0);
@@ -60,7 +72,7 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
       </div>
 
       <div className="space-y-4">
-        {invoices.map((inv, index) => (
+        {invoices.map((inv) => (
           <div 
             key={inv.id} 
             className="group relative p-4 border bg-nw-bone/30 border-nw-graphite/10 hover:border-nw-acid/50 transition-all"
@@ -72,6 +84,7 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
                   type="text"
                   value={inv.label}
                   onChange={(e) => updateInvoice(inv.id, { label: e.target.value })}
+                  onBlur={() => void persistInvoices(invoices)}
                   className="w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-1 transition-colors"
                   placeholder="e.g. Deposit"
                 />
@@ -82,6 +95,7 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
                   type="number"
                   value={inv.percentage}
                   onChange={(e) => updateInvoice(inv.id, { percentage: Number(e.target.value) })}
+                  onBlur={() => void persistInvoices(invoices)}
                   className="w-full bg-transparent border-b border-nw-graphite/30 focus:border-nw-acid outline-none font-mono text-sm text-nw-black py-1 transition-colors"
                 />
               </div>
@@ -120,8 +134,24 @@ export default function InvoiceManager({ config, updateConfig, totalPrice, proje
                     <Icon icon="solar:link-linear" width="18" />
                   </button>
                 )}
+                {projectId && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.open(
+                        `/p/${projectId}?mode=invoice&invoiceId=${encodeURIComponent(inv.id)}&print=1`,
+                        "_blank",
+                        "noopener,noreferrer"
+                      );
+                    }}
+                    className="p-2 text-nw-graphite hover:text-nw-acid transition-colors"
+                    title="Export Invoice PDF"
+                  >
+                    <Icon icon="solar:download-minimalistic-linear" width="18" />
+                  </button>
+                )}
                 <button
-                  onClick={(e) => { e.stopPropagation(); updateInvoice(inv.id, { status: inv.status === 'paid' ? 'unpaid' : 'paid' }); }}
+                  onClick={(e) => { e.stopPropagation(); updateInvoice(inv.id, { status: inv.status === 'paid' ? 'unpaid' : 'paid' }, true); }}
                   className={`p-2 transition-colors ${inv.status === 'paid' ? "text-nw-emerald" : "text-nw-graphite hover:text-nw-black"}`}
                   title={inv.status === 'paid' ? 'Mark as Unpaid' : 'Mark as Paid'}
                 >

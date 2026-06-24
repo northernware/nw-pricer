@@ -20,6 +20,7 @@ export {
   saveProjectAction,
   approveProjectAction,
   createPublicLinksAction,
+  updateProjectInvoicesAction,
   deleteProjectAction,
   unlockProjectAction,
 } from "./projects";
