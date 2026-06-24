@@ -7,6 +7,7 @@ import InputPanel from "./InputPanel";
 import OutputPanel from "./OutputPanel";
 import LivePreview from "./LivePreview";
 import QuoteTemplate from "./QuoteTemplate";
+import PublicTemplate from "./PublicTemplate";
 import { Icon } from "@iconify/react";
 import ProjectLibraryModal from "@/components/calculator/ProjectLibraryModal";
 import NewProjectModal from "@/components/calculator/NewProjectModal";
@@ -262,6 +263,28 @@ export default function Calculator() {
           result={result}
           projectId={sessionId}
         />
+        <div
+          id="contract-export-template"
+          style={{
+            width: "900px",
+            position: "fixed",
+            top: "-9999px",
+            left: "-9999px",
+            background: "#FFFFFF",
+            zIndex: -1,
+          }}
+        >
+          <PublicTemplate
+            id={sessionId || "PREVIEW"}
+            mode="contract"
+            input={config}
+            result={result}
+            createdAt={new Date()}
+            isApproved={!!currentProject?.isApproved}
+            signedBy={currentProject?.signedBy}
+            approvedAt={currentProject?.approvedAt}
+          />
+        </div>
       </div>
     </section>
   );

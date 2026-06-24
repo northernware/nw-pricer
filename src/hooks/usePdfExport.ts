@@ -22,7 +22,8 @@ export function usePdfExport(
   projectId?: string | null
 ) {
   const exportRasterPdf = useCallback(async (activeTab: PdfExportTab) => {
-    const element = document.getElementById("quote-template");
+    const elementId = activeTab === "contract" ? "contract-export-template" : "quote-template";
+    const element = document.getElementById(elementId);
     if (!element) return;
 
     element.style.position = "static";
@@ -90,7 +91,7 @@ export function usePdfExport(
 
   const exportToPdf = useCallback(
     async (activeTab: PdfExportTab) => {
-      if (input && result) {
+      if (input && result && activeTab !== "contract") {
         try {
           await downloadVectorQuotePdf(tabToKind(activeTab), input, result, projectId);
           toast.success("Vector PDF downloaded");
