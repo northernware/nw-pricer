@@ -105,6 +105,12 @@ export function usePdfExport(
 
   const exportToPdf = useCallback(
     async (activeTab: PdfExportTab) => {
+      if (activeTab === "contract" && projectId) {
+        window.open(`/p/${projectId}?mode=contract&print=1`, "_blank", "noopener,noreferrer");
+        toast.success("Opening printable contract");
+        return;
+      }
+
       if (input && result && activeTab !== "contract") {
         try {
           await downloadVectorQuotePdf(tabToKind(activeTab), input, result, projectId);
